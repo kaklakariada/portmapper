@@ -22,17 +22,14 @@ class PresetComboBoxModel implements ComboBoxModel {
 	public PresetComboBoxModel() {
 		dataListeners = new LinkedList<ListDataListener>();
 		presets = new ArrayList<PortMapping>();
-		presets
-				.add(new PortMapping(PortMapping.PROTOCOL_TCP, null, 22022,
-						null, 22, Messages
-								.getString("PresetComboBoxModel.ssh_hidden"))); //$NON-NLS-1$
+		presets.add(new PortMapping(PortMapping.PROTOCOL_TCP, null, 22022,
+				null, 22, "SSH (22022)"));
 		presets.add(new PortMapping(PortMapping.PROTOCOL_TCP, null, 22, null,
-				22, Messages.getString("PresetComboBoxModel.ssh_22"))); //$NON-NLS-1$
+				22, "SSH"));
 		presets.add(new PortMapping(PortMapping.PROTOCOL_TCP, null, 80, null,
-				80, Messages.getString("PresetComboBoxModel.http_80"))); //$NON-NLS-1$
+				80, "HTTP"));
 		presets.add(new PortMapping(PortMapping.PROTOCOL_TCP, null, 8080, null,
-				8080, Messages.getString("PresetComboBoxModel.http_8080"))); //$NON-NLS-1$
-
+				8080, "HTTP (8080)"));
 		selectedPreset = null;
 	}
 

@@ -5,9 +5,10 @@ import java.util.Collection;
 
 import javax.swing.table.AbstractTableModel;
 
+import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.router.PortMapping;
 
-@SuppressWarnings("serial") //$NON-NLS-1$
+@SuppressWarnings("serial")//$NON-NLS-1$
 public class PortMappingsTableModel extends AbstractTableModel {
 
 	private ArrayList<PortMapping> mappings;
@@ -86,17 +87,23 @@ public class PortMappingsTableModel extends AbstractTableModel {
 		if (remoteHostGiven) {
 			switch (col) {
 			case 0:
-				return Messages.getString("PortMappingsTableModel.protocol"); //$NON-NLS-1$
+				return PortMapperApp.getResourceMap().getString(
+						"mainFrame.mappings.protocol"); //$NON-NLS-1$
 			case 1:
-				return Messages.getString("PortMappingsTableModel.remote_host"); //$NON-NLS-1$
+				return PortMapperApp.getResourceMap().getString(
+						"mainFrame.mappings.remote_host"); //$NON-NLS-1$
 			case 2:
-				return Messages.getString("PortMappingsTableModel.external_port"); //$NON-NLS-1$
+				return PortMapperApp.getResourceMap().getString(
+						"mainFrame.mappings.external_port"); //$NON-NLS-1$
 			case 3:
-				return Messages.getString("PortMappingsTableModel.internal_client"); //$NON-NLS-1$
+				return PortMapperApp.getResourceMap().getString(
+						"mainFrame.mappings.internal_client"); //$NON-NLS-1$
 			case 4:
-				return Messages.getString("PortMappingsTableModel.internal_port"); //$NON-NLS-1$
+				return PortMapperApp.getResourceMap().getString(
+						"mainFrame.mappings.internal_port"); //$NON-NLS-1$
 			case 5:
-				return Messages.getString("PortMappingsTableModel.description"); //$NON-NLS-1$
+				return PortMapperApp.getResourceMap().getString(
+						"mainFrame.mappings.description"); //$NON-NLS-1$
 			default:
 				throw new IllegalArgumentException("Column " + col //$NON-NLS-1$
 						+ " does not exist"); //$NON-NLS-1$
@@ -104,18 +111,23 @@ public class PortMappingsTableModel extends AbstractTableModel {
 		} else {
 			switch (col) {
 			case 0:
-				return Messages.getString("PortMappingsTableModel.protocol"); //$NON-NLS-1$
+				return PortMapperApp.getResourceMap().getString(
+						"mainFrame.mappings.protocol"); //$NON-NLS-1$
 			case 1:
-				return Messages.getString("PortMappingsTableModel.external_port"); //$NON-NLS-1$
+				return PortMapperApp.getResourceMap().getString(
+						"mainFrame.mappings.external_port"); //$NON-NLS-1$
 			case 2:
-				return Messages.getString("PortMappingsTableModel.internal_client"); //$NON-NLS-1$
+				return PortMapperApp.getResourceMap().getString(
+						"mainFrame.mappings.internal_client"); //$NON-NLS-1$
 			case 3:
-				return Messages.getString("PortMappingsTableModel.internal_port"); //$NON-NLS-1$
+				return PortMapperApp.getResourceMap().getString(
+						"mainFrame.mappings.internal_port"); //$NON-NLS-1$
 			case 4:
-				return Messages.getString("PortMappingsTableModel.description"); //$NON-NLS-1$
+				return PortMapperApp.getResourceMap().getString(
+						"mainFrame.mappings.description");
 			default:
-				throw new IllegalArgumentException("Column " + col //$NON-NLS-1$
-						+ " does not exist"); //$NON-NLS-1$
+				throw new IllegalArgumentException("Column " + col
+						+ " does not exist");
 			}
 		}
 

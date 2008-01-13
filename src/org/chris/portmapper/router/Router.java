@@ -1,9 +1,6 @@
 package org.chris.portmapper.router;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -226,45 +223,6 @@ public class Router {
 		return addPortMapping(mapping.getDescription(), mapping.getProtocol(),
 				mapping.getRemoteHost(), mapping.getExternalPort(), mapping
 						.getInternalClient(), mapping.getInternalPort(), 0);
-	}
-
-	public String getLocalHostAddress() {
-		logger.info("Get IP of localhost");
-		InetAddress localHostIP = null;
-		try {
-			localHostIP = InetAddress.getLocalHost();
-		} catch (UnknownHostException e) {
-			logger.error("Could not get IP of localhost", e);
-		}
-
-		if (!localHostIP.getHostAddress().startsWith("127.")) {
-			return localHostIP.getHostAddress();
-			// return null;
-		}
-
-		Collection<InetAddress> localHostIPs = new LinkedList<InetAddress>();
-		try {
-			InetAddress localHost = InetAddress.getLocalHost();
-			logger.info("Host name of localhost: " + localHost.getHostName()
-					+ ", canonical host name: "
-					+ localHost.getCanonicalHostName());
-			localHostIPs.addAll(Arrays.asList(InetAddress
-					.getAllByName(localHost.getCanonicalHostName())));
-			localHostIPs.addAll(Arrays.asList(InetAddress
-					.getAllByName(localHost.getHostAddress())));
-			localHostIPs.addAll(Arrays.asList(InetAddress
-					.getAllByName(localHost.getHostName())));
-		} catch (UnknownHostException e) {
-			logger.error("Could not get IP of localhost", e);
-		}
-		for (InetAddress address : localHostIPs) {
-			logger.info("Got IP address " + address);
-			if (!address.getHostAddress().startsWith("127.")) {
-				return address.getHostAddress();
-			}
-		}
-
-		return null;
 	}
 
 	public boolean removeSSHPortMapping() throws RouterException {
