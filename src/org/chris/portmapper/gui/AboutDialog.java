@@ -24,16 +24,18 @@ public class AboutDialog extends JDialog {
 	public AboutDialog() throws HeadlessException {
 		super(PortMapperApp.getInstance().getMainFrame(), true);
 
+		this.setName(DIALOG_NAME);
 		ActionMap actionMap = PortMapperApp.getInstance().getContext()
 				.getActionMap(this.getClass(), this);
 
 		JPanel pane = new JPanel(new MigLayout("", "[center,grow]", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		this.add(pane);
 
-		pane.add(createLabel("MainWindow.program_name"), "wrap"); //$NON-NLS-1$ //$NON-NLS-2$
-		pane.add(createLabel("AboutDialog.description"), //$NON-NLS-1$
-				"wrap"); //$NON-NLS-1$
-		pane.add(createLabel("AboutDialog.created_by"), "wrap"); //$NON-NLS-1$ //$NON-NLS-2$
+		pane.add(createLabel("about_dialog.label1"), "wrap");
+		pane.add(createLabel("about_dialog.label2"), "wrap");
+		pane.add(createLabel("about_dialog.label3"), "wrap");
+		pane.add(createLabel("about_dialog.label4"), "wrap");
+		pane.add(createLabel("about_dialog.label5"), "wrap");
 		pane
 				.add(
 						new JLabel(
@@ -56,17 +58,8 @@ public class AboutDialog extends JDialog {
 	}
 
 	private JLabel createLabel(String name) {
-		String labelKey = getComponentName(name);
-		JLabel newLabel = new JLabel(labelKey);
-		newLabel.setName(labelKey);
+		JLabel newLabel = new JLabel(name);
+		newLabel.setName(name);
 		return newLabel;
-	}
-
-	/**
-	 * @param name
-	 * @return
-	 */
-	private String getComponentName(String name) {
-		return DIALOG_NAME + "." + name;
 	}
 }

@@ -172,7 +172,6 @@ public class PortMapperView extends FrameView {
 		mappingsTable.setSize(new Dimension(400, 100));
 		mappingsTable.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
-					@Override
 					public void valueChanged(ListSelectionEvent e) {
 						firePropertyChange(PROPERTY_MAPPING_SELECTED, false,
 								isMappingSelected());
@@ -184,7 +183,6 @@ public class PortMapperView extends FrameView {
 
 		presetMappingComboBox = new JComboBox(new PresetComboBoxModel());
 		presetMappingComboBox.addItemListener(new ItemListener() {
-			@Override
 			public void itemStateChanged(ItemEvent arg0) {
 				firePropertyChange(PROPERTY_PRESET_MAPPING_SELECTED, false,
 						isPresetMappingSelected());
@@ -364,8 +362,8 @@ public class PortMapperView extends FrameView {
 	}
 
 	public boolean isConnectedToRouter() {
-		// return PortMapperApp.getInstance().getRouter() != null;
-		return true;
+		return PortMapperApp.getInstance().getRouter() != null;
+		// return true;
 	}
 
 	public boolean isMappingSelected() {
