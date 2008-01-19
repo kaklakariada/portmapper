@@ -30,6 +30,8 @@ class PresetComboBoxModel implements ComboBoxModel {
 				80, "HTTP"));
 		presets.add(new PortMapping(PortMapping.PROTOCOL_TCP, null, 8080, null,
 				8080, "HTTP (8080)"));
+		presets.add(new PortMapping(PortMapping.PROTOCOL_UDP, null, 27960,
+				null, 27960, "ET + Quake 3 Server"));
 		selectedPreset = null;
 	}
 

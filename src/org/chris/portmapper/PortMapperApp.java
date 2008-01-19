@@ -37,10 +37,11 @@ public class PortMapperApp extends SingleFrameApplication {
 
 		addExitListener(new ExitListener() {
 			public boolean canExit(EventObject arg0) {
-				return disconnectRouter();
+				return true;
 			}
 
 			public void willExit(EventObject arg0) {
+				disconnectRouter();
 			}
 		});
 		show(view);
@@ -106,8 +107,7 @@ public class PortMapperApp extends SingleFrameApplication {
 		}
 
 		if (!localHostIP.getHostAddress().startsWith("127.")) {
-			// return localHostIP.getHostAddress();
-			return null;
+			return localHostIP.getHostAddress();
 		}
 
 		Collection<InetAddress> localHostIPs = new LinkedList<InetAddress>();
