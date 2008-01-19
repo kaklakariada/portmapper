@@ -58,42 +58,42 @@ public class PortMapperApp extends SingleFrameApplication {
 		return (PortMapperView) PortMapperApp.getInstance().getMainView();
 	}
 
-	public boolean connectRouter() {
-		boolean wasConnected = this.router != null;
+	public boolean connectRouter() throws RouterException {
 		if (this.router != null) {
-			boolean disconnected = this.disconnectRouter();
-			if (!disconnected) {
-				this.getView().fireConnectionStateChange(wasConnected);
-				return false;
-			}
+			logger
+					.warn("Already connected to router. Cannot create a second connection.");
+			return false;
 		}
-		try {
-			this.router = Router.findRouter();
-			logger.info("Connected to router " + router.getName());
-		} catch (RouterException e) {
-			logger.error("Could not connect to router", e);
-		}
+		this.router = Router.findRouter();
+		logger.info("Connected to router " + router.getName());
+
 		boolean isConnected = this.router != null;
-		this.getView().fireConnectionStateChange(wasConnected);
+		this.getView().fireConnectionStateChange();
 		return isConnected;
 	}
 
 	/**
 	 * @return
 	 */
-	protected boolean disconnectRouter() {
-		if (this.router != null) {
-			this.router.disconnect();
-			this.router = null;
-			this.getView().fireConnectionStateChange(true);
-		} else {
-			this.getView().fireConnectionStateChange(false);
+	public boolean disconnectRouter() {
+		if (this.router == null) {
+			logger.warn("Not connected to router. Can not disconnect.");
+			return false;
 		}
-		return this.router == null;
+
+		this.router.disconnect();
+		this.router = null;
+		this.getView().fireConnectionStateChange();
+
+		return true;
 	}
 
 	public Router getRouter() {
 		return router;
+	}
+
+	public boolean isConnected() {
+		return this.getRouter() != null;
 	}
 
 	public String getLocalHostAddress() {
@@ -106,8 +106,8 @@ public class PortMapperApp extends SingleFrameApplication {
 		}
 
 		if (!localHostIP.getHostAddress().startsWith("127.")) {
-			return localHostIP.getHostAddress();
-			// return null;
+			// return localHostIP.getHostAddress();
+			return null;
 		}
 
 		Collection<InetAddress> localHostIPs = new LinkedList<InetAddress>();

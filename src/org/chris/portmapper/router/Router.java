@@ -3,7 +3,6 @@ package org.chris.portmapper.router;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.SortedSet;
@@ -13,9 +12,6 @@ import net.sbbi.upnp.devices.UPNPRootDevice;
 import net.sbbi.upnp.impls.InternetGatewayDevice;
 import net.sbbi.upnp.messages.ActionResponse;
 import net.sbbi.upnp.messages.UPNPResponseException;
-import net.sbbi.upnp.services.ServiceAction;
-import net.sbbi.upnp.services.ServiceStateVariable;
-import net.sbbi.upnp.services.UPNPService;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -148,60 +144,62 @@ public class Router {
 			logger.info("Router Info: " + key + " \t= " + value);
 		}
 
-		for (Object service : rootDevice.getServices()) {
-			UPNPService upnpService = (UPNPService) service;
-			info = new HashMap<String, String>();
-			info.put("serviceID", upnpService.getServiceId());
-			info.put("serviceType", upnpService.getServiceType());
-			info.put("scpdURL", upnpService.getSCPDURL().toExternalForm());
-
-			sortedKeys = new TreeSet<String>(info.keySet());
-
-			for (String key : sortedKeys) {
-				String value = info.get(key);
-				logger.info("Router Service: " + key + " \t= " + value);
-			}
-
-			logActions(upnpService);
-
-			logStateVariables(upnpService);
-		}
+		// for (Object service : rootDevice.getServices()) {
+		// UPNPService upnpService = (UPNPService) service;
+		// info = new HashMap<String, String>();
+		// info.put("serviceID", upnpService.getServiceId());
+		// info.put("serviceType", upnpService.getServiceType());
+		// info.put("scpdURL", upnpService.getSCPDURL().toExternalForm());
+		//
+		// sortedKeys = new TreeSet<String>(info.keySet());
+		//
+		// for (String key : sortedKeys) {
+		// String value = info.get(key);
+		// logger.info("Router Service: " + key + " \t= " + value);
+		// }
+		//
+		// logActions(upnpService);
+		//
+		// logStateVariables(upnpService);
+		// }
 	}
 
-	private void logStateVariables(UPNPService upnpService)
-			throws RouterException {
-		for (Iterator<?> iterator = upnpService.getAvailableStateVariableName(); iterator
-				.hasNext();) {
-			String stateVariableName = (String) iterator.next();
-			ServiceStateVariable stateVar = upnpService
-					.getUPNPServiceStateVariable(stateVariableName);
-			try {
-				logger.info("State Variable " + stateVar.getName()
-						+ " value : " + stateVar.getValue() + " data type: "
-						+ stateVar.getDataType());
-			} catch (UPNPResponseException e) {
-				throw new RouterException(
-						"Could not get info for state variable "
-								+ stateVariableName, e);
-			} catch (IOException e) {
-				throw new RouterException(
-						"Could not get info for state variable "
-								+ stateVariableName, e);
-			}
-		}
-	}
-
-	private void logActions(UPNPService upnpService) {
-		for (Iterator<?> iterator = upnpService.getAvailableActionsName(); iterator
-				.hasNext();) {
-			String actionName = (String) iterator.next();
-			ServiceAction action = upnpService.getUPNPServiceAction(actionName);
-			logger.info("Action " + action.getName() + " output arguements: "
-					+ action.getOutputActionArgumentsNames()
-					+ " input arguments: "
-					+ action.getInputActionArgumentsNames());
-		}
-	}
+	// private void logStateVariables(UPNPService upnpService)
+	// throws RouterException {
+	// for (Iterator<?> iterator = upnpService.getAvailableStateVariableName();
+	// iterator
+	// .hasNext();) {
+	// String stateVariableName = (String) iterator.next();
+	// ServiceStateVariable stateVar = upnpService
+	// .getUPNPServiceStateVariable(stateVariableName);
+	// try {
+	// logger.info("State Variable " + stateVar.getName()
+	// + " value : " + stateVar.getValue() + " data type: "
+	// + stateVar.getDataType());
+	// } catch (UPNPResponseException e) {
+	// throw new RouterException(
+	// "Could not get info for state variable "
+	// + stateVariableName, e);
+	// } catch (IOException e) {
+	// throw new RouterException(
+	// "Could not get info for state variable "
+	// + stateVariableName, e);
+	// }
+	// }
+	// }
+	//
+	// private void logActions(UPNPService upnpService) {
+	// for (Iterator<?> iterator = upnpService.getAvailableActionsName();
+	// iterator
+	// .hasNext();) {
+	// String actionName = (String) iterator.next();
+	// ServiceAction action = upnpService.getUPNPServiceAction(actionName);
+	// logger.info("Action " + action.getName() + " output arguements: "
+	// + action.getOutputActionArgumentsNames()
+	// + " input arguments: "
+	// + action.getInputActionArgumentsNames());
+	// }
+	// }
 
 	private boolean addPortMapping(String description, String protocol,
 			String remoteHost, int externalPort, String internalClient,

@@ -68,7 +68,7 @@ public class AddPortMappingDialog extends JDialog {
 				"[right]rel[left,grow 100]", // Column Constraints
 				"")); // Row Constraints
 		// dialogPane.setName(DIALOG_NAME);
-		dialogPane.setName(DIALOG_NAME);
+		// dialogPane.setName(DIALOG_NAME);
 		dialogPane.add(createLabel("add_mapping_dialog.preset"), "align label");
 		presetComboBox = new JComboBox(new PresetComboBoxModel());
 		presetComboBox.addItemListener(new ItemListener() {
@@ -85,10 +85,10 @@ public class AddPortMappingDialog extends JDialog {
 
 		tcpRadioButton = new JRadioButton("add_mapping_dialog.protocol_tcp",
 				true);
-		udpRadioButton = new JRadioButton("add_mapping_dialog.protocol_tcp",
+		udpRadioButton = new JRadioButton("add_mapping_dialog.protocol_udp",
 				false);
 		tcpRadioButton.setName("add_mapping_dialog.protocol_tcp");
-		udpRadioButton.setName("add_mapping_dialog.protocol_tcp");
+		udpRadioButton.setName("add_mapping_dialog.protocol_udp");
 		ButtonGroup protocolButtonGroup = new ButtonGroup();
 		protocolButtonGroup.add(tcpRadioButton);
 		protocolButtonGroup.add(udpRadioButton);
@@ -264,8 +264,9 @@ public class AddPortMappingDialog extends JDialog {
 		if (ipAddress == null || ipAddress.trim().length() == 0) {
 			if (!optional) {
 				JOptionPane.showMessageDialog(this, getResourceString(
-						"add_mapping_dialog.no_host_name_given", fieldName),
-						getResourceString("add_mapping_dialog.error_title"),
+						"add_mapping_dialog.error.no_host_name_given",
+						fieldName),
+						getResourceString("add_mapping_dialog.error.title"),
 						JOptionPane.WARNING_MESSAGE);
 			}
 			return null;
@@ -276,17 +277,17 @@ public class AddPortMappingDialog extends JDialog {
 			address = InetAddress.getByName(ipAddress.trim());
 		} catch (UnknownHostException e) {
 			JOptionPane.showMessageDialog(this, getResourceString(
-					"add_mapping_dialog.unresolved_host_name", ipAddress,
+					"add_mapping_dialog.error.unresolved_host_name", ipAddress,
 					fieldName),
-					getResourceString("add_mapping_dialog.error_title"),
+					getResourceString("add_mapping_dialog.error.title"),
 					JOptionPane.WARNING_MESSAGE);
 			return null;
 		}
 		if (address == null) {
 			JOptionPane.showMessageDialog(this, getResourceString(
-					"add_mapping_dialog.invalid_host_name", ipAddress,
+					"add_mapping_dialog.error.invalid_host_name", ipAddress,
 					fieldName),
-					getResourceString("add_mapping_dialog.error_title"),
+					getResourceString("add_mapping_dialog.error.title"),
 					JOptionPane.WARNING_MESSAGE);
 		}
 		return address.getHostAddress();

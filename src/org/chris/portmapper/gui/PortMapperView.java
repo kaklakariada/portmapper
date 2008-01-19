@@ -11,6 +11,8 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -43,6 +45,7 @@ import org.chris.portmapper.router.Router;
 import org.chris.portmapper.router.RouterException;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.FrameView;
+import org.jdesktop.application.Task;
 
 /**
  * @author chris
@@ -53,6 +56,7 @@ public class PortMapperView extends FrameView {
 	private static final String ACTION_SHOW_ABOUT_DIALOG = "mainFrame.showAboutDialog";
 	private static final String ACTION_DISPLAY_ROUTER_INFO = "mainFrame.router.info";
 	private static final String ACTION_CONNECT_ROUTER = "mainFrame.router.connect";
+	private static final String ACTION_DISCONNECT_ROUTER = "mainFrame.router.disconnect";
 	private static final String ACTION_COPY_INTERNAL_ADDRESS = "mainFrame.router.copyInternalAddress";
 	private static final String ACTION_COPY_EXTERNAL_ADDRESS = "mainFrame.router.copyExternalAddress";
 	private static final String ACTION_UPDATE_ADDRESSES = "mainFrame.router.updateAddresses";
@@ -71,6 +75,7 @@ public class PortMapperView extends FrameView {
 	private JTable mappingsTable;
 	private JLabel externalIPLabel, internalIPLabel;
 	private JComboBox presetMappingComboBox;
+	private JButton connectDisconnectButton;
 
 	/**
 	 * @param application
@@ -101,7 +106,7 @@ public class PortMapperView extends FrameView {
 				this);
 		JPanel routerPanel = new JPanel(new MigLayout("", "", ""));
 		routerPanel.setBorder(BorderFactory.createTitledBorder(PortMapperApp
-				.getResourceMap().getString("mainFrame.router")));
+				.getResourceMap().getString("mainFrame.router.title")));
 
 		routerPanel.add(new JLabel(PortMapperApp.getResourceMap().getString(
 				"mainFrame.router.external_address")), "align label"); //$NON-NLS-2$
@@ -111,7 +116,7 @@ public class PortMapperView extends FrameView {
 		routerPanel
 				.add(new JButton(actionMap.get(ACTION_COPY_EXTERNAL_ADDRESS)));
 		routerPanel.add(new JButton(actionMap.get(ACTION_UPDATE_ADDRESSES)),
-				"wrap, sizegroup routerbutton, spany 2, aligny base");
+				"wrap, spany 2, aligny base");
 
 		routerPanel.add(new JLabel(PortMapperApp.getResourceMap().getString(
 				"mainFrame.router.internal_address")), "align label");
@@ -122,12 +127,34 @@ public class PortMapperView extends FrameView {
 				new JButton(actionMap.get(ACTION_COPY_INTERNAL_ADDRESS)),
 				"wrap");
 
-		routerPanel.add(new JButton(actionMap.get(ACTION_CONNECT_ROUTER)),
-				"sizegroup routerbutton");
+		connectDisconnectButton = new JButton(actionMap
+				.get(ACTION_CONNECT_ROUTER));
+		routerPanel.add(connectDisconnectButton, "");
 		routerPanel.add(new JButton(actionMap.get(ACTION_DISPLAY_ROUTER_INFO)),
-				"sizegroup routerbutton");
+				"");
 		routerPanel.add(new JButton(actionMap.get(ACTION_SHOW_ABOUT_DIALOG)),
-				"skip 2, sizegroup routerbutton");
+				"skip 2");
+
+		this.addPropertyChangeListener(new PropertyChangeListener() {
+
+			public void propertyChange(PropertyChangeEvent evt) {
+				if (evt.getPropertyName().equals(PROPERTY_ROUTER_CONNECTED)) {
+					logger.info("Connection state changed to "
+							+ evt.getNewValue());
+					ActionMap actionMap = getContext().getActionMap(
+							PortMapperApp.getInstance().getView().getClass(),
+							PortMapperApp.getInstance().getView());
+
+					if (evt.getNewValue().equals(Boolean.TRUE)) {
+						connectDisconnectButton.setAction(actionMap
+								.get(ACTION_DISCONNECT_ROUTER));
+					} else {
+						connectDisconnectButton.setAction(actionMap
+								.get(ACTION_CONNECT_ROUTER));
+					}
+				}
+			}
+		});
 
 		return routerPanel;
 	}
@@ -153,7 +180,7 @@ public class PortMapperView extends FrameView {
 		JPanel logPanel = new JPanel(new MigLayout("", "[grow, fill]",
 				"[grow, fill]"));
 		logPanel.setBorder(BorderFactory.createTitledBorder(PortMapperApp
-				.getResourceMap().getString("mainFrame.log_messages")));
+				.getResourceMap().getString("mainFrame.log_messages.title")));
 		logPanel.add(scrollPane, "height 100::");
 
 		return logPanel;
@@ -193,7 +220,7 @@ public class PortMapperView extends FrameView {
 				"[grow,fill][]"));
 		mappingsPanel.setName("port_mappings");
 		Border panelBorder = BorderFactory.createTitledBorder(PortMapperApp
-				.getResourceMap().getString("mainFrame.port_mappings"));
+				.getResourceMap().getString("mainFrame.port_mappings.title"));
 		mappingsPanel.setBorder(panelBorder);
 		mappingsPanel.add(mappingsTabelPane, "height 100::, wrap");
 		mappingsPanel.add(presetMappingComboBox, "growx, split 5");
@@ -213,9 +240,17 @@ public class PortMapperView extends FrameView {
 	public void updateAddresses() {
 		Router router = PortMapperApp.getInstance().getRouter();
 		if (router == null) {
-			logger.warn("Not connected to router, can not update addresses");
+			externalIPLabel.setText(PortMapperApp.getResourceMap().getString(
+					"mainFrame.router.not_connected"));
+			internalIPLabel.setText(PortMapperApp.getResourceMap().getString(
+					"mainFrame.router.not_connected"));
 			return;
 		}
+		externalIPLabel.setText(PortMapperApp.getResourceMap().getString(
+				"mainFrame.router.updating"));
+		internalIPLabel.setText(PortMapperApp.getResourceMap().getString(
+				"mainFrame.router.updating"));
+
 		internalIPLabel.setText(router.getInternalIPAddress());
 		try {
 			externalIPLabel.setText(router.getExternalIPAddress());
@@ -226,12 +261,15 @@ public class PortMapperView extends FrameView {
 	}
 
 	@Action(name = ACTION_CONNECT_ROUTER)
-	public void connectRouter() {
-		boolean connected = PortMapperApp.getInstance().connectRouter();
-		if (connected) {
-			updateAddresses();
-			updatePortMappings();
-		}
+	public Task<Void, Void> connectRouter() {
+		return new ConnectTask();
+	}
+
+	@Action(name = ACTION_DISCONNECT_ROUTER)
+	public void disconnectRouter() {
+		PortMapperApp.getInstance().disconnectRouter();
+		updateAddresses();
+		updatePortMappings();
 	}
 
 	private void addMapping(PortMapping portMapping) {
@@ -314,18 +352,16 @@ public class PortMapperView extends FrameView {
 	@Action(name = ACTION_UPDATE_PORT_MAPPINGS, enabledProperty = PROPERTY_ROUTER_CONNECTED)
 	public void updatePortMappings() {
 		Router router = PortMapperApp.getInstance().getRouter();
-		if (router != null) {
-			try {
-				Collection<PortMapping> mappings = router.getPortMappings();
-				logger.info("Found " + mappings.size() + " mappings");
-				this.tableModel.setMappings(mappings);
-			} catch (RouterException e) {
-				logger.error("Could not get port mappings", e);
-			}
-		} else {
+		if (router == null) {
 			this.tableModel.setMappings(new LinkedList<PortMapping>());
-			logger
-					.warn("Not connected to router, could not update port mappings");
+			return;
+		}
+		try {
+			Collection<PortMapping> mappings = router.getPortMappings();
+			logger.info("Found " + mappings.size() + " mappings");
+			this.tableModel.setMappings(mappings);
+		} catch (RouterException e) {
+			logger.error("Could not get port mappings", e);
 		}
 	}
 
@@ -356,13 +392,13 @@ public class PortMapperView extends FrameView {
 		updatePortMappings();
 	}
 
-	public void fireConnectionStateChange(boolean stateBefore) {
-		firePropertyChange(PROPERTY_ROUTER_CONNECTED, stateBefore,
-				PortMapperApp.getInstance().getRouter() != null);
+	public void fireConnectionStateChange() {
+		firePropertyChange(PROPERTY_ROUTER_CONNECTED, !isConnectedToRouter(),
+				isConnectedToRouter());
 	}
 
 	public boolean isConnectedToRouter() {
-		return PortMapperApp.getInstance().getRouter() != null;
+		return PortMapperApp.getInstance().isConnected();
 		// return true;
 	}
 
@@ -398,5 +434,34 @@ public class PortMapperView extends FrameView {
 			public void lostOwnership(Clipboard clipboard, Transferable contents) {
 			}
 		});
+	}
+
+	private class ConnectTask extends Task<Void, Void> {
+
+		/**
+		 * @param application
+		 */
+		public ConnectTask() {
+			super(PortMapperApp.getInstance());
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.jdesktop.swingworker.SwingWorker#doInBackground()
+		 */
+		@Override
+		protected Void doInBackground() throws Exception {
+			PortMapperApp.getInstance().connectRouter();
+			message("updateAddresses");
+			updateAddresses();
+			message("updatePortMappings");
+			updatePortMappings();
+			return null;
+		}
+
+		protected void failed(Throwable cause) {
+			logger.warn("Could not connect to router: " + cause.getMessage());
+		}
 	}
 }
