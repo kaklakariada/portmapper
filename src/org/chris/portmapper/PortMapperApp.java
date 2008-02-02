@@ -27,14 +27,15 @@ public class PortMapperApp extends SingleFrameApplication {
 	private Log logger = LogFactory.getLog(this.getClass());
 
 	private Router router;
+	private Settings settings;
 
 	/**
 	 * @see org.jdesktop.application.Application#startup()
 	 */
 	@Override
 	protected void startup() {
+		settings = new Settings();
 		PortMapperView view = new PortMapperView();
-
 		addExitListener(new ExitListener() {
 			public boolean canExit(EventObject arg0) {
 				return true;
@@ -44,6 +45,7 @@ public class PortMapperApp extends SingleFrameApplication {
 				disconnectRouter();
 			}
 		});
+
 		show(view);
 	}
 
@@ -91,6 +93,10 @@ public class PortMapperApp extends SingleFrameApplication {
 
 	public Router getRouter() {
 		return router;
+	}
+
+	public Settings getSettings() {
+		return settings;
 	}
 
 	public boolean isConnected() {

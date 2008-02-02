@@ -15,13 +15,13 @@ import net.sbbi.upnp.messages.UPNPResponseException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.chris.portmapper.router.SinglePortMapping.Protocol;
 
 public class Router {
 
 	private Log logger = LogFactory.getLog(this.getClass());
 	private InternetGatewayDevice router = null;
 	private final static int DISCOVERY_TIMEOUT = 5;
-	private static final int EXTERNAL_SSH_PORT = 22022;
 
 	private Router(InternetGatewayDevice router) {
 		if (router == null) {
@@ -201,19 +201,32 @@ public class Router {
 	// }
 	// }
 
-	private boolean addPortMapping(String description, String protocol,
+	private boolean addPortMapping(String description, Protocol protocol,
 			String remoteHost, int externalPort, String internalClient,
 			int internalPort, int leaseDuration) throws RouterException {
+		String protocolString = (protocol.equals(Protocol.TCP) ? "TCP" : "UDP");
 		try {
 			boolean success = router.addPortMapping(description, null,
 					internalPort, externalPort, internalClient, leaseDuration,
-					protocol);
+					protocolString);
 			return success;
 		} catch (IOException e) {
 			throw new RouterException("Could not add port mapping", e);
 		} catch (UPNPResponseException e) {
 			throw new RouterException("Could not add port mapping", e);
 		}
+	}
+
+	public boolean addPortMappings(Collection<PortMapping> mappings)
+			throws RouterException {
+		for (PortMapping portMapping : mappings) {
+			logger.info("Adding port mapping " + portMapping);
+			boolean success = addPortMapping(portMapping);
+			if (!success) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public boolean addPortMapping(PortMapping mapping) throws RouterException {
@@ -223,21 +236,18 @@ public class Router {
 						.getInternalClient(), mapping.getInternalPort(), 0);
 	}
 
-	public boolean removeSSHPortMapping() throws RouterException {
-		return removePortMapping("TCP", null, EXTERNAL_SSH_PORT);
-	}
-
 	public boolean removeMapping(PortMapping mapping) throws RouterException {
 		return removePortMapping(mapping.getProtocol(),
 				mapping.getRemoteHost(), mapping.getExternalPort());
 
 	}
 
-	public boolean removePortMapping(String protocol, String remoteHost,
+	public boolean removePortMapping(Protocol protocol, String remoteHost,
 			int externalPort) throws RouterException {
+		String protocolString = (protocol.equals(Protocol.TCP) ? "TCP" : "UDP");
 		try {
 			boolean success = router.deletePortMapping(remoteHost,
-					externalPort, protocol);
+					externalPort, protocolString);
 			return success;
 		} catch (IOException e) {
 			throw new RouterException("Could not remove SSH port mapping", e);

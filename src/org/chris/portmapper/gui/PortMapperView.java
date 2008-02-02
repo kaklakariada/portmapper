@@ -9,8 +9,6 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collection;
@@ -19,9 +17,9 @@ import java.util.LinkedList;
 import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -41,6 +39,7 @@ import org.apache.log4j.WriterAppender;
 import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.logging.TextAreaWriter;
 import org.chris.portmapper.router.PortMapping;
+import org.chris.portmapper.router.PortMappingPreset;
 import org.chris.portmapper.router.Router;
 import org.chris.portmapper.router.RouterException;
 import org.jdesktop.application.Action;
@@ -62,8 +61,11 @@ public class PortMapperView extends FrameView {
 	private static final String ACTION_UPDATE_ADDRESSES = "mainFrame.router.updateAddresses";
 	private static final String ACTION_UPDATE_PORT_MAPPINGS = "mainFrame.mappings.update";
 	private static final String ACTION_REMOVE_MAPPINGS = "mainFrame.mappings.remove";
-	private static final String ACTION_ADD_MAPPING = "mainFrame.mappings.add";
-	private static final String ACTION_ADD_PRESET_MAPPING = "mainFrame.mappings.addPreset";
+
+	private static final String ACTION_CREATE_PRESET_MAPPING = "mainFrame.preset_mappings.create";
+	private static final String ACTION_EDIT_PRESET_MAPPING = "mainFrame.preset_mappings.edit";
+	private static final String ACTION_REMOVE_PRESET_MAPPING = "mainFrame.preset_mappings.remove";
+	private static final String ACTION_USE_PRESET_MAPPING = "mainFrame.preset_mappings.use";
 
 	private Log logger = LogFactory.getLog(this.getClass());
 
@@ -74,8 +76,8 @@ public class PortMapperView extends FrameView {
 	private PortMappingsTableModel tableModel;
 	private JTable mappingsTable;
 	private JLabel externalIPLabel, internalIPLabel;
-	private JComboBox presetMappingComboBox;
 	private JButton connectDisconnectButton;
+	private JList portMappingPresets;
 
 	/**
 	 * @param application
@@ -95,6 +97,7 @@ public class PortMapperView extends FrameView {
 				"[grow 50]unrelated[]unrelated[grow 50]"));
 
 		panel.add(getMappingsPanel(), "wrap");
+		panel.add(getPresetPanel(), "wrap");
 		panel.add(getRouterPanel(), "wrap");
 		panel.add(getLogPanel(), "wrap");
 
@@ -104,7 +107,7 @@ public class PortMapperView extends FrameView {
 	private JComponent getRouterPanel() {
 		ActionMap actionMap = this.getContext().getActionMap(this.getClass(),
 				this);
-		JPanel routerPanel = new JPanel(new MigLayout("", "", ""));
+		JPanel routerPanel = new JPanel(new MigLayout("", "[fill, grow][]", ""));
 		routerPanel.setBorder(BorderFactory.createTitledBorder(PortMapperApp
 				.getResourceMap().getString("mainFrame.router.title")));
 
@@ -186,6 +189,47 @@ public class PortMapperView extends FrameView {
 		return logPanel;
 	}
 
+	private JComponent getPresetPanel() {
+		ActionMap actionMap = this.getContext().getActionMap(this.getClass(),
+				this);
+
+		JPanel presetPanel = new JPanel(new MigLayout("", "", ""));
+		presetPanel.setBorder(BorderFactory.createTitledBorder(PortMapperApp
+				.getResourceMap().getString(
+						"mainFrame.port_mapping_presets.title")));
+
+		portMappingPresets = new JList(new PresetListModel(PortMapperApp
+				.getInstance().getSettings()));
+		portMappingPresets
+				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		portMappingPresets.setLayoutOrientation(JList.VERTICAL);
+
+		portMappingPresets
+				.addListSelectionListener(new ListSelectionListener() {
+					public void valueChanged(ListSelectionEvent e) {
+						logger.debug("Selection of preset list has changed: "
+								+ isPresetMappingSelected());
+						firePropertyChange(PROPERTY_PRESET_MAPPING_SELECTED,
+								false, isPresetMappingSelected());
+					}
+				});
+
+		presetPanel.add(new JScrollPane(portMappingPresets), "spany 4");
+
+		presetPanel.add(
+				new JButton(actionMap.get(ACTION_CREATE_PRESET_MAPPING)),
+				"wrap");
+		presetPanel.add(new JButton(actionMap.get(ACTION_EDIT_PRESET_MAPPING)),
+				"wrap");
+		presetPanel.add(
+				new JButton(actionMap.get(ACTION_REMOVE_PRESET_MAPPING)),
+				"wrap");
+		presetPanel.add(new JButton(actionMap.get(ACTION_USE_PRESET_MAPPING)),
+				"wrap");
+
+		return presetPanel;
+	}
+
 	private JComponent getMappingsPanel() {
 		// Mappings panel
 
@@ -208,31 +252,18 @@ public class PortMapperView extends FrameView {
 		JScrollPane mappingsTabelPane = new JScrollPane();
 		mappingsTabelPane.setViewportView(mappingsTable);
 
-		presetMappingComboBox = new JComboBox(new PresetComboBoxModel());
-		presetMappingComboBox.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent arg0) {
-				firePropertyChange(PROPERTY_PRESET_MAPPING_SELECTED, false,
-						isPresetMappingSelected());
-			}
-		});
-
 		JPanel mappingsPanel = new JPanel(new MigLayout("", "[fill,grow]",
 				"[grow,fill][]"));
 		mappingsPanel.setName("port_mappings");
 		Border panelBorder = BorderFactory.createTitledBorder(PortMapperApp
 				.getResourceMap().getString("mainFrame.port_mappings.title"));
 		mappingsPanel.setBorder(panelBorder);
-		mappingsPanel.add(mappingsTabelPane, "height 100::, wrap");
-		mappingsPanel.add(presetMappingComboBox, "growx, split 5");
-		mappingsPanel.add(
-				new JButton(actionMap.get(ACTION_ADD_PRESET_MAPPING)), "");
-		mappingsPanel.add(new JButton(actionMap.get(ACTION_ADD_MAPPING)),
-				"sizegroup editmappingbutton");
+		mappingsPanel.add(mappingsTabelPane, "height 100::, span 2, wrap");
+
 		mappingsPanel.add(new JButton(actionMap.get(ACTION_REMOVE_MAPPINGS)),
-				"sizegroup editmappingbutton");
+				"");
 		mappingsPanel.add(new JButton(actionMap
-				.get(ACTION_UPDATE_PORT_MAPPINGS)),
-				"sizegroup editmappingbutton, wrap");
+				.get(ACTION_UPDATE_PORT_MAPPINGS)), "wrap");
 		return mappingsPanel;
 	}
 
@@ -272,11 +303,15 @@ public class PortMapperView extends FrameView {
 		updatePortMappings();
 	}
 
-	private void addMapping(PortMapping portMapping) {
+	private void addMapping(Collection<PortMapping> portMappings) {
 		boolean success = false;
+		Router router = PortMapperApp.getInstance().getRouter();
+		if (router == null) {
+			return;
+		}
+
 		try {
-			success = PortMapperApp.getInstance().getRouter().addPortMapping(
-					portMapping);
+			success = router.addPortMappings(portMappings);
 		} catch (RouterException e) {
 			logger.error("Could not add port mapping", e);
 		}
@@ -365,10 +400,10 @@ public class PortMapperView extends FrameView {
 		}
 	}
 
-	@Action(name = ACTION_ADD_PRESET_MAPPING, enabledProperty = PROPERTY_PRESET_MAPPING_SELECTED)
+	@Action(name = ACTION_USE_PRESET_MAPPING, enabledProperty = PROPERTY_PRESET_MAPPING_SELECTED)
 	public void addPresetMapping() {
-		PortMapping selectedItem = (PortMapping) presetMappingComboBox
-				.getSelectedItem();
+		PortMappingPreset selectedItem = (PortMappingPreset) this.portMappingPresets
+				.getSelectedValue();
 		if (selectedItem != null) {
 			String localHostAddress = PortMapperApp.getInstance()
 					.getLocalHostAddress();
@@ -379,17 +414,31 @@ public class PortMapperView extends FrameView {
 						PortMapperApp.getResourceMap().getString(
 								"messages.error"), JOptionPane.ERROR_MESSAGE);
 			} else {
-				PortMapping newMapping = (PortMapping) selectedItem.clone();
-				newMapping.setInternalClient(localHostAddress);
-				addMapping(newMapping);
+				logger.info("Adding port mappings for preset "
+						+ selectedItem.toString());
+				addMapping(selectedItem.getPortMappings(localHostAddress));
 			}
 		}
 	}
 
-	@Action(name = ACTION_ADD_MAPPING, enabledProperty = PROPERTY_ROUTER_CONNECTED)
-	public void addMapping() {
-		PortMapperApp.getInstance().show(new AddPortMappingDialog());
-		updatePortMappings();
+	@Action(name = ACTION_CREATE_PRESET_MAPPING)
+	public void createPresetMapping() {
+		PortMapperApp.getInstance().show(
+				new EditPresetDialog(new PortMappingPreset()));
+	}
+
+	@Action(name = ACTION_EDIT_PRESET_MAPPING, enabledProperty = PROPERTY_PRESET_MAPPING_SELECTED)
+	public void editPresetMapping() {
+		PortMappingPreset selectedPreset = (PortMappingPreset) this.portMappingPresets
+				.getSelectedValue();
+		PortMapperApp.getInstance().show(new EditPresetDialog(selectedPreset));
+	}
+
+	@Action(name = ACTION_REMOVE_PRESET_MAPPING, enabledProperty = PROPERTY_PRESET_MAPPING_SELECTED)
+	public void removePresetMapping() {
+		PortMappingPreset selectedPreset = (PortMappingPreset) this.portMappingPresets
+				.getSelectedValue();
+		PortMapperApp.getInstance().getSettings().removePresets(selectedPreset);
 	}
 
 	public void fireConnectionStateChange() {
@@ -408,8 +457,7 @@ public class PortMapperView extends FrameView {
 	}
 
 	public boolean isPresetMappingSelected() {
-		return this.isConnectedToRouter()
-				&& this.presetMappingComboBox.getSelectedItem() != null;
+		return this.portMappingPresets.getSelectedValue() != null;
 	}
 
 	public Collection<PortMapping> getSelectedPortMappings() {

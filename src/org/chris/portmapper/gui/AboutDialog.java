@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
 
 import org.chris.portmapper.PortMapperApp;
+import org.chris.portmapper.util.URLLabel;
 import org.jdesktop.application.Action;
 
 @SuppressWarnings("serial")
@@ -38,8 +39,8 @@ public class AboutDialog extends JDialog {
 		pane.add(createLabel("about_dialog.label5"), "wrap");
 		pane
 				.add(
-						new JLabel(
-								"<html><a href=\\\\\"http://sourceforge.net/projects/upnp-portmapper/\\\\\">http://sourceforge.net/projects/upnp-portmapper/</a></html>"), //$NON-NLS-1$
+						new URLLabel(
+								"http://sourceforge.net/projects/upnp-portmapper/", "http://sourceforge.net/projects/upnp-portmapper/"), //$NON-NLS-1$
 						"wrap unrelated"); //$NON-NLS-1$
 		JButton closeButton = new JButton(actionMap.get(ACTION_CLOSE)); //$NON-NLS-1$
 		closeButton.addActionListener(new ActionListener() {

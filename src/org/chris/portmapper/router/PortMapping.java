@@ -5,13 +5,12 @@ import java.util.Map;
 
 import net.sbbi.upnp.messages.ActionResponse;
 
+import org.chris.portmapper.router.SinglePortMapping.Protocol;
+
 public class PortMapping implements Cloneable {
 
-	public static final String PROTOCOL_TCP = "TCP";
-	public static final String PROTOCOL_UDP = "UDP";
-
 	private int externalPort;
-	private String protocol;
+	private Protocol protocol;
 	private int internalPort;
 	private String description;
 	private String internalClient;
@@ -19,7 +18,7 @@ public class PortMapping implements Cloneable {
 	private boolean enabled;
 	private long leaseDuration;
 
-	public PortMapping(String protocol, String remoteHost, int externalPort,
+	public PortMapping(Protocol protocol, String remoteHost, int externalPort,
 			String internalClient, int internalPort, String description) {
 		super();
 		this.protocol = protocol;
@@ -41,7 +40,9 @@ public class PortMapping implements Cloneable {
 
 		externalPort = Integer.parseInt(values.get("NewExternalPort"));
 		internalPort = Integer.parseInt(values.get("NewInternalPort"));
-		protocol = values.get("NewProtocol");
+		String protocolString = values.get("NewProtocol");
+		protocol = (protocolString.equalsIgnoreCase("TCP") ? Protocol.TCP
+				: Protocol.UDP);
 		description = values.get("NewPortMappingDescription");
 		internalClient = values.get("NewInternalClient");
 		remoteHost = values.get("NewRemoteHost");
@@ -78,7 +79,7 @@ public class PortMapping implements Cloneable {
 		return externalPort;
 	}
 
-	public String getProtocol() {
+	public Protocol getProtocol() {
 		return protocol;
 	}
 
