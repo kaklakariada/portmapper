@@ -5,8 +5,6 @@ import java.util.Map;
 
 import net.sbbi.upnp.messages.ActionResponse;
 
-import org.chris.portmapper.router.SinglePortMapping.Protocol;
-
 public class PortMapping implements Cloneable {
 
 	private int externalPort;

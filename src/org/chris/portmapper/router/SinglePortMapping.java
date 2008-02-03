@@ -3,19 +3,26 @@
  */
 package org.chris.portmapper.router;
 
+import java.io.Serializable;
+
 /**
  * @author chris
  * 
  */
-public class SinglePortMapping implements Cloneable {
+public class SinglePortMapping implements Cloneable, Serializable {
 
-	public enum Protocol {
-		TCP, UDP
-	};
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3055383170284209747L;
 
 	private int externalPort;
 	private Protocol protocol;
 	private int internalPort;
+
+	public SinglePortMapping() {
+		super();
+	}
 
 	public int getExternalPort() {
 		return externalPort;
@@ -48,4 +55,5 @@ public class SinglePortMapping implements Cloneable {
 		port.protocol = this.protocol;
 		return port;
 	}
+
 }

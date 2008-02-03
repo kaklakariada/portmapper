@@ -20,12 +20,15 @@ import org.apache.commons.logging.LogFactory;
 public class URLLabel extends JLabel {
 
 	private Log logger = LogFactory.getLog(this.getClass());
-	private String url;
+	private String url, text;
 
-	public URLLabel(String text, String labelUrl) {
-		super("<html><a href=\\\\\\\\\\\"" + labelUrl + "\\\\\\\\\\\">" + text
-				+ "</a></html>");
-		this.url = labelUrl;
+	public URLLabel(String name) {
+		super();
+		this.url = name;
+		this.text = name;
+		this.setLabelText();
+		this.setName(name);
+
 		this.addMouseListener(new MouseListener() {
 
 			public void mouseClicked(MouseEvent arg0) {
@@ -55,5 +58,28 @@ public class URLLabel extends JLabel {
 
 			}
 		});
+	}
+
+	private void setLabelText() {
+		super.setText("<html><a href=\\\\\\\\\\\"" + url + "\\\\\\\\\\\">"
+				+ text + "</a></html>");
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+		setLabelText();
+	}
+
+	public String getLabel() {
+		return text;
+	}
+
+	public void setLabel(String text) {
+		this.text = text;
+		setLabelText();
 	}
 }

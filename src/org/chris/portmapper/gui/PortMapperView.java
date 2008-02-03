@@ -34,10 +34,7 @@ import net.miginfocom.swing.MigLayout;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.Logger;
-import org.apache.log4j.WriterAppender;
 import org.chris.portmapper.PortMapperApp;
-import org.chris.portmapper.logging.TextAreaWriter;
 import org.chris.portmapper.router.PortMapping;
 import org.chris.portmapper.router.PortMappingPreset;
 import org.chris.portmapper.router.Router;
@@ -97,8 +94,8 @@ public class PortMapperView extends FrameView {
 				"[grow 50]unrelated[]unrelated[grow 50]"));
 
 		panel.add(getMappingsPanel(), "wrap");
+		panel.add(getRouterPanel(), "grow 0, split 2");
 		panel.add(getPresetPanel(), "wrap");
-		panel.add(getRouterPanel(), "wrap");
 		panel.add(getLogPanel(), "wrap");
 
 		this.setComponent(panel);
@@ -136,7 +133,7 @@ public class PortMapperView extends FrameView {
 		routerPanel.add(new JButton(actionMap.get(ACTION_DISPLAY_ROUTER_INFO)),
 				"");
 		routerPanel.add(new JButton(actionMap.get(ACTION_SHOW_ABOUT_DIALOG)),
-				"skip 2");
+				"");
 
 		this.addPropertyChangeListener(new PropertyChangeListener() {
 
@@ -163,19 +160,13 @@ public class PortMapperView extends FrameView {
 	}
 
 	private JComponent getLogPanel() {
-		WriterAppender writerAppender = (WriterAppender) Logger.getLogger(
-				"org.chris").getAppender("jtextarea");
 
 		JTextArea logTextArea = new JTextArea();
-		// logTextArea.setColumns(40);
-		// logTextArea.setRows(10);
 		logTextArea.setEditable(false);
 		logTextArea.setWrapStyleWord(true);
 		logTextArea.setLineWrap(true);
 
-		// LoggingDocument loggingDocument = new LoggingDocument();
-		// writerAppender.setWriter(new DocumentWriter(loggingDocument));
-		writerAppender.setWriter(new TextAreaWriter(logTextArea));
+		PortMapperApp.getInstance().setLoggingTextArea(logTextArea);
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setViewportView(logTextArea);
@@ -193,7 +184,7 @@ public class PortMapperView extends FrameView {
 		ActionMap actionMap = this.getContext().getActionMap(this.getClass(),
 				this);
 
-		JPanel presetPanel = new JPanel(new MigLayout("", "", ""));
+		JPanel presetPanel = new JPanel(new MigLayout("", "[grow, fill][]", ""));
 		presetPanel.setBorder(BorderFactory.createTitledBorder(PortMapperApp
 				.getResourceMap().getString(
 						"mainFrame.port_mapping_presets.title")));
@@ -207,14 +198,14 @@ public class PortMapperView extends FrameView {
 		portMappingPresets
 				.addListSelectionListener(new ListSelectionListener() {
 					public void valueChanged(ListSelectionEvent e) {
-						logger.debug("Selection of preset list has changed: "
+						logger.trace("Selection of preset list has changed: "
 								+ isPresetMappingSelected());
 						firePropertyChange(PROPERTY_PRESET_MAPPING_SELECTED,
 								false, isPresetMappingSelected());
 					}
 				});
 
-		presetPanel.add(new JScrollPane(portMappingPresets), "spany 4");
+		presetPanel.add(new JScrollPane(portMappingPresets), "spany 4, grow");
 
 		presetPanel.add(
 				new JButton(actionMap.get(ACTION_CREATE_PRESET_MAPPING)),

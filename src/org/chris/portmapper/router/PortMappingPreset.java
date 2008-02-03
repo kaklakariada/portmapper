@@ -1,12 +1,18 @@
 package org.chris.portmapper.router;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.chris.portmapper.PortMapperApp;
 
-public class PortMappingPreset implements Cloneable {
+public class PortMappingPreset implements Cloneable, Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7524672328836766162L;
 
 	private String description;
 	private String internalClient;
@@ -37,36 +43,6 @@ public class PortMappingPreset implements Cloneable {
 	@Override
 	public String toString() {
 		return description;
-		// StringBuffer b = new StringBuffer();
-		// b.append("PortMappping: ");
-		// b.append(protocol);
-		// b.append(" ");
-		// b.append(externalPort);
-		// b.append(" -> ");
-		// b.append(internalClient);
-		// b.append(":");
-		// b.append(internalPort);
-		// b.append(" ");
-		// b.append(enabled ? "enabled" : "not enabled");
-		// b.append(" ");
-		// b.append(description);
-		// return b.toString();
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public String getInternalClient() {
-		return internalClient;
-	}
-
-	public void setInternalClient(String internalClient) {
-		this.internalClient = internalClient;
-	}
-
-	public String getRemoteHost() {
-		return remoteHost;
 	}
 
 	public List<PortMapping> getPortMappings(String localhost) {
@@ -115,16 +91,40 @@ public class PortMappingPreset implements Cloneable {
 		return ports;
 	}
 
+	public void setPorts(List<SinglePortMapping> ports) {
+		this.ports = ports;
+	}
+
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getDescription() {
+		return description;
 	}
 
 	public void setRemoteHost(String remoteHost) {
 		this.remoteHost = remoteHost;
 	}
 
-	public void setPorts(List<SinglePortMapping> ports) {
-		this.ports = ports;
+	public String getRemoteHost() {
+		return remoteHost;
+	}
+
+	public void setInternalClient(String internalClient) {
+		this.internalClient = internalClient;
+	}
+
+	public String getInternalClient() {
+		return internalClient;
+	}
+
+	public boolean isNew() {
+		return isNew;
+	}
+
+	public void setNew(boolean isNew) {
+		this.isNew = isNew;
 	}
 
 	/**

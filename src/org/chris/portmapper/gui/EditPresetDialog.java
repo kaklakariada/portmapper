@@ -33,8 +33,8 @@ import org.apache.commons.logging.LogFactory;
 import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.router.PortMapping;
 import org.chris.portmapper.router.PortMappingPreset;
+import org.chris.portmapper.router.Protocol;
 import org.chris.portmapper.router.SinglePortMapping;
-import org.chris.portmapper.router.SinglePortMapping.Protocol;
 import org.jdesktop.application.Action;
 
 @SuppressWarnings("serial")
@@ -263,7 +263,11 @@ public class EditPresetDialog extends JDialog {
 	@Action(name = ACTION_SAVE)
 	public void save() {
 		// TODO: Validate addresses
-		editedPreset.setInternalClient(internalClientTextField.getText());
+		if (useLocalhostCheckBox.isSelected()) {
+			editedPreset.setInternalClient(null);
+		} else {
+			editedPreset.setInternalClient(internalClientTextField.getText());
+		}
 		editedPreset.setRemoteHost(remoteHostTextField.getText());
 		editedPreset.setDescription(descriptionTextField.getText());
 		editedPreset.setPorts(this.ports);

@@ -10,8 +10,8 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 import org.chris.portmapper.PortMapperApp;
+import org.chris.portmapper.router.Protocol;
 import org.chris.portmapper.router.SinglePortMapping;
-import org.chris.portmapper.router.SinglePortMapping.Protocol;
 
 /**
  * @author chris

@@ -3,6 +3,7 @@
  */
 package org.chris.portmapper;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
@@ -10,9 +11,14 @@ import java.util.Collection;
 import java.util.EventObject;
 import java.util.LinkedList;
 
+import javax.swing.JTextArea;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
+import org.apache.log4j.WriterAppender;
 import org.chris.portmapper.gui.PortMapperView;
+import org.chris.portmapper.logging.TextAreaWriter;
 import org.chris.portmapper.router.Router;
 import org.chris.portmapper.router.RouterException;
 import org.jdesktop.application.ResourceMap;
@@ -24,17 +30,26 @@ import org.jdesktop.application.SingleFrameApplication;
  */
 public class PortMapperApp extends SingleFrameApplication {
 
+	/**
+	 * 
+	 */
+	private static final String SETTINGS_FILENAME = "settings.xml";
+
 	private Log logger = LogFactory.getLog(this.getClass());
 
 	private Router router;
 	private Settings settings;
+	private TextAreaWriter logWriter;
 
 	/**
 	 * @see org.jdesktop.application.Application#startup()
 	 */
 	@Override
 	protected void startup() {
-		settings = new Settings();
+		initTextAreaLogger();
+
+		loadSettings();
+
 		PortMapperView view = new PortMapperView();
 		addExitListener(new ExitListener() {
 			public boolean canExit(EventObject arg0) {
@@ -47,6 +62,47 @@ public class PortMapperApp extends SingleFrameApplication {
 		});
 
 		show(view);
+	}
+
+	private void loadSettings() {
+		logger.info("Loading settings from file " + SETTINGS_FILENAME);
+		try {
+			settings = (Settings) getContext().getLocalStorage().load(
+					SETTINGS_FILENAME);
+		} catch (IOException e) {
+			logger.warn("Could not load settings from file", e);
+		}
+
+		if (settings == null) {
+			logger
+					.info("Settings were not loaded from file: create new settings");
+			settings = new Settings();
+		} else {
+			logger.info("Got settings " + settings);
+		}
+	}
+
+	private void initTextAreaLogger() {
+		WriterAppender writerAppender = (WriterAppender) Logger.getLogger(
+				"org.chris").getAppender("jtextarea");
+		logWriter = new TextAreaWriter();
+		writerAppender.setWriter(logWriter);
+	}
+
+	public void setLoggingTextArea(JTextArea textArea) {
+		this.logWriter.setTextArea(textArea);
+	}
+
+	@Override
+	protected void shutdown() {
+		super.shutdown();
+		logger.info("Saving settings " + settings + " to file "
+				+ SETTINGS_FILENAME);
+		try {
+			getContext().getLocalStorage().save(settings, SETTINGS_FILENAME);
+		} catch (IOException e) {
+			logger.warn("Could not save settings to file", e);
+		}
 	}
 
 	public static PortMapperApp getInstance() {

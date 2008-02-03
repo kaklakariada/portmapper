@@ -15,7 +15,6 @@ import net.sbbi.upnp.messages.UPNPResponseException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.chris.portmapper.router.SinglePortMapping.Protocol;
 
 public class Router {
 

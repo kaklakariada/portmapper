@@ -5,6 +5,7 @@ package org.chris.portmapper;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,12 @@ import org.chris.portmapper.router.PortMappingPreset;
  * @author chris
  * 
  */
-public class Settings {
+public class Settings implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1349121868190190000L;
 
 	public final static String PROPERTY_PORT_MAPPING_PRESETS = "presets";
 	private List<PortMappingPreset> presets;
@@ -34,6 +40,10 @@ public class Settings {
 
 	public List<PortMappingPreset> getPresets() {
 		return presets;
+	}
+
+	public void setPresets(List<PortMappingPreset> presets) {
+		this.presets = presets;
 	}
 
 	public void addPreset(PortMappingPreset newPreset) {
@@ -61,5 +71,10 @@ public class Settings {
 		this.propertyChangeSupport.firePropertyChange(
 				PROPERTY_PORT_MAPPING_PRESETS, null,
 				new ArrayList<PortMappingPreset>(this.presets));
+	}
+
+	@Override
+	public String toString() {
+		return "[Settings: presets=" + presets + "]";
 	}
 }
