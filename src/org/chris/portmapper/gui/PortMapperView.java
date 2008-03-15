@@ -113,10 +113,11 @@ public class PortMapperView extends FrameView {
 		externalIPLabel = new JLabel(PortMapperApp.getResourceMap().getString(
 				"mainFrame.router.not_connected"));
 		routerPanel.add(externalIPLabel, "width 120!");
-		routerPanel
-				.add(new JButton(actionMap.get(ACTION_COPY_EXTERNAL_ADDRESS)));
+		routerPanel.add(
+				new JButton(actionMap.get(ACTION_COPY_EXTERNAL_ADDRESS)),
+				"sizegroup router");
 		routerPanel.add(new JButton(actionMap.get(ACTION_UPDATE_ADDRESSES)),
-				"wrap, spany 2, aligny base");
+				"wrap, spany 2, aligny base, sizegroup router");
 
 		routerPanel.add(new JLabel(PortMapperApp.getResourceMap().getString(
 				"mainFrame.router.internal_address")), "align label");
@@ -125,15 +126,15 @@ public class PortMapperView extends FrameView {
 		routerPanel.add(internalIPLabel, "width 120!");
 		routerPanel.add(
 				new JButton(actionMap.get(ACTION_COPY_INTERNAL_ADDRESS)),
-				"wrap");
+				"wrap, sizegroup router");
 
 		connectDisconnectButton = new JButton(actionMap
 				.get(ACTION_CONNECT_ROUTER));
 		routerPanel.add(connectDisconnectButton, "");
 		routerPanel.add(new JButton(actionMap.get(ACTION_DISPLAY_ROUTER_INFO)),
-				"");
+				"sizegroup router");
 		routerPanel.add(new JButton(actionMap.get(ACTION_SHOW_ABOUT_DIALOG)),
-				"");
+				"sizegroup router");
 
 		this.addPropertyChangeListener(new PropertyChangeListener() {
 
@@ -209,14 +210,14 @@ public class PortMapperView extends FrameView {
 
 		presetPanel.add(
 				new JButton(actionMap.get(ACTION_CREATE_PRESET_MAPPING)),
-				"wrap");
+				"wrap, sizegroup preset_buttons");
 		presetPanel.add(new JButton(actionMap.get(ACTION_EDIT_PRESET_MAPPING)),
-				"wrap");
+				"wrap, sizegroup preset_buttons");
 		presetPanel.add(
 				new JButton(actionMap.get(ACTION_REMOVE_PRESET_MAPPING)),
-				"wrap");
+				"wrap, sizegroup preset_buttons");
 		presetPanel.add(new JButton(actionMap.get(ACTION_USE_PRESET_MAPPING)),
-				"wrap");
+				"wrap, sizegroup preset_buttons");
 
 		return presetPanel;
 	}

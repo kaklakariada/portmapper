@@ -15,6 +15,7 @@ import net.sbbi.upnp.messages.UPNPResponseException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.chris.portmapper.util.EncodingUtilities;
 
 public class Router {
 
@@ -204,8 +205,10 @@ public class Router {
 			String remoteHost, int externalPort, String internalClient,
 			int internalPort, int leaseDuration) throws RouterException {
 		String protocolString = (protocol.equals(Protocol.TCP) ? "TCP" : "UDP");
+		String encodedDescription = EncodingUtilities
+				.htmlEntityEncode(description);
 		try {
-			boolean success = router.addPortMapping(description, null,
+			boolean success = router.addPortMapping(encodedDescription, null,
 					internalPort, externalPort, internalClient, leaseDuration,
 					protocolString);
 			return success;

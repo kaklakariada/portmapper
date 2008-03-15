@@ -1,15 +1,15 @@
 <project name="PortMapper" basedir="." default="main">
 
-	
-	<property name="version.number" value="1.1"/>
-	
+
+	<property name="version.number" value="1.5_beta1" />
+
 	<property name="src.dir" value="src" />
 	<property name="build.dir" value="build" />
 	<property name="classes.dir" value="${build.dir}/classes" />
 	<property name="jar.dir" value="${build.dir}/jar" />
 
 	<property name="main-class" value="org.chris.portmapper.PortMapperApp" />
-	
+
 	<buildnumber />
 	<property name="version" value="${version.number}_build${build.number}" />
 	<property name="lib.dir" value="lib" />
@@ -28,15 +28,20 @@
 
 	<target name="compile">
 		<mkdir dir="${classes.dir}" />
-		<javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" />
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" debug="true" target="1.5" source="1.5"/>
 		<copy todir="${classes.dir}">
 			<fileset dir="${src.dir}" excludes="**/*.java" />
 		</copy>
-		<move file="${classes.dir}/org/chris/portmapper/resources/PortMapperApp_en.properties" tofile="${classes.dir}/org/chris/portmapper/resources/PortMapperApp.properties" />
-		<move file="${classes.dir}/org/chris/portmapper/resources/ConnectTask_en.properties" tofile="${classes.dir}/org/chris/portmapper/resources/ConnectTask.properties" />
 	</target>
 
-	<target name="jar" depends="compile">
+	<target name="prepare_language_files">
+		<copy file="${classes.dir}/org/chris/portmapper/resources/PortMapperApp_en.properties" tofile="${classes.dir}/org/chris/portmapper/resources/PortMapperApp.properties" />
+		<copy file="${classes.dir}/org/chris/portmapper/resources/ConnectTask_en.properties" tofile="${classes.dir}/org/chris/portmapper/resources/ConnectTask.properties" />
+		<replace casesensitive="false" dir="${classes.dir}" includes="**/*.properties" token="@@VERSION_NUMBER@@" value="${version.number}" />
+		<replace casesensitive="false" dir="${classes.dir}" includes="**/*.properties" token="@@BUILD_NUMBER@@" value="${build.number}" />
+	</target>
+
+	<target name="jar" depends="compile, prepare_language_files">
 		<mkdir dir="${jar.dir}" />
 		<jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
 			<manifest>
@@ -45,7 +50,7 @@
 		</jar>
 	</target>
 
-	<target name="one-jar" depends="jar">
+	<target name="one-jar" depends="clean,jar">
 		<!-- Construct the One-JAR file -->
 		<one-jar destfile="${jar.dir}/${ant.project.name}-${version}.jar" manifest="one-jar.mf">
 			<main>

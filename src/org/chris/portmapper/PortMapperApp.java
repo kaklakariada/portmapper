@@ -192,6 +192,8 @@ public class PortMapperApp extends SingleFrameApplication {
 			if (!address.getHostAddress().startsWith("127.")) {
 				return address.getHostAddress();
 			}
+			logger
+					.warn("Only found IP addresses starting with '127.'. This is a known issue with some Linux distributions.");
 		}
 
 		return null;
