@@ -112,7 +112,7 @@ public class PortMapperView extends FrameView {
 				"mainFrame.router.external_address")), "align label"); //$NON-NLS-2$
 		externalIPLabel = new JLabel(PortMapperApp.getResourceMap().getString(
 				"mainFrame.router.not_connected"));
-		routerPanel.add(externalIPLabel, "width 120!");
+		routerPanel.add(externalIPLabel, "width 130!");
 		routerPanel.add(
 				new JButton(actionMap.get(ACTION_COPY_EXTERNAL_ADDRESS)),
 				"sizegroup router");
@@ -123,7 +123,7 @@ public class PortMapperView extends FrameView {
 				"mainFrame.router.internal_address")), "align label");
 		internalIPLabel = new JLabel(PortMapperApp.getResourceMap().getString(
 				"mainFrame.router.not_connected"));
-		routerPanel.add(internalIPLabel, "width 120!");
+		routerPanel.add(internalIPLabel, "width 130!");
 		routerPanel.add(
 				new JButton(actionMap.get(ACTION_COPY_INTERNAL_ADDRESS)),
 				"wrap, sizegroup router");

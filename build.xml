@@ -1,7 +1,7 @@
 <project name="PortMapper" basedir="." default="main">
 
 
-	<property name="version.number" value="1.5_beta1" />
+	<property name="version.number" value="1.5_beta2" />
 
 	<property name="src.dir" value="src" />
 	<property name="build.dir" value="build" />
