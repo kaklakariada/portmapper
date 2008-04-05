@@ -21,7 +21,7 @@ public class Router {
 
 	private Log logger = LogFactory.getLog(this.getClass());
 	private InternetGatewayDevice router = null;
-	private final static int DISCOVERY_TIMEOUT = 5;
+	private final static int DISCOVERY_TIMEOUT = 5000;
 
 	private Router(InternetGatewayDevice router) {
 		if (router == null) {

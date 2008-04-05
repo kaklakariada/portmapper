@@ -123,6 +123,7 @@ public class PortMapperApp extends SingleFrameApplication {
 					.warn("Already connected to router. Cannot create a second connection.");
 			return false;
 		}
+		logger.info("Searching for router...");
 		this.router = Router.findRouter();
 		logger.info("Connected to router " + router.getName());
 
