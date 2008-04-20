@@ -17,11 +17,32 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.chris.portmapper.util.EncodingUtilities;
 
+/**
+ * This class represents a router device and provides methods for managing port
+ * mappings and getting information about the router.
+ * 
+ * @author chris
+ * 
+ */
 public class Router {
 
 	private Log logger = LogFactory.getLog(this.getClass());
+
+	/**
+	 * The wrapped router device.
+	 */
 	private InternetGatewayDevice router = null;
+
+	/**
+	 * The timeout in milliseconds for finding a router device.
+	 */
 	private final static int DISCOVERY_TIMEOUT = 5000;
+
+	/**
+	 * The maximum number of port mappings that we will try to retrieve from the
+	 * router.
+	 */
+	private final static int MAX_NUM_PORTMAPPINGS = 100;
 
 	private Router(InternetGatewayDevice router) {
 		if (router == null) {
@@ -30,12 +51,27 @@ public class Router {
 		this.router = router;
 	}
 
+	/**
+	 * Find the router device in the network.
+	 * 
+	 * @return the router device.
+	 * @throws RouterException
+	 *             if no or more than one router devices where found.
+	 */
+
 	public static Router findRouter() throws RouterException {
 		InternetGatewayDevice devices = findInternetGatewayDevice();
 		Router r = new Router(devices);
 		return r;
 	}
 
+	/**
+	 * Find all router devices in the network and check, that only one is found.
+	 * 
+	 * @return the router device.
+	 * @throws RouterException
+	 *             if no or more than one router devices where found.
+	 */
 	private static InternetGatewayDevice findInternetGatewayDevice()
 			throws RouterException {
 		InternetGatewayDevice[] devices;
@@ -60,6 +96,11 @@ public class Router {
 		return router.getIGDRootDevice().getModelName();
 	}
 
+	/**
+	 * Get the external IP of the router.
+	 * 
+	 * @return the external IP of the router.
+	 */
 	public String getExternalIPAddress() throws RouterException {
 		logger.info("Get external IP address...");
 		String ipAddress;
@@ -74,6 +115,11 @@ public class Router {
 		return ipAddress;
 	}
 
+	/**
+	 * Get the internal IP of the router.
+	 * 
+	 * @return the internal IP of the router.
+	 */
 	public String getInternalIPAddress() {
 		logger.info("Get internal IP address...");
 		String ipAddress;
@@ -82,33 +128,73 @@ public class Router {
 		return ipAddress;
 	}
 
+	/**
+	 * Get all port mappings from the router.
+	 * 
+	 * @return all port mappings from the router.
+	 * @throws RouterException
+	 *             if something went wrong when getting the port mappings.
+	 */
 	public Collection<PortMapping> getPortMappings() throws RouterException {
 		logger.info("Get all port mappings...");
 		Collection<PortMapping> mappings = new LinkedList<PortMapping>();
 		try {
 
+			/*
+			 * This is a little trick to get all port mappings. There is a
+			 * method that gets the number of available port mappings
+			 * (getNatMappingsCount()), but it seems, that this method just
+			 * tries to get all port mappings and checks, if an error is
+			 * returned.
+			 * 
+			 * In order to speed this up, we will do the same here, but stop,
+			 * when the first exception is thrown.
+			 */
 			boolean moreEntries = true;
-			int i = 0;
-			while (moreEntries) {
-				logger.debug("Get port mapping entry number " + i);
+			int currentMappingNumber = 0;
+			while (moreEntries && currentMappingNumber < MAX_NUM_PORTMAPPINGS) {
+				logger.debug("Get port mapping entry number "
+						+ currentMappingNumber);
 				ActionResponse response = null;
+
 				try {
-					response = router.getGenericPortMappingEntry(i);
+					response = router
+							.getGenericPortMappingEntry(currentMappingNumber);
 				} catch (UPNPResponseException e) {
-					if (e
-							.getMessage()
-							.equals(
-									"Detailed error code :713, Detailed error description :SpecifiedArrayIndexInvalid")) {
+
+					// The error codes 713 and 714 mean, that no port mappings
+					// where found for the current entry. See bug reports
+					// https://sourceforge.net/tracker/index.php?func=detail&aid=1939749&group_id=213879&atid=1027466
+					// and http://www.sbbi.net/forum/viewtopic.php?p=394
+					if (e.getDetailErrorCode() == 713
+							|| e.getDetailErrorCode() == 714) {
 						moreEntries = false;
-						logger.debug("Got no more port mappings");
+						logger.debug("Got no port mapping for entry number "
+								+ currentMappingNumber
+								+ ". Stop getting more entries.");
 					} else {
 						throw e;
 					}
 				}
+
+				// Create a port mapping for the response.
 				if (response != null) {
 					mappings.add(PortMapping.create(response));
+				} else {
+					logger.warn("Got a null port mapping for number "
+							+ currentMappingNumber
+							+ ". This may be a bug in UPNPLib.");
 				}
-				i++;
+				currentMappingNumber++;
+			}
+
+			// Check, if the max number of entries is reached and print a
+			// warning message.
+			if (currentMappingNumber == MAX_NUM_PORTMAPPINGS) {
+				logger
+						.warn("Reached max number of port mappings to get ("
+								+ MAX_NUM_PORTMAPPINGS
+								+ "). Perhaps not all port mappings where retrieved. Try to increase Router.MAX_NUM_PORTMAPPINGS.");
 			}
 
 		} catch (IOException e) {
@@ -116,6 +202,7 @@ public class Router {
 		} catch (UPNPResponseException e) {
 			throw new RouterException("Could not get NAT mappings", e);
 		}
+
 		return mappings;
 	}
 
