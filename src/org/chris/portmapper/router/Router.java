@@ -155,11 +155,19 @@ public class Router {
 			while (moreEntries && currentMappingNumber < MAX_NUM_PORTMAPPINGS) {
 				logger.debug("Get port mapping entry number "
 						+ currentMappingNumber);
-				ActionResponse response = null;
 
 				try {
-					response = router
+					ActionResponse response = router
 							.getGenericPortMappingEntry(currentMappingNumber);
+
+					// Create a port mapping for the response.
+					if (response != null) {
+						mappings.add(PortMapping.create(response));
+					} else {
+						logger.warn("Got a null port mapping for number "
+								+ currentMappingNumber
+								+ ". This may be a bug in UPNPLib.");
+					}
 				} catch (UPNPResponseException e) {
 
 					// The error codes 713 and 714 mean, that no port mappings
@@ -177,14 +185,6 @@ public class Router {
 					}
 				}
 
-				// Create a port mapping for the response.
-				if (response != null) {
-					mappings.add(PortMapping.create(response));
-				} else {
-					logger.warn("Got a null port mapping for number "
-							+ currentMappingNumber
-							+ ". This may be a bug in UPNPLib.");
-				}
 				currentMappingNumber++;
 			}
 
