@@ -3,6 +3,7 @@
  */
 package org.chris.portmapper;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -31,7 +32,13 @@ import org.jdesktop.application.SingleFrameApplication;
 public class PortMapperApp extends SingleFrameApplication {
 
 	/**
-	 * 
+	 * The name of the system property which will be used as the directory where
+	 * all configuration files will be stored.
+	 */
+	private static final String CONFIG_DIR_PROPERTY_NAME = "portmapper.config.dir";
+
+	/**
+	 * The file name for the settings file.
 	 */
 	private static final String SETTINGS_FILENAME = "settings.xml";
 
@@ -46,7 +53,10 @@ public class PortMapperApp extends SingleFrameApplication {
 	 */
 	@Override
 	protected void startup() {
+
 		initTextAreaLogger();
+
+		setCustomConfigDir();
 
 		loadSettings();
 
@@ -64,6 +74,43 @@ public class PortMapperApp extends SingleFrameApplication {
 		show(view);
 	}
 
+	/**
+	 * Read the system property with name
+	 * {@link PortMapperApp#CONFIG_DIR_PROPERTY_NAME} and change the local
+	 * storage directory if the property is given and points to a writable
+	 * directory.
+	 */
+	private void setCustomConfigDir() {
+		String customConfigurationDir = System
+				.getProperty(CONFIG_DIR_PROPERTY_NAME);
+		if (customConfigurationDir != null) {
+			File dir = new File(customConfigurationDir);
+			if (!dir.isDirectory()) {
+				logger.error("Custom configuration directory '"
+						+ customConfigurationDir + "' is not a directory.");
+				System.exit(1);
+			}
+			if (!dir.canRead() || !dir.canWrite()) {
+				logger
+						.error("Can not read or write to custom configuration directory '"
+								+ customConfigurationDir + "'.");
+				System.exit(1);
+			}
+			logger.info("Using custom configuration directory '"
+					+ dir.getAbsolutePath() + "'.");
+			getContext().getLocalStorage().setDirectory(dir);
+		} else {
+			logger.info("Using default configuration directory '"
+					+ getContext().getLocalStorage().getDirectory()
+							.getAbsolutePath() + "'.");
+		}
+	}
+
+	/**
+	 * Load the application settings from file
+	 * {@link PortMapperApp#SETTINGS_FILENAME} located in the configuration
+	 * directory.
+	 */
 	private void loadSettings() {
 		logger.info("Loading settings from file " + SETTINGS_FILENAME);
 		try {
