@@ -60,6 +60,17 @@ public class PortMapperApp extends SingleFrameApplication {
 
 		loadSettings();
 
+		String useHTMLEncoding = System
+				.getProperty("portmapper.settings.use_html_encoding");
+		if (useHTMLEncoding != null
+				&& useHTMLEncoding.equalsIgnoreCase("false")) {
+			this.getSettings().setUseEntityEncoding(false);
+			logger
+					.info("Do not use html encoding for port mapping description.");
+		} else {
+			this.getSettings().setUseEntityEncoding(true);
+		}
+
 		PortMapperView view = new PortMapperView();
 		addExitListener(new ExitListener() {
 			public boolean canExit(EventObject arg0) {

@@ -53,15 +53,10 @@ public class PortMappingPreset implements Cloneable, Serializable {
 			i++;
 			String internalClientName = this.internalClient != null ? this.internalClient
 					: localhost;
-			String portDescription;
-			if (ports.size() == 1) {
-				portDescription = description;
-			} else {
-				portDescription = description + " (" + i + ")";
-			}
+
 			PortMapping newMapping = new PortMapping(port.getProtocol(),
 					remoteHost, port.getExternalPort(), internalClientName,
-					port.getInternalPort(), portDescription);
+					port.getInternalPort(), description);
 
 			allPortMappings.add(newMapping);
 		}

@@ -25,9 +25,12 @@ public class Settings implements Serializable {
 	public final static String PROPERTY_PORT_MAPPING_PRESETS = "presets";
 	private List<PortMappingPreset> presets;
 
+	private boolean useEntityEncoding;
+
 	private transient PropertyChangeSupport propertyChangeSupport;
 
 	public Settings() {
+		useEntityEncoding = true;
 		presets = new ArrayList<PortMappingPreset>();
 		propertyChangeSupport = new PropertyChangeSupport(this);
 	}
@@ -76,5 +79,20 @@ public class Settings implements Serializable {
 	@Override
 	public String toString() {
 		return "[Settings: presets=" + presets + "]";
+	}
+
+	/**
+	 * @return the useEntityEncoding
+	 */
+	public boolean isUseEntityEncoding() {
+		return useEntityEncoding;
+	}
+
+	/**
+	 * @param useEntityEncoding
+	 *            the useEntityEncoding to set
+	 */
+	public void setUseEntityEncoding(boolean useEntityEncoding) {
+		this.useEntityEncoding = useEntityEncoding;
 	}
 }
