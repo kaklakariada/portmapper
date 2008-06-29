@@ -6,9 +6,9 @@
 	<classpathentry kind="lib" path="lib/commons-logging.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-api.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.15.jar"/>
-	<classpathentry kind="lib" path="lib/miglayout15-swing.jar"/>
 	<classpathentry kind="lib" path="lib/sbbi-upnplib-1.0.4.jar"/>
 	<classpathentry kind="lib" path="lib/AppFramework-1.03.jar"/>
 	<classpathentry kind="lib" path="lib/swing-worker.jar"/>
+	<classpathentry kind="lib" path="lib/miglayout-3.5.5-swing.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
