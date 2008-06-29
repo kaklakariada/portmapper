@@ -37,6 +37,12 @@ import org.chris.portmapper.router.Protocol;
 import org.chris.portmapper.router.SinglePortMapping;
 import org.jdesktop.application.Action;
 
+/**
+ * This class represents the edit preset dialog.
+ * 
+ * @author chris
+ * 
+ */
 @SuppressWarnings("serial")
 public class EditPresetDialog extends JDialog {
 
@@ -65,6 +71,7 @@ public class EditPresetDialog extends JDialog {
 	private PortsTableModel tableModel;
 
 	/**
+	 * 
 	 * @param portMappingPreset
 	 */
 	public EditPresetDialog(PortMappingPreset portMappingPreset) {
@@ -105,7 +112,7 @@ public class EditPresetDialog extends JDialog {
 		}
 	}
 
-	private JLabel createLabel(String name) {
+	private static JLabel createLabel(String name) {
 		JLabel newLabel = new JLabel(name);
 		newLabel.setName(name);
 		return newLabel;
@@ -146,7 +153,7 @@ public class EditPresetDialog extends JDialog {
 					internalClientTextField.setText(PortMapperApp.getInstance()
 							.getLocalHostAddress());
 				} else {
-					internalClientTextField.setText("");
+					// internalClientTextField.setText("");
 				}
 			}
 		});
@@ -219,6 +226,16 @@ public class EditPresetDialog extends JDialog {
 		portsTable.getColumnModel().getColumn(0).setCellEditor(
 				new DefaultCellEditor(protocolComboBox));
 
+		// portsTable.getColumnModel().getColumn(1).setCellEditor(
+		// new SpinnerCellEditor(1, 1, 65535, 1));
+		// portsTable.getColumnModel().getColumn(2).setCellEditor(
+		// new SpinnerCellEditor(1, 1, 65535, 1));
+
+		// portsTable.getColumnModel().getColumn(1).setCellEditor(
+		// new TextNumberCellEditor(1, 5));
+		// portsTable.getColumnModel().getColumn(2).setCellEditor(
+		// new TextNumberCellEditor(1, 5));
+
 		portsPanel.add(new JScrollPane(portsTable), "spany 2");
 
 		portsPanel.add(new JButton(actionMap.get(ACTION_ADD_PORT)), "wrap");
@@ -260,9 +277,13 @@ public class EditPresetDialog extends JDialog {
 		return this.portsTable.getSelectedRowCount() > 0;
 	}
 
+	/**
+	 * This method is executed when the user clicks the save button. The method
+	 * saves the entered preset
+	 */
 	@Action(name = ACTION_SAVE)
 	public void save() {
-		// TODO: Validate addresses
+
 		if (useLocalhostCheckBox.isSelected()) {
 			editedPreset.setInternalClient(null);
 		} else {
@@ -272,9 +293,9 @@ public class EditPresetDialog extends JDialog {
 		editedPreset.setDescription(descriptionTextField.getText());
 		editedPreset.setPorts(this.ports);
 
-		editedPreset.save();
+		editedPreset.save(PortMapperApp.getInstance().getSettings());
 
-		logger.info("Saved preset " + editedPreset.toString());
+		logger.info("Saved preset '" + editedPreset.toString() + "'.");
 
 		this.dispose();
 	}

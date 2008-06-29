@@ -17,11 +17,14 @@ public class SinglePortMapping implements Cloneable, Serializable {
 	private static final long serialVersionUID = 3055383170284209747L;
 
 	private int externalPort;
-	private Protocol protocol;
 	private int internalPort;
+	private Protocol protocol;
 
 	public SinglePortMapping() {
 		super();
+		this.internalPort = 1;
+		this.externalPort = 1;
+		this.protocol = Protocol.TCP;
 	}
 
 	public int getExternalPort() {

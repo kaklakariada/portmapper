@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.chris.portmapper.PortMapperApp;
+import org.chris.portmapper.Settings;
 
 public class PortMappingPreset implements Cloneable, Serializable {
 
@@ -123,13 +123,14 @@ public class PortMappingPreset implements Cloneable, Serializable {
 	}
 
 	/**
+	 * @param settings
 	 * 
 	 */
-	public void save() {
+	public void save(Settings settings) {
 		if (this.isNew) {
-			PortMapperApp.getInstance().getSettings().addPreset(this);
+			settings.addPreset(this);
 		} else {
-			PortMapperApp.getInstance().getSettings().savePreset(this);
+			settings.savePreset(this);
 		}
 		this.isNew = false;
 	}
