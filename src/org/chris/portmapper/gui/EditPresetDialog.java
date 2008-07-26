@@ -189,13 +189,8 @@ public class EditPresetDialog extends JDialog {
 		setContentPane(dialogPane);
 		dialogPane.getRootPane().setDefaultButton(okButton);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
 		setModal(true);
-		setName("dlg_task");
 		pack();
-		// setLocationRelativeTo(application.getMainWindow().getFrame());
-		// setVisible(true);
-
 	}
 
 	/**

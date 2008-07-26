@@ -57,6 +57,9 @@ public class PortMapperView extends FrameView {
 	private static final String ACTION_COPY_EXTERNAL_ADDRESS = "mainFrame.router.copyExternalAddress";
 	private static final String ACTION_UPDATE_ADDRESSES = "mainFrame.router.updateAddresses";
 	private static final String ACTION_UPDATE_PORT_MAPPINGS = "mainFrame.mappings.update";
+
+	private static final String ACTION_PORTMAPPER_SETTINGS = "mainFrame.portmapper.settings";
+
 	private static final String ACTION_REMOVE_MAPPINGS = "mainFrame.mappings.remove";
 
 	private static final String ACTION_CREATE_PRESET_MAPPING = "mainFrame.preset_mappings.create";
@@ -134,7 +137,7 @@ public class PortMapperView extends FrameView {
 		routerPanel.add(new JButton(actionMap.get(ACTION_DISPLAY_ROUTER_INFO)),
 				"sizegroup router");
 		routerPanel.add(new JButton(actionMap.get(ACTION_SHOW_ABOUT_DIALOG)),
-				"sizegroup router");
+				"sizegroup router, wrap");
 
 		this.addPropertyChangeListener(new PropertyChangeListener() {
 
@@ -156,6 +159,8 @@ public class PortMapperView extends FrameView {
 				}
 			}
 		});
+		routerPanel.add(new JButton(actionMap.get(ACTION_PORTMAPPER_SETTINGS)),
+				"");
 
 		return routerPanel;
 	}
@@ -424,6 +429,12 @@ public class PortMapperView extends FrameView {
 		PortMappingPreset selectedPreset = (PortMappingPreset) this.portMappingPresets
 				.getSelectedValue();
 		PortMapperApp.getInstance().show(new EditPresetDialog(selectedPreset));
+	}
+
+	@Action(name = ACTION_PORTMAPPER_SETTINGS)
+	public void changeSettings() {
+		logger.debug("Open Settings dialog");
+		PortMapperApp.getInstance().show(new SettingsDialog());
 	}
 
 	@Action(name = ACTION_REMOVE_PRESET_MAPPING, enabledProperty = PROPERTY_PRESET_MAPPING_SELECTED)

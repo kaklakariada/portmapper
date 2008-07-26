@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Level;
 import org.chris.portmapper.router.PortMappingPreset;
 
 /**
@@ -20,17 +21,19 @@ public class Settings implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1349121868190190000L;
+	private static final long serialVersionUID = -1349121864190190000L;
 
 	public final static String PROPERTY_PORT_MAPPING_PRESETS = "presets";
-	private List<PortMappingPreset> presets;
 
-	private boolean useEntityEncoding;
+	private List<PortMappingPreset> presets;
+	private Boolean useEntityEncoding;
+	private Integer logLevel;
 
 	private transient PropertyChangeSupport propertyChangeSupport;
 
 	public Settings() {
 		useEntityEncoding = true;
+		this.setLogLevel(Level.INFO);
 		presets = new ArrayList<PortMappingPreset>();
 		propertyChangeSupport = new PropertyChangeSupport(this);
 	}
@@ -78,7 +81,8 @@ public class Settings implements Serializable {
 
 	@Override
 	public String toString() {
-		return "[Settings: presets=" + presets + "]";
+		return "[Settings: presets=" + presets + ", useEntityEncoding="
+				+ useEntityEncoding + ", logLevel=" + logLevel + "]";
 	}
 
 	/**
@@ -94,5 +98,20 @@ public class Settings implements Serializable {
 	 */
 	public void setUseEntityEncoding(boolean useEntityEncoding) {
 		this.useEntityEncoding = useEntityEncoding;
+	}
+
+	/**
+	 * @return
+	 */
+	public Level getLogLevel() {
+		return Level.toLevel(this.logLevel);
+	}
+
+	/**
+	 * @param logLevel
+	 *            the logLevel to set
+	 */
+	public void setLogLevel(Level logLevel) {
+		this.logLevel = logLevel.toInt();
 	}
 }

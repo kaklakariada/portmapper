@@ -16,6 +16,7 @@ import javax.swing.JTextArea;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.WriterAppender;
 import org.chris.portmapper.gui.PortMapperView;
@@ -59,17 +60,6 @@ public class PortMapperApp extends SingleFrameApplication {
 		setCustomConfigDir();
 
 		loadSettings();
-
-		String useHTMLEncoding = System
-				.getProperty("portmapper.settings.use_html_encoding");
-		if (useHTMLEncoding != null
-				&& useHTMLEncoding.equalsIgnoreCase("false")) {
-			this.getSettings().setUseEntityEncoding(false);
-			logger
-					.info("Do not use html encoding for port mapping description.");
-		} else {
-			this.getSettings().setUseEntityEncoding(true);
-		}
 
 		PortMapperView view = new PortMapperView();
 		addExitListener(new ExitListener() {
@@ -151,12 +141,13 @@ public class PortMapperApp extends SingleFrameApplication {
 			settings = new Settings();
 		} else {
 			logger.info("Got settings " + settings);
+			this.setLogLevel(settings.getLogLevel());
 		}
 	}
 
 	private void initTextAreaLogger() {
 		WriterAppender writerAppender = (WriterAppender) Logger.getLogger(
-				"org.chris").getAppender("jtextarea");
+				"org.chris.portmapper").getAppender("jtextarea");
 		logWriter = new TextAreaWriter();
 		writerAppender.setWriter(logWriter);
 	}
@@ -270,6 +261,10 @@ public class PortMapperApp extends SingleFrameApplication {
 		}
 
 		return null;
+	}
+
+	public void setLogLevel(Level level) {
+		Logger.getLogger("org.chris.portmapper").setLevel(level);
 	}
 
 	/**
