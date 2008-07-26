@@ -89,11 +89,15 @@ public class PortMapperApp extends SingleFrameApplication {
 	 * Read the system property with name
 	 * {@link PortMapperApp#CONFIG_DIR_PROPERTY_NAME} and change the local
 	 * storage directory if the property is given and points to a writable
-	 * directory.
+	 * directory. If there is a directory named <code>PortMapperConf</code> in
+	 * the current directory, use this as the configuration directory.
 	 */
 	private void setCustomConfigDir() {
 		String customConfigurationDir = System
 				.getProperty(CONFIG_DIR_PROPERTY_NAME);
+		File portableAppConfigDir = new File("PortMapperConf");
+
+		// the property is set: check, if the given directory can be used
 		if (customConfigurationDir != null) {
 			File dir = new File(customConfigurationDir);
 			if (!dir.isDirectory()) {
@@ -110,6 +114,16 @@ public class PortMapperApp extends SingleFrameApplication {
 			logger.info("Using custom configuration directory '"
 					+ dir.getAbsolutePath() + "'.");
 			getContext().getLocalStorage().setDirectory(dir);
+
+			// check, if the portable app directory exists and use this one
+		} else if (portableAppConfigDir.isDirectory()
+				&& portableAppConfigDir.canRead()
+				&& portableAppConfigDir.canWrite()) {
+			logger.info("Found portable app configuration directory '"
+					+ portableAppConfigDir.getAbsolutePath() + "'.");
+			getContext().getLocalStorage().setDirectory(portableAppConfigDir);
+
+			// use the default configuration directory
 		} else {
 			logger.info("Using default configuration directory '"
 					+ getContext().getLocalStorage().getDirectory()
