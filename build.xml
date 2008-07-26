@@ -1,14 +1,16 @@
 <project name="PortMapper" basedir="." default="main">
 
-	<property name="src.dir" value="src" />
-	<property name="build.dir" value="build" />
-	<property name="classes.dir" value="${build.dir}/classes" />
-	<property name="jar.dir" value="${build.dir}/jar" />
+	<property name="src.dir" location="src" />
+	<property name="build.dir" location="build" />
+	<property name="classes.dir" location="${build.dir}/classes" />
+	<property name="build.resources.dir" location="${classes.dir}/org/chris/portmapper/resources/" />
+	<property name="src.resources.dir" location="${src.dir}/org/chris/portmapper/resources/" />
+	<property name="jar.dir" location="${build.dir}/jar" />
 
 	<property name="main-class" value="org.chris.portmapper.PortMapperApp" />
 
 	<buildnumber />
-	<property name="lib.dir" value="lib" />
+	<property name="lib.dir" location="lib" />
 
 	<property name="one-jar.version" value="0.96" />
 	<taskdef name="one-jar" classname="com.simontuffs.onejar.ant.OneJarTask" classpath="${lib.dir}/one-jar-ant-task-${one-jar.version}.jar" onerror="report" />
@@ -35,10 +37,41 @@
 	</target>
 
 	<target name="prepare_language_files" depends="get_version_number">
-		<copy file="${classes.dir}/org/chris/portmapper/resources/PortMapperApp_en.properties" tofile="${classes.dir}/org/chris/portmapper/resources/PortMapperApp.properties" />
-		<copy file="${classes.dir}/org/chris/portmapper/resources/ConnectTask_en.properties" tofile="${classes.dir}/org/chris/portmapper/resources/ConnectTask.properties" />
+
+		<exec executable="native2ascii" failonerror="true">
+			<arg value="-encoding" />
+			<arg value="ISO-8859-1" />
+			<arg file="${src.resources.dir}/PortMapperApp_de.properties" />
+			<arg file="${build.resources.dir}/PortMapperApp_de.properties" />
+		</exec>
+
+		<exec executable="native2ascii" failonerror="true">
+			<arg value="-encoding" />
+			<arg value="ISO-8859-1" />
+			<arg file="${src.resources.dir}/ConnectTask_de.properties" />
+			<arg file="${build.resources.dir}/ConnectTask_de.properties" />
+		</exec>
+
+		<exec executable="native2ascii" failonerror="true">
+			<arg value="-encoding" />
+			<arg value="ISO-8859-1" />
+			<arg file="${src.resources.dir}/PortMapperApp_nb.properties" />
+			<arg file="${build.resources.dir}/PortMapperApp_nb.properties" />
+		</exec>
+
+		<exec executable="native2ascii" failonerror="true">
+			<arg value="-encoding" />
+			<arg value="ISO-8859-1" />
+			<arg file="${src.resources.dir}/ConnectTask_nb.properties" />
+			<arg file="${build.resources.dir}/ConnectTask_nb.properties" />
+		</exec>
+
+		<copy file="${build.resources.dir}/PortMapperApp_en.properties" tofile="${build.resources.dir}/PortMapperApp.properties" />
+		<copy file="${build.resources.dir}/ConnectTask_en.properties" tofile="${build.resources.dir}/ConnectTask.properties" />
 		<replace casesensitive="false" dir="${classes.dir}" includes="**/*.properties" token="@@VERSION_NUMBER@@" value="${version.number}" />
 		<replace casesensitive="false" dir="${classes.dir}" includes="**/*.properties" token="@@BUILD_NUMBER@@" value="${build.number}" />
+
+
 	</target>
 
 	<target name="jar" depends="compile, prepare_language_files">
@@ -50,7 +83,8 @@
 		</jar>
 	</target>
 
-	<target name="one-jar" depends="clean,get_version_number,jar">
+	<target name="one-jar" depends="clean,get_version_number,compile,prepare_language_files">
+		<mkdir dir="${jar.dir}" />
 		<!-- Construct the One-JAR file -->
 		<one-jar destfile="${jar.dir}/${ant.project.name}-${version.number}.jar" manifest="one-jar.mf">
 			<main>
