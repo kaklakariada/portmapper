@@ -6,11 +6,8 @@ package org.chris.portmapper;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.Collection;
+import java.net.Socket;
 import java.util.EventObject;
-import java.util.LinkedList;
 
 import javax.swing.JTextArea;
 
@@ -223,44 +220,58 @@ public class PortMapperApp extends SingleFrameApplication {
 		return this.getRouter() != null;
 	}
 
+	/**
+	 * Get the IP address of the local host.
+	 * 
+	 * @return IP address of the local host or <code>null</code>, if the address
+	 *         could not be determined.
+	 */
 	public String getLocalHostAddress() {
-		logger.info("Get IP of localhost");
+		logger.debug("Get IP of localhost...");
+
 		InetAddress localHostIP = null;
 		try {
-			localHostIP = InetAddress.getLocalHost();
-		} catch (UnknownHostException e) {
-			logger.error("Could not get IP of localhost", e);
-		}
 
-		if (!localHostIP.getHostAddress().startsWith("127.")) {
-			return localHostIP.getHostAddress();
-		}
+			// In order to use the Socked method to get the address, we have to
+			// be connected to the router.
+			if (this.isConnected()) {
+				logger.debug("Creating socket to router: "
+						+ getRouter().getInternalIPAddress() + ":"
+						+ getRouter().getInternalPort() + "...");
 
-		Collection<InetAddress> localHostIPs = new LinkedList<InetAddress>();
-		try {
-			InetAddress localHost = InetAddress.getLocalHost();
-			logger.info("Host name of localhost: " + localHost.getHostName()
-					+ ", canonical host name: "
-					+ localHost.getCanonicalHostName());
-			localHostIPs.addAll(Arrays.asList(InetAddress
-					.getAllByName(localHost.getCanonicalHostName())));
-			localHostIPs.addAll(Arrays.asList(InetAddress
-					.getAllByName(localHost.getHostAddress())));
-			localHostIPs.addAll(Arrays.asList(InetAddress
-					.getAllByName(localHost.getHostName())));
-		} catch (UnknownHostException e) {
-			logger.error("Could not get IP of localhost", e);
-		}
-		for (InetAddress address : localHostIPs) {
-			logger.info("Got IP address " + address);
-			if (!address.getHostAddress().startsWith("127.")) {
-				return address.getHostAddress();
+				Socket socket = new Socket(getRouter().getInternalIPAddress(),
+						getRouter().getInternalPort());
+				localHostIP = socket.getLocalAddress();
+
+				logger.debug("Got address " + localHostIP + " from socket.");
+
+				// We are not connected to the router, so we have to use the
+				// traditional method.
+			} else {
+
+				logger
+						.debug("Not connected to router, can not use socket to determine the address of the localhost. "
+								+ "If no address is found, please connect to the router.");
+
+				localHostIP = InetAddress.getLocalHost();
+
+				logger.debug("Got address " + localHostIP
+						+ " via InetAddress.getLocalHost().");
 			}
-			logger
-					.warn("Only found IP addresses starting with '127.'. This is a known issue with some Linux distributions.");
+
+		} catch (IOException e) {
+			logger.error("Could not get IP of localhost", e);
 		}
 
-		return null;
+		// We do not want an address like 127.0.0.1
+		if (localHostIP.getHostAddress().startsWith("127.")) {
+			logger
+					.warn("Could not determine the address of localhost. Please enter it manually.");
+			return null;
+		}
+
+		return localHostIP.getHostAddress();
+
 	}
 
 	public void setLogLevel(Level level) {

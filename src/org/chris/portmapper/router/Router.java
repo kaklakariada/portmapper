@@ -103,7 +103,7 @@ public class Router {
 	 * @return the external IP of the router.
 	 */
 	public String getExternalIPAddress() throws RouterException {
-		logger.info("Get external IP address...");
+		logger.debug("Get external IP address...");
 		String ipAddress;
 		try {
 			ipAddress = router.getExternalIPAddress();
@@ -112,7 +112,7 @@ public class Router {
 		} catch (IOException e) {
 			throw new RouterException("Could not get external IP", e);
 		}
-		logger.info("Got external IP address " + ipAddress);
+		logger.info("Got external IP address " + ipAddress + " for router.");
 		return ipAddress;
 	}
 
@@ -122,11 +122,23 @@ public class Router {
 	 * @return the internal IP of the router.
 	 */
 	public String getInternalIPAddress() {
-		logger.info("Get internal IP address...");
+		logger.debug("Get internal IP address...");
 		String ipAddress;
 		ipAddress = router.getIGDRootDevice().getPresentationURL().getHost();
-		logger.info("Got internal IP address " + ipAddress);
+		logger.info("Got internal IP address " + ipAddress + " for router.");
 		return ipAddress;
+	}
+
+	/**
+	 * Get the internal port of the router.
+	 * 
+	 * @return the internal port of the router.
+	 */
+	public int getInternalPort() {
+		logger.debug("Get internal port of router...");
+		int port = router.getIGDRootDevice().getPresentationURL().getPort();
+		logger.info("Got internal port " + port + " for router.");
+		return port;
 	}
 
 	/**
@@ -154,8 +166,8 @@ public class Router {
 			boolean moreEntries = true;
 			int currentMappingNumber = 0;
 			while (moreEntries && currentMappingNumber < MAX_NUM_PORTMAPPINGS) {
-				logger.debug("Get port mapping entry number "
-						+ currentMappingNumber);
+				logger.debug("Getting port mapping with entry number "
+						+ currentMappingNumber + "...");
 
 				try {
 					ActionResponse response = router
@@ -173,10 +185,12 @@ public class Router {
 
 					// The error codes 713 and 714 mean, that no port mappings
 					// where found for the current entry. See bug reports
-					// https://sourceforge.net/tracker/index.php?func=detail&aid=1939749&group_id=213879&atid=1027466
+					//https://sourceforge.net/tracker/index.php?func=detail&aid=
+					// 1939749&group_id=213879&atid=1027466
 					// and http://www.sbbi.net/forum/viewtopic.php?p=394
 					if (e.getDetailErrorCode() == 713
 							|| e.getDetailErrorCode() == 714) {
+
 						moreEntries = false;
 						logger.debug("Got no port mapping for entry number "
 								+ currentMappingNumber
