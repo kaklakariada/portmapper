@@ -117,15 +117,15 @@ public class Router {
 	}
 
 	/**
-	 * Get the internal IP of the router.
+	 * Get the internal host name or IP of the router.
 	 * 
-	 * @return the internal IP of the router.
+	 * @return the internal host name or IP of the router.
 	 */
-	public String getInternalIPAddress() {
+	public String getInternalHostName() {
 		logger.debug("Get internal IP address...");
 		String ipAddress;
 		ipAddress = router.getIGDRootDevice().getPresentationURL().getHost();
-		logger.info("Got internal IP address " + ipAddress + " for router.");
+		logger.info("Got internal host name '" + ipAddress + "' for router.");
 		return ipAddress;
 	}
 
@@ -308,7 +308,7 @@ public class Router {
 	}
 
 	public void disconnect() {
-
+		// Nothing to do right now.
 	}
 
 	public long getValidityTime() {

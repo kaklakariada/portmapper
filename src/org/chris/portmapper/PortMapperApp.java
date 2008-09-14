@@ -234,23 +234,36 @@ public class PortMapperApp extends SingleFrameApplication {
 
 			// In order to use the Socked method to get the address, we have to
 			// be connected to the router.
-			if (this.isConnected()) {
-				logger.debug("Creating socket to router: "
-						+ getRouter().getInternalIPAddress() + ":"
-						+ getRouter().getInternalPort() + "...");
 
-				Socket socket = new Socket(getRouter().getInternalIPAddress(),
-						getRouter().getInternalPort());
+			int routerInternalPort = -1;
+
+			if (this.isConnected()) {
+				routerInternalPort = getRouter().getInternalPort();
+				logger.debug("Got internal router port " + routerInternalPort);
+			}
+
+			// Check, if we got a correct port number
+			if (routerInternalPort > 0) {
+				logger.debug("Creating socket to router: "
+						+ getRouter().getInternalHostName() + ":"
+						+ routerInternalPort + "...");
+
+				Socket socket = new Socket(getRouter().getInternalHostName(),
+						routerInternalPort);
 				localHostIP = socket.getLocalAddress();
 
 				logger.debug("Got address " + localHostIP + " from socket.");
-
-				// We are not connected to the router, so we have to use the
-				// traditional method.
 			} else {
+				logger.debug("Got invalid internal router port number "
+						+ routerInternalPort);
+			}
+
+			// We are not connected to the router or got an invalid port number,
+			// so we have to use the traditional method.
+			if (localHostIP == null) {
 
 				logger
-						.debug("Not connected to router, can not use socket to determine the address of the localhost. "
+						.debug("Not connected to router or got invalid port number, can not use socket to determine the address of the localhost. "
 								+ "If no address is found, please connect to the router.");
 
 				localHostIP = InetAddress.getLocalHost();

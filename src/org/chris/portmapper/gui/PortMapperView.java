@@ -279,7 +279,7 @@ public class PortMapperView extends FrameView {
 		internalIPLabel.setText(PortMapperApp.getResourceMap().getString(
 				"mainFrame.router.updating"));
 
-		internalIPLabel.setText(router.getInternalIPAddress());
+		internalIPLabel.setText(router.getInternalHostName());
 		try {
 			externalIPLabel.setText(router.getExternalIPAddress());
 		} catch (RouterException e) {
