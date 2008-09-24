@@ -1,12 +1,18 @@
 package org.chris.portmapper.gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+
 import javax.swing.ActionMap;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -53,6 +59,18 @@ public class SettingsDialog extends JDialog {
 		this.setName(DIALOG_NAME);
 		this.setModal(true);
 		this.pack();
+
+		// Register an action listener that closes the window when the ESC
+		// button is pressed
+		KeyStroke escKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0,
+				true);
+		ActionListener windowCloseActionListener = new ActionListener() {
+			public final void actionPerformed(final ActionEvent e) {
+				cancel();
+			}
+		};
+		getRootPane().registerKeyboardAction(windowCloseActionListener,
+				escKeyStroke, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 	}
 
 	private static JLabel createLabel(String name) {
@@ -86,7 +104,7 @@ public class SettingsDialog extends JDialog {
 		logLevelComboBox = new JComboBox(new Object[] { Level.ALL, Level.TRACE,
 				Level.DEBUG, Level.INFO, Level.WARN, Level.ERROR, Level.FATAL,
 				Level.OFF });
-		logLevelComboBox.setSelectedItem(settings.getLogLevel());
+		logLevelComboBox.setSelectedItem(Level.toLevel(settings.getLogLevel()));
 
 		dialogPane.add(logLevelComboBox, "wrap");
 
@@ -107,7 +125,8 @@ public class SettingsDialog extends JDialog {
 
 		Settings settings = PortMapperApp.getInstance().getSettings();
 		settings.setUseEntityEncoding(useEntityEncoding.isSelected());
-		settings.setLogLevel((Level) logLevelComboBox.getSelectedItem());
+		settings.setLogLevel(((Level) logLevelComboBox.getSelectedItem())
+				.toString());
 
 		PortMapperApp.getInstance().setLogLevel(settings.getLogLevel());
 

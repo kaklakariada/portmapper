@@ -124,7 +124,7 @@ public class PortMapperApp extends SingleFrameApplication {
 	 * directory.
 	 */
 	private void loadSettings() {
-		logger.info("Loading settings from file " + SETTINGS_FILENAME);
+		logger.debug("Loading settings from file " + SETTINGS_FILENAME);
 		try {
 			settings = (Settings) getContext().getLocalStorage().load(
 					SETTINGS_FILENAME);
@@ -134,10 +134,10 @@ public class PortMapperApp extends SingleFrameApplication {
 
 		if (settings == null) {
 			logger
-					.info("Settings were not loaded from file: create new settings");
+					.debug("Settings were not loaded from file: create new settings");
 			settings = new Settings();
 		} else {
-			logger.info("Got settings " + settings);
+			logger.debug("Got settings " + settings);
 			this.setLogLevel(settings.getLogLevel());
 		}
 	}
@@ -156,7 +156,7 @@ public class PortMapperApp extends SingleFrameApplication {
 	@Override
 	protected void shutdown() {
 		super.shutdown();
-		logger.info("Saving settings " + settings + " to file "
+		logger.debug("Saving settings " + settings + " to file "
 				+ SETTINGS_FILENAME);
 		try {
 			getContext().getLocalStorage().save(settings, SETTINGS_FILENAME);
@@ -287,8 +287,9 @@ public class PortMapperApp extends SingleFrameApplication {
 
 	}
 
-	public void setLogLevel(Level level) {
-		Logger.getLogger("org.chris.portmapper").setLevel(level);
+	public void setLogLevel(String logLevel) {
+		Logger.getLogger("org.chris.portmapper").setLevel(
+				Level.toLevel(logLevel));
 	}
 
 	/**

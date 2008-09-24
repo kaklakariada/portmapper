@@ -3,6 +3,7 @@ package org.chris.portmapper.gui;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeSupport;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -15,6 +16,7 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -22,6 +24,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -84,6 +87,18 @@ public class EditPresetDialog extends JDialog {
 		this.propertyChangeSupport = new PropertyChangeSupport(ports);
 		propertyChangeSupport.addPropertyChangeListener(PROPERTY_PORTS,
 				tableModel);
+
+		// Register an action listener that closes the window when the ESC
+		// button is pressed
+		KeyStroke escKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0,
+				true);
+		ActionListener windowCloseActionListener = new ActionListener() {
+			public final void actionPerformed(final ActionEvent e) {
+				cancel();
+			}
+		};
+		getRootPane().registerKeyboardAction(windowCloseActionListener,
+				escKeyStroke, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 	}
 
 	private void copyValuesFromPreset() {
@@ -297,6 +312,7 @@ public class EditPresetDialog extends JDialog {
 
 	@Action(name = ACTION_CANCEL)
 	public void cancel() {
+		this.setVisible(false);
 		this.dispose();
 	}
 

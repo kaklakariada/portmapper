@@ -3,12 +3,15 @@ package org.chris.portmapper.gui;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.ActionMap;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -55,11 +58,24 @@ public class AboutDialog extends JDialog {
 			}
 		});
 		pane.add(closeButton);
+
+		// Register an action listener that closes the window when the ESC
+		// button is pressed
+		KeyStroke escKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0,
+				true);
+		ActionListener windowCloseActionListener = new ActionListener() {
+			public final void actionPerformed(final ActionEvent e) {
+				close();
+			}
+		};
+		getRootPane().registerKeyboardAction(windowCloseActionListener, escKeyStroke, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
 		this.pack();
 	}
 
 	@Action(name = ACTION_CLOSE)
 	public void close() {
+		setVisible(false);
 		this.dispose();
 	}
 

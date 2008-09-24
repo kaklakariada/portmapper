@@ -21,19 +21,19 @@ public class Settings implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1349121864190190000L;
+	private static final long serialVersionUID = -1349121864190290050L;
 
 	public final static String PROPERTY_PORT_MAPPING_PRESETS = "presets";
 
 	private List<PortMappingPreset> presets;
-	private Boolean useEntityEncoding;
-	private Integer logLevel;
+	private boolean useEntityEncoding;
+	private String logLevel;
 
 	private transient PropertyChangeSupport propertyChangeSupport;
 
 	public Settings() {
 		useEntityEncoding = true;
-		this.setLogLevel(Level.INFO);
+		logLevel = Level.INFO.toString();
 		presets = new ArrayList<PortMappingPreset>();
 		propertyChangeSupport = new PropertyChangeSupport(this);
 	}
@@ -103,15 +103,15 @@ public class Settings implements Serializable {
 	/**
 	 * @return
 	 */
-	public Level getLogLevel() {
-		return Level.toLevel(this.logLevel);
+	public String getLogLevel() {
+		return this.logLevel;
 	}
 
 	/**
 	 * @param logLevel
 	 *            the logLevel to set
 	 */
-	public void setLogLevel(Level logLevel) {
-		this.logLevel = logLevel.toInt();
+	public void setLogLevel(String logLevel) {
+		this.logLevel = logLevel;
 	}
 }
