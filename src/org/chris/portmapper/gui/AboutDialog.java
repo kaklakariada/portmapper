@@ -50,14 +50,7 @@ public class AboutDialog extends JDialog {
 		pane.add(createLabel("about_dialog.label5"), "wrap related");
 		pane.add(new URLLabel("about_dialog.homepage_label"), //$NON-NLS-1$
 				"wrap unrelated"); //$NON-NLS-1$
-		JButton closeButton = new JButton(actionMap.get(ACTION_CLOSE)); //$NON-NLS-1$
-		closeButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
-				dispose();
-			}
-		});
-		pane.add(closeButton);
+		pane.add(new JButton(actionMap.get(ACTION_CLOSE)));
 
 		// Register an action listener that closes the window when the ESC
 		// button is pressed
@@ -68,7 +61,8 @@ public class AboutDialog extends JDialog {
 				close();
 			}
 		};
-		getRootPane().registerKeyboardAction(windowCloseActionListener, escKeyStroke, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		getRootPane().registerKeyboardAction(windowCloseActionListener,
+				escKeyStroke, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
 		this.pack();
 	}
