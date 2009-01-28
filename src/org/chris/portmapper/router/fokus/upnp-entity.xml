@@ -1,0 +1,13 @@
+<StartupConfiguration>
+	<WorkingDirectory>config</WorkingDirectory>
+	<LightName>VirtualLight</LightName>
+	<SensorName>VirtualTemperature</SensorName>
+
+	<ControlPoint>
+		<FriendlyName>Router Control</FriendlyName>
+		<EventCallbackServerPort>11070</EventCallbackServerPort>
+		<SSDPUnicastPort>11071</SSDPUnicastPort>
+		<!-- Optional -->
+		<EventCallbackUDPServerPort>11072</EventCallbackUDPServerPort>
+	</ControlPoint>
+</StartupConfiguration>

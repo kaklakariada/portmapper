@@ -1,4 +1,4 @@
-package org.chris.portmapper.router;
+package org.chris.portmapper.router.sbbi;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -16,6 +16,10 @@ import net.sbbi.upnp.messages.UPNPResponseException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.chris.portmapper.PortMapperApp;
+import org.chris.portmapper.model.PortMapping;
+import org.chris.portmapper.model.Protocol;
+import org.chris.portmapper.router.IRouter;
+import org.chris.portmapper.router.RouterException;
 import org.chris.portmapper.util.EncodingUtilities;
 
 /**
@@ -25,7 +29,7 @@ import org.chris.portmapper.util.EncodingUtilities;
  * @author chris
  * 
  */
-public class Router {
+public class SBBIRouter implements IRouter {
 
 	private Log logger = LogFactory.getLog(this.getClass());
 
@@ -45,7 +49,7 @@ public class Router {
 	 */
 	private final static int MAX_NUM_PORTMAPPINGS = 100;
 
-	private Router(InternetGatewayDevice router) {
+	private SBBIRouter(InternetGatewayDevice router) {
 		if (router == null) {
 			throw new IllegalArgumentException("No router given");
 		}
@@ -60,9 +64,9 @@ public class Router {
 	 *             if no or more than one router devices where found.
 	 */
 
-	public static Router findRouter() throws RouterException {
+	public static IRouter findRouter() throws RouterException {
 		InternetGatewayDevice devices = findInternetGatewayDevice();
-		Router r = new Router(devices);
+		IRouter r = new SBBIRouter(devices);
 		return r;
 	}
 
@@ -93,14 +97,19 @@ public class Router {
 		return devices[0];
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.chris.portmapper.router.IRouter#getName()
+	 */
 	public String getName() throws RouterException {
 		return router.getIGDRootDevice().getModelName();
 	}
 
-	/**
-	 * Get the external IP of the router.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @return the external IP of the router.
+	 * @see org.chris.portmapper.router.IRouter#getExternalIPAddress()
 	 */
 	public String getExternalIPAddress() throws RouterException {
 		logger.debug("Get external IP address...");
@@ -116,10 +125,10 @@ public class Router {
 		return ipAddress;
 	}
 
-	/**
-	 * Get the internal host name or IP of the router.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @return the internal host name or IP of the router.
+	 * @see org.chris.portmapper.router.IRouter#getInternalHostName()
 	 */
 	public String getInternalHostName() {
 		logger.debug("Get internal IP address...");
@@ -129,10 +138,10 @@ public class Router {
 		return ipAddress;
 	}
 
-	/**
-	 * Get the internal port of the router.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @return the internal port of the router.
+	 * @see org.chris.portmapper.router.IRouter#getInternalPort()
 	 */
 	public int getInternalPort() {
 		logger.debug("Get internal port of router...");
@@ -141,12 +150,10 @@ public class Router {
 		return port;
 	}
 
-	/**
-	 * Get all port mappings from the router.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @return all port mappings from the router.
-	 * @throws RouterException
-	 *             if something went wrong when getting the port mappings.
+	 * @see org.chris.portmapper.router.IRouter#getPortMappings()
 	 */
 	public Collection<PortMapping> getPortMappings() throws RouterException {
 		logger.info("Get all port mappings...");
@@ -185,7 +192,7 @@ public class Router {
 
 					// The error codes 713 and 714 mean, that no port mappings
 					// where found for the current entry. See bug reports
-					//https://sourceforge.net/tracker/index.php?func=detail&aid=
+					// https://sourceforge.net/tracker/index.php?func=detail&aid=
 					// 1939749&group_id=213879&atid=1027466
 					// and http://www.sbbi.net/forum/viewtopic.php?p=394
 					if (e.getDetailErrorCode() == 713
@@ -196,7 +203,14 @@ public class Router {
 								+ currentMappingNumber
 								+ ". Stop getting more entries.");
 					} else {
-						throw e;
+						// Also ignore all other exceptions to workaround
+						// possible router bugs.
+						// https://sourceforge.net/tracker2/?func=detail&aid=2540478&group_id=213879&atid=1027466
+						moreEntries = false;
+						logger.error(
+								"Got exception when fetching port mapping for entry number "
+										+ currentMappingNumber
+										+ ". Stop getting more entries.", e);
 					}
 				}
 
@@ -214,13 +228,16 @@ public class Router {
 
 		} catch (IOException e) {
 			throw new RouterException("Could not get NAT mappings", e);
-		} catch (UPNPResponseException e) {
-			throw new RouterException("Could not get NAT mappings", e);
 		}
 
 		return mappings;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.chris.portmapper.router.IRouter#logRouterInfo()
+	 */
 	public void logRouterInfo() throws RouterException {
 		Map<String, String> info = new HashMap<String, String>();
 		UPNPRootDevice rootDevice = router.getIGDRootDevice();
@@ -245,6 +262,20 @@ public class Router {
 			String value = info.get(key);
 			logger.info("Router Info: " + key + " \t= " + value);
 		}
+
+		logger.info("def loc " + rootDevice.getDeviceDefLoc());
+		logger.info("def loc data " + rootDevice.getDeviceDefLocData());
+		logger.info("icons " + rootDevice.getDeviceIcons());
+		logger.info("device type " + rootDevice.getDeviceType());
+		logger.info("direct parent " + rootDevice.getDirectParent());
+		logger.info("disc udn " + rootDevice.getDiscoveryUDN());
+		logger.info("disc usn " + rootDevice.getDiscoveryUSN());
+		logger.info("udn " + rootDevice.getUDN());
+		// logger.info(rootDevice.get);
+		// logger.info(rootDevice.get);
+		// logger.info(rootDevice.get);
+		// logger.info(rootDevice.get);
+
 	}
 
 	private boolean addPortMapping(String description, Protocol protocol,
@@ -268,38 +299,53 @@ public class Router {
 		}
 	}
 
-	public boolean addPortMappings(Collection<PortMapping> mappings)
+	public void addPortMappings(Collection<PortMapping> mappings)
 			throws RouterException {
 		for (PortMapping portMapping : mappings) {
 			logger.info("Adding port mapping " + portMapping);
-			boolean success = addPortMapping(portMapping);
-			if (!success) {
-				return false;
-			}
+			addPortMapping(portMapping);
 		}
-		return true;
 	}
 
-	public boolean addPortMapping(PortMapping mapping) throws RouterException {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.chris.portmapper.router.IRouter#addPortMapping(org.chris.portmapper
+	 * .router.PortMapping)
+	 */
+	public void addPortMapping(PortMapping mapping) throws RouterException {
 		logger.info("Adding port mapping " + mapping.getCompleteDescription());
-		return addPortMapping(mapping.getDescription(), mapping.getProtocol(),
-				mapping.getRemoteHost(), mapping.getExternalPort(), mapping
-						.getInternalClient(), mapping.getInternalPort(), 0);
+		addPortMapping(mapping.getDescription(), mapping.getProtocol(), mapping
+				.getRemoteHost(), mapping.getExternalPort(), mapping
+				.getInternalClient(), mapping.getInternalPort(), 0);
 	}
 
-	public boolean removeMapping(PortMapping mapping) throws RouterException {
-		return removePortMapping(mapping.getProtocol(),
-				mapping.getRemoteHost(), mapping.getExternalPort());
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.chris.portmapper.router.IRouter#removeMapping(org.chris.portmapper
+	 * .router.PortMapping)
+	 */
+	public void removeMapping(PortMapping mapping) throws RouterException {
+		removePortMapping(mapping.getProtocol(), mapping.getRemoteHost(),
+				mapping.getExternalPort());
 
 	}
 
-	public boolean removePortMapping(Protocol protocol, String remoteHost,
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.chris.portmapper.router.IRouter#removePortMapping(org.chris.portmapper
+	 * .router.Protocol, java.lang.String, int)
+	 */
+	public void removePortMapping(Protocol protocol, String remoteHost,
 			int externalPort) throws RouterException {
 		String protocolString = (protocol.equals(Protocol.TCP) ? "TCP" : "UDP");
 		try {
-			boolean success = router.deletePortMapping(remoteHost,
-					externalPort, protocolString);
-			return success;
+			router.deletePortMapping(remoteHost, externalPort, protocolString);
 		} catch (IOException e) {
 			throw new RouterException("Could not remove SSH port mapping", e);
 		} catch (UPNPResponseException e) {
@@ -307,11 +353,32 @@ public class Router {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.chris.portmapper.router.IRouter#disconnect()
+	 */
 	public void disconnect() {
 		// Nothing to do right now.
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.chris.portmapper.router.IRouter#getValidityTime()
+	 */
 	public long getValidityTime() {
 		return router.getIGDRootDevice().getValidityTime();
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.chris.portmapper.router.IRouter#getUpTime()
+	 */
+	public long getUpTime() throws RouterException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

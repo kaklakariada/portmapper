@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Level;
-import org.chris.portmapper.router.PortMappingPreset;
+import org.chris.portmapper.model.PortMappingPreset;
 
 /**
  * @author chris

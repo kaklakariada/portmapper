@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.chris.portmapper.router;
+package org.chris.portmapper.model;
 
 import java.io.Serializable;
 

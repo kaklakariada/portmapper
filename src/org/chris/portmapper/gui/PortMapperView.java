@@ -35,9 +35,9 @@ import net.miginfocom.swing.MigLayout;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.chris.portmapper.PortMapperApp;
-import org.chris.portmapper.router.PortMapping;
-import org.chris.portmapper.router.PortMappingPreset;
-import org.chris.portmapper.router.Router;
+import org.chris.portmapper.model.PortMapping;
+import org.chris.portmapper.model.PortMappingPreset;
+import org.chris.portmapper.router.IRouter;
 import org.chris.portmapper.router.RouterException;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.FrameView;
@@ -266,7 +266,7 @@ public class PortMapperView extends FrameView {
 
 	@Action(name = ACTION_UPDATE_ADDRESSES, enabledProperty = PROPERTY_ROUTER_CONNECTED)
 	public void updateAddresses() {
-		Router router = PortMapperApp.getInstance().getRouter();
+		IRouter router = PortMapperApp.getInstance().getRouter();
 		if (router == null) {
 			externalIPLabel.setText(PortMapperApp.getResourceMap().getString(
 					"mainFrame.router.not_connected"));
@@ -301,26 +301,21 @@ public class PortMapperView extends FrameView {
 	}
 
 	private void addMapping(Collection<PortMapping> portMappings) {
-		boolean success = false;
-		Router router = PortMapperApp.getInstance().getRouter();
+		IRouter router = PortMapperApp.getInstance().getRouter();
 		if (router == null) {
 			return;
 		}
 
 		try {
-			success = router.addPortMappings(portMappings);
+			router.addPortMappings(portMappings);
 		} catch (RouterException e) {
 			logger.error("Could not add port mapping", e);
-		}
-
-		if (success) {
-			logger.info("Portmapping was added successfully");
-		} else {
-			logger.warn("Portmapping was NOT added successfully");
 			JOptionPane.showMessageDialog(this.getFrame(),
 					"The port mapping could not be added.",
 					"Error adding port mapping", JOptionPane.WARNING_MESSAGE);
 		}
+
+		logger.info("Portmapping was added successfully");
 		this.updatePortMappings();
 	}
 
@@ -330,22 +325,13 @@ public class PortMapperView extends FrameView {
 				.getSelectedPortMappings();
 		for (PortMapping mapping : selectedMappings) {
 			logger.info("Removing mapping " + mapping);
-			boolean success = false;
 			try {
-				success = PortMapperApp.getInstance().getRouter()
-						.removeMapping(mapping);
+				PortMapperApp.getInstance().getRouter().removeMapping(mapping);
 			} catch (RouterException e) {
 				logger.error("Could not remove port mapping " + mapping, e);
 				break;
 			}
-			if (success) {
-				logger.info("Mapping was removed successfully: " + mapping);
-			} else {
-				logger
-						.error("Mapping was not removed successfully: "
-								+ mapping);
-				break;
-			}
+			logger.info("Mapping was removed successfully: " + mapping);
 		}
 		if (selectedMappings.size() > 0) {
 			updatePortMappings();
@@ -354,7 +340,7 @@ public class PortMapperView extends FrameView {
 
 	@Action(name = ACTION_DISPLAY_ROUTER_INFO, enabledProperty = PROPERTY_ROUTER_CONNECTED)
 	public void displayRouterInfo() {
-		Router router = PortMapperApp.getInstance().getRouter();
+		IRouter router = PortMapperApp.getInstance().getRouter();
 		if (router == null) {
 			logger.warn("Not connected to router, could not get router info");
 			return;
@@ -383,7 +369,7 @@ public class PortMapperView extends FrameView {
 
 	@Action(name = ACTION_UPDATE_PORT_MAPPINGS, enabledProperty = PROPERTY_ROUTER_CONNECTED)
 	public void updatePortMappings() {
-		Router router = PortMapperApp.getInstance().getRouter();
+		IRouter router = PortMapperApp.getInstance().getRouter();
 		if (router == null) {
 			this.tableModel.setMappings(new LinkedList<PortMapping>());
 			return;

@@ -6,7 +6,7 @@ import java.util.Collection;
 import javax.swing.table.AbstractTableModel;
 
 import org.chris.portmapper.PortMapperApp;
-import org.chris.portmapper.router.PortMapping;
+import org.chris.portmapper.model.PortMapping;
 
 @SuppressWarnings("serial")//$NON-NLS-1$
 public class PortMappingsTableModel extends AbstractTableModel {

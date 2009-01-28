@@ -1,4 +1,4 @@
-package org.chris.portmapper.router;
+package org.chris.portmapper.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -46,13 +46,19 @@ public class PortMappingPreset implements Cloneable, Serializable {
 	}
 
 	public List<PortMapping> getPortMappings(String localhost) {
+		if (this.useLocalhostAsInternalClient()
+				&& (localhost == null || localhost.length() == 0)) {
+			throw new IllegalArgumentException(
+					"Got invalid localhost and internal host is not given.");
+		}
+
 		List<PortMapping> allPortMappings = new ArrayList<PortMapping>(
 				this.ports.size());
 		int i = 0;
 		for (SinglePortMapping port : this.ports) {
 			i++;
-			String internalClientName = this.internalClient != null ? this.internalClient
-					: localhost;
+			String internalClientName = this.useLocalhostAsInternalClient() ? localhost
+					: this.internalClient;
 
 			PortMapping newMapping = new PortMapping(port.getProtocol(),
 					remoteHost, port.getExternalPort(), internalClientName,
@@ -120,6 +126,11 @@ public class PortMappingPreset implements Cloneable, Serializable {
 
 	public void setNew(boolean isNew) {
 		this.isNew = isNew;
+	}
+
+	public boolean useLocalhostAsInternalClient() {
+		return this.getInternalClient() == null
+				|| this.getInternalClient().length() == 0;
 	}
 
 	/**

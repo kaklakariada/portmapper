@@ -34,10 +34,10 @@ import net.miginfocom.swing.MigLayout;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.chris.portmapper.PortMapperApp;
-import org.chris.portmapper.router.PortMapping;
-import org.chris.portmapper.router.PortMappingPreset;
-import org.chris.portmapper.router.Protocol;
-import org.chris.portmapper.router.SinglePortMapping;
+import org.chris.portmapper.model.PortMapping;
+import org.chris.portmapper.model.PortMappingPreset;
+import org.chris.portmapper.model.Protocol;
+import org.chris.portmapper.model.SinglePortMapping;
 import org.jdesktop.application.Action;
 
 /**

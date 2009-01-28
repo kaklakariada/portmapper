@@ -1,4 +1,4 @@
-package org.chris.portmapper.router;
+package org.chris.portmapper.model;
 
 import java.util.HashMap;
 import java.util.Map;

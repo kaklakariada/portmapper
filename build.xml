@@ -1,7 +1,8 @@
 <project name="PortMapper" basedir="." default="build-one-jar">
 
-	<property name="src.dir" location="src" />
-	<property name="build.dir" location="build" />
+	<property name="project.dir" location="./" />
+	<property name="src.dir" location="${project.dir}/src" />
+	<property name="build.dir" location="${project.dir}/build" />
 	<property name="classes.dir" location="${build.dir}/classes" />
 	<property name="build.resources.dir" location="${classes.dir}/org/chris/portmapper/resources/" />
 	<property name="src.resources.dir" location="${src.dir}/org/chris/portmapper/resources/" />
@@ -10,7 +11,7 @@
 	<property name="main-class" value="org.chris.portmapper.PortMapperApp" />
 
 	<buildnumber />
-	<property name="lib.dir" location="lib" />
+	<property name="lib.dir" location="${project.dir}/lib" />
 
 	<property name="one-jar.version" value="0.96" />
 	<taskdef name="one-jar" classname="com.simontuffs.onejar.ant.OneJarTask" classpath="${lib.dir}/one-jar-ant-task-${one-jar.version}.jar" onerror="report" />
@@ -30,10 +31,20 @@
 
 	<target name="get_version_number" description="Prompt the user for the version number">
 		<input message="Enter version number of new build." addproperty="version.number" />
+		<exec executable="svnversion" outputproperty="svn.revision.number" failonerror="true">
+			<arg line="-n" />
+			<arg path="${project.dir}" />
+		</exec>
+		<echo>Version number:      ${version.number}</echo>
+		<echo>Build number:        ${build.number}</echo>
+		<echo>SNV revision number: ${svn.revision.number}</echo>
 	</target>
 
 	<target name="compile" depends="clean" description="Compile the Java source files">
-		<javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" debug="true" target="1.5" source="1.5" />
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" debug="true" target="1.5" source="1.5">
+			<exclude name="**/fokus/*" />
+			<exclude name="**/htmlunit/*" />
+		</javac>
 		<copy todir="${classes.dir}">
 			<fileset dir="${src.dir}" excludes="**/*.java" />
 		</copy>
@@ -72,6 +83,7 @@
 		<copy file="${build.resources.dir}/ConnectTask_en.properties" tofile="${build.resources.dir}/ConnectTask.properties" />
 		<replace casesensitive="false" dir="${classes.dir}" includes="**/*.properties" token="@@VERSION_NUMBER@@" value="${version.number}" />
 		<replace casesensitive="false" dir="${classes.dir}" includes="**/*.properties" token="@@BUILD_NUMBER@@" value="${build.number}" />
+		<replace casesensitive="false" dir="${classes.dir}" includes="**/*.properties" token="@@SVN_REVISION_NUMBER@@" value="${svn.revision.number}" />
 	</target>
 
 	<target name="jar" depends="clean, compile, prepare_language_files" description="Create a JAR containing the class files">

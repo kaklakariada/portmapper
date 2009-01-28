@@ -18,8 +18,9 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.WriterAppender;
 import org.chris.portmapper.gui.PortMapperView;
 import org.chris.portmapper.logging.TextAreaWriter;
-import org.chris.portmapper.router.Router;
+import org.chris.portmapper.router.IRouter;
 import org.chris.portmapper.router.RouterException;
+import org.chris.portmapper.router.sbbi.SBBIRouter;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
 
@@ -42,7 +43,7 @@ public class PortMapperApp extends SingleFrameApplication {
 
 	private Log logger = LogFactory.getLog(this.getClass());
 
-	private Router router;
+	private IRouter router;
 	private Settings settings;
 	private TextAreaWriter logWriter;
 
@@ -177,15 +178,20 @@ public class PortMapperApp extends SingleFrameApplication {
 		return (PortMapperView) PortMapperApp.getInstance().getMainView();
 	}
 
-	public boolean connectRouter() throws RouterException {
+	public boolean connectRouter() {
 		if (this.router != null) {
 			logger
 					.warn("Already connected to router. Cannot create a second connection.");
 			return false;
 		}
 		logger.info("Searching for router...");
-		this.router = Router.findRouter();
-		logger.info("Connected to router " + router.getName());
+		// this.router = RouterEntity.findRouter();
+		try {
+			this.router = SBBIRouter.findRouter();
+			logger.info("Connected to router " + router.getName());
+		} catch (RouterException e) {
+			logger.error("", e);
+		}
 
 		boolean isConnected = this.router != null;
 		this.getView().fireConnectionStateChange();
@@ -208,7 +214,7 @@ public class PortMapperApp extends SingleFrameApplication {
 		return true;
 	}
 
-	public Router getRouter() {
+	public IRouter getRouter() {
 		return router;
 	}
 
@@ -225,6 +231,7 @@ public class PortMapperApp extends SingleFrameApplication {
 	 * 
 	 * @return IP address of the local host or <code>null</code>, if the address
 	 *         could not be determined.
+	 * @throws RouterException
 	 */
 	public String getLocalHostAddress() {
 		logger.debug("Get IP of localhost...");
@@ -238,7 +245,11 @@ public class PortMapperApp extends SingleFrameApplication {
 			int routerInternalPort = -1;
 
 			if (this.isConnected()) {
-				routerInternalPort = getRouter().getInternalPort();
+				try {
+					routerInternalPort = getRouter().getInternalPort();
+				} catch (RouterException e) {
+					logger.warn("Could not get internal port of router", e);
+				}
 				logger.debug("Got internal router port " + routerInternalPort);
 			}
 
