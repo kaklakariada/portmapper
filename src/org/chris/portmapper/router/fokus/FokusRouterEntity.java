@@ -25,7 +25,7 @@ import de.fraunhofer.fokus.upnp.util.exceptions.ActionFailedException;
  * @author chris
  * 
  */
-public class FokusRouterEntity extends TemplateEntity implements IRouter {
+public class FokusRouterEntity extends TemplateEntity {
 
 	/**
 	 * The maximum number of port mappings that we will try to retrieve from the
@@ -401,7 +401,9 @@ public class FokusRouterEntity extends TemplateEntity implements IRouter {
 			} catch (InterruptedException e) {
 			}
 		}
-		return entity;
+		// return entity;
+		// TODO
+		return null;
 	}
 
 }

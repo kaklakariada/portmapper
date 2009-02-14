@@ -17,6 +17,15 @@ public interface IRouter {
 	public abstract String getName() throws RouterException;
 
 	/**
+	 * Get the IP address of the local host.
+	 * 
+	 * @return IP address of the local host or <code>null</code>, if the address
+	 *         could not be determined.
+	 * @throws RouterException
+	 */
+	public String getLocalHostAddress() throws RouterException;
+
+	/**
 	 * Get the external IP of the router.
 	 * 
 	 * @return the external IP of the router.
@@ -27,8 +36,9 @@ public interface IRouter {
 	 * Get the internal host name or IP of the router.
 	 * 
 	 * @return the internal host name or IP of the router.
+	 * @throws RouterException
 	 */
-	public abstract String getInternalHostName();
+	public abstract String getInternalHostName() throws RouterException;
 
 	/**
 	 * Get the internal port of the router.

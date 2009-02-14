@@ -279,7 +279,12 @@ public class PortMapperView extends FrameView {
 		internalIPLabel.setText(PortMapperApp.getResourceMap().getString(
 				"mainFrame.router.updating"));
 
-		internalIPLabel.setText(router.getInternalHostName());
+		try {
+			internalIPLabel.setText(router.getInternalHostName());
+		} catch (RouterException e) {
+			internalIPLabel.setText("");
+			logger.error("Did not get internal IP address", e);
+		}
 		try {
 			externalIPLabel.setText(router.getExternalIPAddress());
 		} catch (RouterException e) {
@@ -390,7 +395,8 @@ public class PortMapperView extends FrameView {
 		if (selectedItem != null) {
 			String localHostAddress = PortMapperApp.getInstance()
 					.getLocalHostAddress();
-			if (localHostAddress == null) {
+			if (selectedItem.useLocalhostAsInternalClient()
+					&& localHostAddress == null) {
 				JOptionPane.showMessageDialog(this.getFrame(), PortMapperApp
 						.getResourceMap().getString(
 								"messages.error_getting_localhost_address"),
@@ -482,11 +488,6 @@ public class PortMapperView extends FrameView {
 			super(PortMapperApp.getInstance());
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.jdesktop.swingworker.SwingWorker#doInBackground()
-		 */
 		@Override
 		protected Void doInBackground() throws Exception {
 			PortMapperApp.getInstance().connectRouter();
@@ -498,6 +499,8 @@ public class PortMapperView extends FrameView {
 		}
 
 		protected void failed(Throwable cause) {
+			logger.warn("Could not connect to router: " + cause.getMessage(),
+					cause);
 			logger.warn("Could not connect to router: " + cause.getMessage());
 		}
 	}

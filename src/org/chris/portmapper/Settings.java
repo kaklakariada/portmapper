@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.apache.log4j.Level;
 import org.chris.portmapper.model.PortMappingPreset;
+import org.chris.portmapper.router.sbbi.SBBIRouterFactory;
 
 /**
  * @author chris
@@ -28,6 +29,7 @@ public class Settings implements Serializable {
 	private List<PortMappingPreset> presets;
 	private boolean useEntityEncoding;
 	private String logLevel;
+	private String routerFactoryClassName;
 
 	private transient PropertyChangeSupport propertyChangeSupport;
 
@@ -35,7 +37,12 @@ public class Settings implements Serializable {
 		useEntityEncoding = true;
 		logLevel = Level.INFO.toString();
 		presets = new ArrayList<PortMappingPreset>();
+		routerFactoryClassName = SBBIRouterFactory.class.getName();
 		propertyChangeSupport = new PropertyChangeSupport(this);
+		// routerFactoryClassName =
+		// "org.chris.portmapper.router.weupnp.WeUPnPRouterFactory";
+		// routerFactoryClassName =
+		// "org.chris.portmapper.router.dummy.DummyRouterFactory";
 	}
 
 	public void addPropertyChangeListener(String property,
@@ -82,7 +89,8 @@ public class Settings implements Serializable {
 	@Override
 	public String toString() {
 		return "[Settings: presets=" + presets + ", useEntityEncoding="
-				+ useEntityEncoding + ", logLevel=" + logLevel + "]";
+				+ useEntityEncoding + ", logLevel=" + logLevel
+				+ ", routerFactoryClassName=" + routerFactoryClassName + "]";
 	}
 
 	/**
@@ -113,5 +121,13 @@ public class Settings implements Serializable {
 	 */
 	public void setLogLevel(String logLevel) {
 		this.logLevel = logLevel;
+	}
+
+	public String getRouterFactoryClassName() {
+		return routerFactoryClassName;
+	}
+
+	public void setRouterFactoryClassName(String routerFactoryClassName) {
+		this.routerFactoryClassName = routerFactoryClassName;
 	}
 }

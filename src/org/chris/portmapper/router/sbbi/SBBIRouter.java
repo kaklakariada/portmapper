@@ -18,7 +18,7 @@ import org.apache.commons.logging.LogFactory;
 import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.model.PortMapping;
 import org.chris.portmapper.model.Protocol;
-import org.chris.portmapper.router.IRouter;
+import org.chris.portmapper.router.AbstractRouter;
 import org.chris.portmapper.router.RouterException;
 import org.chris.portmapper.util.EncodingUtilities;
 
@@ -29,7 +29,7 @@ import org.chris.portmapper.util.EncodingUtilities;
  * @author chris
  * 
  */
-public class SBBIRouter implements IRouter {
+public class SBBIRouter extends AbstractRouter {
 
 	private Log logger = LogFactory.getLog(this.getClass());
 
@@ -63,10 +63,9 @@ public class SBBIRouter implements IRouter {
 	 * @throws RouterException
 	 *             if no or more than one router devices where found.
 	 */
-
-	public static IRouter findRouter() throws RouterException {
-		InternetGatewayDevice devices = findInternetGatewayDevice();
-		IRouter r = new SBBIRouter(devices);
+	public static AbstractRouter findRouter() throws RouterException {
+		InternetGatewayDevice device = findInternetGatewayDevice();
+		AbstractRouter r = new SBBIRouter(device);
 		return r;
 	}
 
@@ -97,20 +96,10 @@ public class SBBIRouter implements IRouter {
 		return devices[0];
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.chris.portmapper.router.IRouter#getName()
-	 */
 	public String getName() throws RouterException {
 		return router.getIGDRootDevice().getModelName();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.chris.portmapper.router.IRouter#getExternalIPAddress()
-	 */
 	public String getExternalIPAddress() throws RouterException {
 		logger.debug("Get external IP address...");
 		String ipAddress;
@@ -125,11 +114,6 @@ public class SBBIRouter implements IRouter {
 		return ipAddress;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.chris.portmapper.router.IRouter#getInternalHostName()
-	 */
 	public String getInternalHostName() {
 		logger.debug("Get internal IP address...");
 		String ipAddress;
@@ -138,11 +122,6 @@ public class SBBIRouter implements IRouter {
 		return ipAddress;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.chris.portmapper.router.IRouter#getInternalPort()
-	 */
 	public int getInternalPort() {
 		logger.debug("Get internal port of router...");
 		int port = router.getIGDRootDevice().getPresentationURL().getPort();
@@ -150,11 +129,6 @@ public class SBBIRouter implements IRouter {
 		return port;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.chris.portmapper.router.IRouter#getPortMappings()
-	 */
 	public Collection<PortMapping> getPortMappings() throws RouterException {
 		logger.info("Get all port mappings...");
 		Collection<PortMapping> mappings = new LinkedList<PortMapping>();
@@ -271,11 +245,6 @@ public class SBBIRouter implements IRouter {
 		logger.info("disc udn " + rootDevice.getDiscoveryUDN());
 		logger.info("disc usn " + rootDevice.getDiscoveryUSN());
 		logger.info("udn " + rootDevice.getUDN());
-		// logger.info(rootDevice.get);
-		// logger.info(rootDevice.get);
-		// logger.info(rootDevice.get);
-		// logger.info(rootDevice.get);
-
 	}
 
 	private boolean addPortMapping(String description, Protocol protocol,
@@ -307,13 +276,6 @@ public class SBBIRouter implements IRouter {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.chris.portmapper.router.IRouter#addPortMapping(org.chris.portmapper
-	 * .router.PortMapping)
-	 */
 	public void addPortMapping(PortMapping mapping) throws RouterException {
 		logger.info("Adding port mapping " + mapping.getCompleteDescription());
 		addPortMapping(mapping.getDescription(), mapping.getProtocol(), mapping
@@ -321,64 +283,34 @@ public class SBBIRouter implements IRouter {
 				.getInternalClient(), mapping.getInternalPort(), 0);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.chris.portmapper.router.IRouter#removeMapping(org.chris.portmapper
-	 * .router.PortMapping)
-	 */
 	public void removeMapping(PortMapping mapping) throws RouterException {
 		removePortMapping(mapping.getProtocol(), mapping.getRemoteHost(),
 				mapping.getExternalPort());
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.chris.portmapper.router.IRouter#removePortMapping(org.chris.portmapper
-	 * .router.Protocol, java.lang.String, int)
-	 */
 	public void removePortMapping(Protocol protocol, String remoteHost,
 			int externalPort) throws RouterException {
 		String protocolString = (protocol.equals(Protocol.TCP) ? "TCP" : "UDP");
 		try {
 			router.deletePortMapping(remoteHost, externalPort, protocolString);
 		} catch (IOException e) {
-			throw new RouterException("Could not remove SSH port mapping", e);
+			throw new RouterException("Could not remove port mapping", e);
 		} catch (UPNPResponseException e) {
-			throw new RouterException("Could not remove SSH port mapping", e);
+			throw new RouterException("Could not remove port mapping", e);
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.chris.portmapper.router.IRouter#disconnect()
-	 */
 	public void disconnect() {
 		// Nothing to do right now.
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.chris.portmapper.router.IRouter#getValidityTime()
-	 */
 	public long getValidityTime() {
 		return router.getIGDRootDevice().getValidityTime();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.chris.portmapper.router.IRouter#getUpTime()
-	 */
 	public long getUpTime() throws RouterException {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
 }

@@ -2,6 +2,7 @@
 
 	<property name="project.dir" location="./" />
 	<property name="src.dir" location="${project.dir}/src" />
+	<property name="weupnp.src.dir" location="${project.dir}/src_weupnp" />
 	<property name="build.dir" location="${project.dir}/build" />
 	<property name="classes.dir" location="${build.dir}/classes" />
 	<property name="build.resources.dir" location="${classes.dir}/org/chris/portmapper/resources/" />
@@ -41,6 +42,10 @@
 	</target>
 
 	<target name="compile" depends="clean" description="Compile the Java source files">
+		<javac srcdir="${weupnp.src.dir}" destdir="${classes.dir}" classpathref="classpath" debug="true" target="1.5" source="1.5">
+			<exclude name="**/fokus/*" />
+			<exclude name="**/htmlunit/*" />
+		</javac>
 		<javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" debug="true" target="1.5" source="1.5">
 			<exclude name="**/fokus/*" />
 			<exclude name="**/htmlunit/*" />

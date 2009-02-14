@@ -5,8 +5,7 @@ package org.chris.portmapper;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
+import java.lang.reflect.Constructor;
 import java.util.EventObject;
 
 import javax.swing.JTextArea;
@@ -18,9 +17,10 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.WriterAppender;
 import org.chris.portmapper.gui.PortMapperView;
 import org.chris.portmapper.logging.TextAreaWriter;
+import org.chris.portmapper.model.PortMappingPreset;
 import org.chris.portmapper.router.IRouter;
+import org.chris.portmapper.router.IRouterFactory;
 import org.chris.portmapper.router.RouterException;
-import org.chris.portmapper.router.sbbi.SBBIRouter;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
 
@@ -159,6 +159,12 @@ public class PortMapperApp extends SingleFrameApplication {
 		super.shutdown();
 		logger.debug("Saving settings " + settings + " to file "
 				+ SETTINGS_FILENAME);
+		if (logger.isTraceEnabled()) {
+			for (PortMappingPreset preset : settings.getPresets()) {
+				logger.trace("Saving port mapping "
+						+ preset.getCompleteDescription());
+			}
+		}
 		try {
 			getContext().getLocalStorage().save(settings, SETTINGS_FILENAME);
 		} catch (IOException e) {
@@ -178,24 +184,65 @@ public class PortMapperApp extends SingleFrameApplication {
 		return (PortMapperView) PortMapperApp.getInstance().getMainView();
 	}
 
-	public boolean connectRouter() {
+	public boolean connectRouter() throws RouterException {
 		if (this.router != null) {
 			logger
 					.warn("Already connected to router. Cannot create a second connection.");
 			return false;
 		}
-		logger.info("Searching for router...");
-		// this.router = RouterEntity.findRouter();
+
+		IRouterFactory routerFactory;
 		try {
-			this.router = SBBIRouter.findRouter();
+			routerFactory = createRouterFactory();
+		} catch (RouterException e) {
+			logger.error("Could not create router factory", e);
+			return false;
+		}
+		logger.info("Searching for router...");
+		this.router = routerFactory.findRouter();
+
+		if (router == null) {
+			throw new RouterException("Did not find a router");
+		}
+
+		try {
 			logger.info("Connected to router " + router.getName());
 		} catch (RouterException e) {
-			logger.error("", e);
+			throw new RouterException("Could not get router name", e);
 		}
 
 		boolean isConnected = this.router != null;
 		this.getView().fireConnectionStateChange();
 		return isConnected;
+	}
+
+	@SuppressWarnings("unchecked")
+	private IRouterFactory createRouterFactory() throws RouterException {
+		Class<IRouterFactory> routerFactoryClass;
+		try {
+			routerFactoryClass = (Class<IRouterFactory>) Class.forName(settings
+					.getRouterFactoryClassName());
+		} catch (ClassNotFoundException e1) {
+			throw new RouterException(
+					"Did not find router factory class for name "
+							+ settings.getRouterFactoryClassName(), e1);
+		}
+
+		IRouterFactory routerFactory;
+		logger.debug("Creating a new instance of the router factory class "
+				+ routerFactoryClass.getName());
+		try {
+			Constructor<IRouterFactory> constructor = routerFactoryClass
+					.getConstructor(new Class[0]);
+			logger.debug("Found constructor, invoke it.");
+			routerFactory = constructor.newInstance(new Object[0]);
+		} catch (Exception e) {
+			throw new RouterException(
+					"Could not create a router factory for name "
+							+ settings.getRouterFactoryClassName(), e);
+		}
+		logger.debug("Router factory created.");
+		return routerFactory;
 	}
 
 	/**
@@ -235,67 +282,16 @@ public class PortMapperApp extends SingleFrameApplication {
 	 */
 	public String getLocalHostAddress() {
 		logger.debug("Get IP of localhost...");
-
-		InetAddress localHostIP = null;
-		try {
-
-			// In order to use the Socked method to get the address, we have to
-			// be connected to the router.
-
-			int routerInternalPort = -1;
-
-			if (this.isConnected()) {
-				try {
-					routerInternalPort = getRouter().getInternalPort();
-				} catch (RouterException e) {
-					logger.warn("Could not get internal port of router", e);
-				}
-				logger.debug("Got internal router port " + routerInternalPort);
-			}
-
-			// Check, if we got a correct port number
-			if (routerInternalPort > 0) {
-				logger.debug("Creating socket to router: "
-						+ getRouter().getInternalHostName() + ":"
-						+ routerInternalPort + "...");
-
-				Socket socket = new Socket(getRouter().getInternalHostName(),
-						routerInternalPort);
-				localHostIP = socket.getLocalAddress();
-
-				logger.debug("Got address " + localHostIP + " from socket.");
-			} else {
-				logger.debug("Got invalid internal router port number "
-						+ routerInternalPort);
-			}
-
-			// We are not connected to the router or got an invalid port number,
-			// so we have to use the traditional method.
-			if (localHostIP == null) {
-
+		if (router != null) {
+			try {
+				return router.getLocalHostAddress();
+			} catch (RouterException e) {
+				logger.warn("Could not get address of localhost.", e);
 				logger
-						.debug("Not connected to router or got invalid port number, can not use socket to determine the address of the localhost. "
-								+ "If no address is found, please connect to the router.");
-
-				localHostIP = InetAddress.getLocalHost();
-
-				logger.debug("Got address " + localHostIP
-						+ " via InetAddress.getLocalHost().");
+						.warn("Could not get address of localhost. Please enter it manually.");
 			}
-
-		} catch (IOException e) {
-			logger.error("Could not get IP of localhost", e);
 		}
-
-		// We do not want an address like 127.0.0.1
-		if (localHostIP.getHostAddress().startsWith("127.")) {
-			logger
-					.warn("Could not determine the address of localhost. Please enter it manually.");
-			return null;
-		}
-
-		return localHostIP.getHostAddress();
-
+		return null;
 	}
 
 	public void setLogLevel(String logLevel) {

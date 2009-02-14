@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="src_weupnp"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/commons-jxpath-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging.jar"/>
@@ -41,5 +42,10 @@
 	<classpathentry kind="lib" path="lib/htmlunit/xercesImpl-2.8.1.jar"/>
 	<classpathentry kind="lib" path="lib/htmlunit/xml-apis-1.0.b2.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/FokusUPnP"/>
+	<classpathentry kind="lib" path="lib/BrowserLauncher2-1_3.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://browserlaunch2.sourceforge.net/api"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

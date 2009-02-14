@@ -21,6 +21,9 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Level;
 import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.Settings;
+import org.chris.portmapper.router.dummy.DummyRouterFactory;
+import org.chris.portmapper.router.sbbi.SBBIRouterFactory;
+import org.chris.portmapper.router.weupnp.WeUPnPRouterFactory;
 import org.jdesktop.application.Action;
 
 /**
@@ -42,6 +45,7 @@ public class SettingsDialog extends JDialog {
 	private JCheckBox useEntityEncoding;
 
 	private JComboBox logLevelComboBox;
+	private JComboBox routerFactoryClassComboBox;
 
 	private JButton okButton;
 
@@ -51,6 +55,7 @@ public class SettingsDialog extends JDialog {
 	 */
 	public SettingsDialog() {
 		super(PortMapperApp.getInstance().getMainFrame(), true);
+
 		logger.debug("Create settings dialog");
 		this.setContentPane(this.getDialogPane());
 
@@ -108,6 +113,16 @@ public class SettingsDialog extends JDialog {
 
 		dialogPane.add(logLevelComboBox, "wrap");
 
+		dialogPane.add(createLabel("settings_dialog.upnp_lib"));
+
+		routerFactoryClassComboBox = new JComboBox(new Object[] {
+				SBBIRouterFactory.class.getName(),
+				WeUPnPRouterFactory.class.getName(),
+				DummyRouterFactory.class.getName() });
+		routerFactoryClassComboBox.setSelectedItem(settings
+				.getRouterFactoryClassName());
+		dialogPane.add(routerFactoryClassComboBox, "span 2, wrap");
+
 		dialogPane.add(new JButton(actionMap.get(ACTION_CANCEL)),
 				"tag cancel, span 2");
 		okButton = new JButton(actionMap.get(ACTION_SAVE));
@@ -122,24 +137,21 @@ public class SettingsDialog extends JDialog {
 	 */
 	@Action(name = ACTION_SAVE)
 	public void save() {
-
 		Settings settings = PortMapperApp.getInstance().getSettings();
 		settings.setUseEntityEncoding(useEntityEncoding.isSelected());
 		settings.setLogLevel(((Level) logLevelComboBox.getSelectedItem())
 				.toString());
+		settings.setRouterFactoryClassName(routerFactoryClassComboBox
+				.getSelectedItem().toString());
 
 		PortMapperApp.getInstance().setLogLevel(settings.getLogLevel());
 
-		logger.info("Saved settings " + settings);
+		logger.debug("Saved settings " + settings);
 		this.dispose();
 	}
 
 	@Action(name = ACTION_CANCEL)
 	public void cancel() {
 		this.dispose();
-	}
-
-	private String getResourceString(String name, Object... args) {
-		return PortMapperApp.getResourceMap().getString(name, args);
 	}
 }
