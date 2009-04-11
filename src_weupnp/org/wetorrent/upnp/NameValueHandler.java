@@ -46,7 +46,7 @@ public class NameValueHandler extends DefaultHandler {
 	}
 
 	public void characters(char[] ch, int start, int length) {
-		nameValue.put(currentElement, new String(ch, start, length));
+		nameValue.put(currentElement, new String(ch, start, length).trim());
 	}
 
 	public Map<String, String> getNameValue() {

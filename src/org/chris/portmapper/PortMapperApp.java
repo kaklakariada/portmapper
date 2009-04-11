@@ -219,6 +219,8 @@ public class PortMapperApp extends SingleFrameApplication {
 	@SuppressWarnings("unchecked")
 	private IRouterFactory createRouterFactory() throws RouterException {
 		Class<IRouterFactory> routerFactoryClass;
+		logger.info("Creating router factory for class "
+				+ settings.getRouterFactoryClassName());
 		try {
 			routerFactoryClass = (Class<IRouterFactory>) Class.forName(settings
 					.getRouterFactoryClassName());
@@ -234,14 +236,14 @@ public class PortMapperApp extends SingleFrameApplication {
 		try {
 			Constructor<IRouterFactory> constructor = routerFactoryClass
 					.getConstructor(new Class[0]);
-			logger.debug("Found constructor, invoke it.");
+			logger.debug("Found constructor, invoke it");
 			routerFactory = constructor.newInstance(new Object[0]);
 		} catch (Exception e) {
 			throw new RouterException(
 					"Could not create a router factory for name "
 							+ settings.getRouterFactoryClassName(), e);
 		}
-		logger.debug("Router factory created.");
+		logger.debug("Router factory created");
 		return routerFactory;
 	}
 

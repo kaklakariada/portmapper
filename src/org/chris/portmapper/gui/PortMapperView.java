@@ -143,7 +143,7 @@ public class PortMapperView extends FrameView {
 
 			public void propertyChange(PropertyChangeEvent evt) {
 				if (evt.getPropertyName().equals(PROPERTY_ROUTER_CONNECTED)) {
-					logger.info("Connection state changed to "
+					logger.debug("Connection state changed to "
 							+ evt.getNewValue());
 					ActionMap actionMap = getContext().getActionMap(
 							PortMapperApp.getInstance().getView().getClass(),
@@ -473,8 +473,10 @@ public class PortMapperView extends FrameView {
 
 	private void copyTextToClipboard(String text) {
 		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+		logger.trace("Copy text '" + text + "' to clipbord");
 		clipboard.setContents(new StringSelection(text), new ClipboardOwner() {
 			public void lostOwnership(Clipboard clipboard, Transferable contents) {
+				logger.trace("Lost clipboard ownership");
 			}
 		});
 	}
@@ -490,11 +492,15 @@ public class PortMapperView extends FrameView {
 
 		@Override
 		protected Void doInBackground() throws Exception {
+			logger.trace("Connecting to router...");
 			PortMapperApp.getInstance().connectRouter();
 			message("updateAddresses");
+			logger.trace("Updating addresses...");
 			updateAddresses();
 			message("updatePortMappings");
+			logger.trace("Updating port mappings...");
 			updatePortMappings();
+			logger.trace("done");
 			return null;
 		}
 

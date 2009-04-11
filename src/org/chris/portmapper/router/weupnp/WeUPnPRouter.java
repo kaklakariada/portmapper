@@ -96,29 +96,33 @@ public class WeUPnPRouter extends AbstractRouter {
 
 	@Override
 	public Collection<PortMapping> getPortMappings() throws RouterException {
-		int numMappings;
-		try {
-			numMappings = device.getPortMappingNumberOfEntries();
-		} catch (WeUPnPException e) {
-			throw new RouterException("Could not get number of port mappings",
-					e);
-		}
 		Collection<PortMapping> mappings = new LinkedList<PortMapping>();
-		for (int i = 0; i < numMappings; i++) {
-			PortMappingEntry entry;
+		boolean morePortMappings = true;
+		int index = 0;
+		while (morePortMappings) {
+			PortMappingEntry entry = null;
 			try {
-				entry = device.getGenericPortMappingEntry(i);
+				logger.debug("Getting port mapping " + index + "...");
+				entry = device.getGenericPortMappingEntry(index);
+				logger.debug("Got port mapping " + index + ": " + entry);
 			} catch (WeUPnPException e) {
-				throw new RouterException("Could not get port mapping " + i, e);
+				morePortMappings = false;
+				logger.debug("Got an exception for index " + index
+						+ ", stop getting more mappings", e);
 			}
 
-			Protocol protocol = entry.getProtocol().equalsIgnoreCase("TCP") ? Protocol.TCP
-					: Protocol.UDP;
-			PortMapping m = new PortMapping(protocol, entry.getRemoteHost(),
-					entry.getExternalPort(), entry.getInternalClient(), entry
-							.getInternalPort(), entry
-							.getPortMappingDescription());
-			mappings.add(m);
+			if (entry != null) {
+				Protocol protocol = entry.getProtocol().equalsIgnoreCase("TCP") ? Protocol.TCP
+						: Protocol.UDP;
+				PortMapping m = new PortMapping(protocol,
+						entry.getRemoteHost(), entry.getExternalPort(), entry
+								.getInternalClient(), entry.getInternalPort(),
+						entry.getPortMappingDescription());
+				mappings.add(m);
+			} else {
+				logger.debug("Got null port mapping for index " + index);
+			}
+			index++;
 		}
 		return mappings;
 	}

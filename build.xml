@@ -113,4 +113,8 @@
 		</one-jar>
 	</target>
 
+	<target name="run" depends="build-one-jar" description="Run PortMapper">
+		<java jar="${jar.dir}/${ant.project.name}-${version.number}.jar" fork="true" />
+	</target>
+
 </project>

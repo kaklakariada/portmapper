@@ -25,72 +25,96 @@
 package org.wetorrent.upnp;
 
 public class PortMappingEntry {
-    private int internalPort;
-    private int externalPort;
-    private String remoteHost;
-    private String internalClient;
-    private String protocol;
-    private String enabled;
-    
-    private String portMappingDescription;
-    
-    public PortMappingEntry() {
-    }
+	private int internalPort;
+	private int externalPort;
+	private String remoteHost;
+	private String internalClient;
+	private String protocol;
+	private String enabled;
 
-    public int getInternalPort() {
-        return internalPort;
-    }
+	private String portMappingDescription;
 
-    public void setInternalPort(int internalPort) {
-        this.internalPort = internalPort;
-    }
+	public PortMappingEntry() {
+	}
 
-    public int getExternalPort() {
-        return externalPort;
-    }
+	public int getInternalPort() {
+		return internalPort;
+	}
 
-    public void setExternalPort(int externalPort) {
-        this.externalPort = externalPort;
-    }
+	public void setInternalPort(int internalPort) {
+		this.internalPort = internalPort;
+	}
 
-    public String getRemoteHost() {
-        return remoteHost;
-    }
+	public int getExternalPort() {
+		return externalPort;
+	}
 
-    public void setRemoteHost(String remoteHost) {
-        this.remoteHost = remoteHost;
-    }
+	public void setExternalPort(int externalPort) {
+		this.externalPort = externalPort;
+	}
 
-    public String getInternalClient() {
-        return internalClient;
-    }
+	public String getRemoteHost() {
+		return remoteHost;
+	}
 
-    public void setInternalClient(String internalClient) {
-        this.internalClient = internalClient;
-    }
+	public void setRemoteHost(String remoteHost) {
+		this.remoteHost = remoteHost;
+	}
 
-    public String getProtocol() {
-        return protocol;
-    }
+	public String getInternalClient() {
+		return internalClient;
+	}
 
-    public void setProtocol(String protocol) {
-        this.protocol = protocol;
-    }
+	public void setInternalClient(String internalClient) {
+		this.internalClient = internalClient;
+	}
 
-    public String getEnabled() {
-        return enabled;
-    }
+	public String getProtocol() {
+		return protocol;
+	}
 
-    public void setEnabled(String enabled) {
-        this.enabled = enabled;
-    }
+	public void setProtocol(String protocol) {
+		this.protocol = protocol;
+	}
 
-    public String getPortMappingDescription() {
-        return portMappingDescription;
-    }
+	public String getEnabled() {
+		return enabled;
+	}
 
-    public void setPortMappingDescription(String portMappingDescription) {
-        this.portMappingDescription = portMappingDescription;
-    }
-    
+	public void setEnabled(String enabled) {
+		this.enabled = enabled;
+	}
+
+	public String getPortMappingDescription() {
+		return portMappingDescription;
+	}
+
+	public void setPortMappingDescription(String portMappingDescription) {
+		this.portMappingDescription = portMappingDescription;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuffer b = new StringBuffer();
+		b.append("[PortMappingEntry: protocol=");
+		b.append(protocol);
+		b.append(", remote host=");
+		b.append(remoteHost);
+		b.append(", internal client=");
+		b.append(internalClient);
+		b.append(", internal port=");
+		b.append(internalPort);
+		b.append(", external port=");
+		b.append(externalPort);
+		b.append(", enabled=");
+		b.append(enabled);
+		b.append(", description=");
+		b.append(portMappingDescription);
+		b.append("]");
+		return b.toString();
+	}
+
 }

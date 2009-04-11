@@ -285,15 +285,25 @@ public class GatewayDevice {
 
 		PortMappingEntry portMappingEntry = new PortMappingEntry();
 
-		portMappingEntry.setExternalPort(parseInt(nameValue
-				.get("NewExternalPort")));
+		if ( nameValue.get("NewExternalPort") != null) {
+			portMappingEntry.setExternalPort(parseInt(nameValue
+					.get("NewExternalPort")));
+		} else {
+			portMappingEntry.setExternalPort(-1);
+		}
 
 		portMappingEntry.setRemoteHost(nameValue.get("NewRemoteHost"));
 		portMappingEntry.setInternalClient(nameValue.get("NewInternalClient"));
 		portMappingEntry.setProtocol(nameValue.get("NewProtocol"));
 
+		if(nameValue
+				.get("NewInternalPort")!=null){
 		portMappingEntry.setInternalPort(parseInt(nameValue
 				.get("NewInternalPort")));
+		}else{
+			portMappingEntry.setInternalPort(-1);
+		}
+			
 		portMappingEntry.setEnabled(nameValue.get("NewEnabled"));
 		portMappingEntry.setPortMappingDescription(nameValue
 				.get("NewPortMappingDescription"));
@@ -317,6 +327,7 @@ public class GatewayDevice {
 	}
 
 	public int getPortMappingNumberOfEntries() throws WeUPnPException {
+
 		Map<String, String> nameValue = simpleUPnPcommand(controlURL,
 				serviceType, "GetPortMappingNumberOfEntries", null);
 
@@ -326,8 +337,8 @@ public class GatewayDevice {
 		try {
 			return Integer.parseInt(portMappingNumberString);
 		} catch (NumberFormatException e) {
-			throw new WeUPnPException("Got invalid port number "
-					+ portMappingNumberString, e);
+			throw new WeUPnPException("Got invalid port number '"
+					+ portMappingNumberString + "'", e);
 		}
 	}
 
