@@ -17,7 +17,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class AbstractRouter implements IRouter {
 
-	private Log logger = LogFactory.getLog(this.getClass());
+	private final Log logger = LogFactory.getLog(this.getClass());
 
 	public String getLocalHostAddress() throws RouterException {
 		logger.debug("Get IP of localhost...");

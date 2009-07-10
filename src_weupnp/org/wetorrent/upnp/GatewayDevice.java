@@ -26,6 +26,7 @@ package org.wetorrent.upnp;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -65,6 +66,19 @@ public class GatewayDevice {
 	private String manufacturer;
 	private String modelDescription;
 	private String presentationURL;
+
+	/**
+	 * The address used to reach this machine from the GatewayDevice
+	 */
+	private InetAddress localAddress;
+
+	public InetAddress getLocalAddress() {
+		return localAddress;
+	}
+
+	public void setLocalAddress(InetAddress localAddress) {
+		this.localAddress = localAddress;
+	}
 
 	/**
 	 * Creates a new instance of GatewayDevice
@@ -285,7 +299,7 @@ public class GatewayDevice {
 
 		PortMappingEntry portMappingEntry = new PortMappingEntry();
 
-		if ( nameValue.get("NewExternalPort") != null) {
+		if (nameValue.get("NewExternalPort") != null) {
 			portMappingEntry.setExternalPort(parseInt(nameValue
 					.get("NewExternalPort")));
 		} else {
@@ -296,14 +310,13 @@ public class GatewayDevice {
 		portMappingEntry.setInternalClient(nameValue.get("NewInternalClient"));
 		portMappingEntry.setProtocol(nameValue.get("NewProtocol"));
 
-		if(nameValue
-				.get("NewInternalPort")!=null){
-		portMappingEntry.setInternalPort(parseInt(nameValue
-				.get("NewInternalPort")));
-		}else{
+		if (nameValue.get("NewInternalPort") != null) {
+			portMappingEntry.setInternalPort(parseInt(nameValue
+					.get("NewInternalPort")));
+		} else {
 			portMappingEntry.setInternalPort(-1);
 		}
-			
+
 		portMappingEntry.setEnabled(nameValue.get("NewEnabled"));
 		portMappingEntry.setPortMappingDescription(nameValue
 				.get("NewPortMappingDescription"));

@@ -17,9 +17,9 @@ import org.chris.portmapper.router.RouterException;
  */
 public class DummyRouter implements IRouter {
 
-	private Log logger = LogFactory.getLog(this.getClass());
+	private final Log logger = LogFactory.getLog(this.getClass());
 
-	private Collection<PortMapping> mappings;
+	private final Collection<PortMapping> mappings;
 
 	public DummyRouter() {
 		logger.debug("Created new DummyRouter");
@@ -87,12 +87,10 @@ public class DummyRouter implements IRouter {
 	public void removePortMapping(Protocol protocol, String remoteHost,
 			int externalPort) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public String getLocalHostAddress() throws RouterException {
 		return "DummyLocalhostAddress";
 	}
-
 }

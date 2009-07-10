@@ -5,7 +5,7 @@ import java.io.Writer;
 
 public class DocumentWriter extends Writer {
 
-	private LoggingDocument document;
+	private final LoggingDocument document;
 
 	public DocumentWriter(LoggingDocument document) {
 		super();

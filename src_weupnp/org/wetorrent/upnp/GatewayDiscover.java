@@ -1,25 +1,25 @@
-/* 
- *              weupnp - Trivial upnp java library 
+/*
+ *              weupnp - Trivial upnp java library
  *
  * Copyright (C) 2008 Alessandro Bahgat Shehata, Daniele Castagna
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * 
+ *
  * Alessandro Bahgat Shehata - ale dot bahgat at gmail dot com
  * Daniele Castagna - daniele dot castagna at gmail dot com
- * 
+ *
  */
 
 package org.wetorrent.upnp;
@@ -28,37 +28,50 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.BindException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-import java.util.Collection;
-import java.util.LinkedList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GatewayDiscover {
 
 	private static final int PORT = 1900;
 	private final String IP = "239.255.255.250";
 
-	private Collection<GatewayDevice> devices = new LinkedList<GatewayDevice>();
+	private final Map<InetAddress, GatewayDevice> devices = new HashMap<InetAddress, GatewayDevice>();
 
 	public GatewayDiscover() {
 	}
 
-	public Collection<GatewayDevice> discover() throws WeUPnPException {
+	public Map<InetAddress, GatewayDevice> discover() throws WeUPnPException {
 
-		DatagramSocket ssdp;
+		DatagramSocket ssdp = null;
 		try {
+			// try binding using the default port
 			ssdp = new DatagramSocket(PORT);
-		} catch (SocketException e1) {
-			throw new WeUPnPException("Error when creating socket for port "
-					+ PORT, e1);
+		} catch (BindException be) {
+			// could not bind to the default port
+		} catch (SocketException e) {
+			throw new WeUPnPException("Error discovering gateway devices", e);
+		}
+		try {
+			if (null == ssdp) {
+				// let the JVM choose an available port
+				ssdp = new DatagramSocket();
+			}
+		} catch (SocketException e) {
+			throw new WeUPnPException("Error discovering gateway devices", e);
 		}
 
+		int port = ssdp.getLocalPort();
+
 		final String searchMessage = "M-SEARCH * HTTP/1.1\r\n" + "HOST: " + IP
-				+ ":" + PORT + "\r\n" + "ST: "
+				+ ":" + port + "\r\n" + "ST: "
 				+ "urn:schemas-upnp-org:device:InternetGatewayDevice:1"
 				+ "\r\n" + "MAN: \"ssdp:discover\"\r\n" + "MX: 2\r\n" + "\r\n";
 		try {
@@ -90,14 +103,26 @@ public class GatewayDiscover {
 					// TODO: devices should be a map, and receivePacket.address
 					// should be the key ;)
 					GatewayDevice d = parseMSearchReplay(receivedData);
-					devices.add(d);
+
+					/* Get local address as it appears to the Gateway */
+					DatagramSocket sock = new DatagramSocket();
+					sock.connect(receivePacket.getSocketAddress());
+					InetAddress localAddress = sock.getLocalAddress();
+					sock.disconnect();
+					sock = null;
+
+					d.setLocalAddress(localAddress);
+					devices.put(localAddress, d);
 				} catch (SocketTimeoutException ste) {
 					waitingPacket = false;
 				}
 			}
 
-			for (GatewayDevice device : devices) {
-				device.loadDescription();
+			for (GatewayDevice device : devices.values()) {
+				try {
+					device.loadDescription();
+				} catch (Exception e) {
+				}
 			}
 		} catch (IOException e) {
 			throw new WeUPnPException("Error discovering gateway devices", e);
@@ -134,15 +159,14 @@ public class GatewayDiscover {
 				if (value != null)
 					value = value.trim();
 
-				if (key.equalsIgnoreCase("location"))
+				if (key.compareToIgnoreCase("location") == 0)
 					device.setLocation(value);
-				else if (key.equalsIgnoreCase("st"))
+				else if (key.compareToIgnoreCase("st") == 0)
 					device.setSt(value);
 			}
 			try {
 				line = br.readLine().trim();
-			} catch (IOException e) {
-				throw new WeUPnPException("Error reading search replay", e);
+			} catch (IOException ex) {
 			}
 		}
 
@@ -154,7 +178,7 @@ public class GatewayDiscover {
 		if (devices.isEmpty()) {
 			throw new WeUPnPException("Did not find any gateways");
 		}
-		for (GatewayDevice device : devices) {
+		for (GatewayDevice device : devices.values()) {
 			if (device.isConnected())
 				return device;
 		}

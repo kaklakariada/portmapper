@@ -41,7 +41,7 @@ public class PortMapperApp extends SingleFrameApplication {
 	 */
 	private static final String SETTINGS_FILENAME = "settings.xml";
 
-	private Log logger = LogFactory.getLog(this.getClass());
+	private final Log logger = LogFactory.getLog(this.getClass());
 
 	private IRouter router;
 	private Settings settings;

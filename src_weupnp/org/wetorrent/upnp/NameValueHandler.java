@@ -32,7 +32,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class NameValueHandler extends DefaultHandler {
 
-	private Map<String, String> nameValue;
+	private final Map<String, String> nameValue;
 
 	public NameValueHandler() {
 		this.nameValue = new HashMap<String, String>();

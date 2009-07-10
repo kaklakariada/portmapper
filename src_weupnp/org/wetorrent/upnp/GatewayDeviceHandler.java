@@ -54,7 +54,7 @@ public class GatewayDeviceHandler extends DefaultHandler {
 	 */
 	private static final int STATE_WAN_IP_CONNECTION = 3;
 
-	private GatewayDevice device;
+	private final GatewayDevice device;
 	private String currentElement;
 	private int level = 0;
 	private short state = STATE_INITIALIZED;

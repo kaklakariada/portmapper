@@ -11,7 +11,7 @@ import org.chris.portmapper.model.PortMapping;
 @SuppressWarnings("serial")//$NON-NLS-1$
 public class PortMappingsTableModel extends AbstractTableModel {
 
-	private ArrayList<PortMapping> mappings;
+	private final ArrayList<PortMapping> mappings;
 	private boolean remoteHostGiven = true;
 
 	public PortMappingsTableModel() {
@@ -21,7 +21,8 @@ public class PortMappingsTableModel extends AbstractTableModel {
 	}
 
 	public void setMappings(Collection<PortMapping> mappings) {
-		this.mappings = new ArrayList<PortMapping>(mappings);
+		this.mappings.clear();
+		this.mappings.addAll(mappings);
 		boolean newRemoteHostGiven = remoteHostGiven();
 		if (newRemoteHostGiven != remoteHostGiven) {
 			super.fireTableStructureChanged();

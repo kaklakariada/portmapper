@@ -22,7 +22,7 @@ public class SpinnerCellEditor extends AbstractCellEditor implements
 		TableCellEditor, ChangeListener {
 
 	private Integer currentPortNumber;
-	private JSpinner spinner;
+	private final JSpinner spinner;
 
 	/**
 	 * 

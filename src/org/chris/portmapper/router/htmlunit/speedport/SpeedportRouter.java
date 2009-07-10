@@ -29,7 +29,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 public class SpeedportRouter extends AbstractRouter {
 
 	private final static Log logger = LogFactory.getLog(SpeedportRouter.class);
-	private WebClient webClient;
+	private final WebClient webClient;
 
 	private SpeedportRouter(WebClient webClient) {
 		this.webClient = webClient;

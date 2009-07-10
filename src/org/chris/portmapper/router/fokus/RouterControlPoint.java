@@ -6,7 +6,7 @@ import org.apache.commons.logging.LogFactory;
 public class RouterControlPoint {
 	// public class RouterControlPoint extends TemplateControlPoint {
 
-	private Log logger = LogFactory.getLog(this.getClass());
+	private final Log logger = LogFactory.getLog(this.getClass());
 	private final static String DEVICE_NAME = "urn:schemas-upnp-org:device:WANConnectionDevice:";
 	// Vector<RouterCPDevice> routerList = new Vector<RouterCPDevice>();
 	//

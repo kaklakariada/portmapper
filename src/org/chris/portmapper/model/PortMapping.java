@@ -7,12 +7,12 @@ import net.sbbi.upnp.messages.ActionResponse;
 
 public class PortMapping implements Cloneable {
 
-	private int externalPort;
-	private Protocol protocol;
-	private int internalPort;
-	private String description;
+	private final int externalPort;
+	private final Protocol protocol;
+	private final int internalPort;
+	private final String description;
 	private String internalClient;
-	private String remoteHost;
+	private final String remoteHost;
 	private boolean enabled;
 	private long leaseDuration;
 

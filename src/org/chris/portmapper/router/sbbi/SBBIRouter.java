@@ -31,7 +31,7 @@ import org.chris.portmapper.util.EncodingUtilities;
  */
 public class SBBIRouter extends AbstractRouter {
 
-	private Log logger = LogFactory.getLog(this.getClass());
+	private final Log logger = LogFactory.getLog(this.getClass());
 
 	/**
 	 * The wrapped router device.

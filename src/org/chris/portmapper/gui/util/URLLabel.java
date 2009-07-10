@@ -26,7 +26,7 @@ import edu.stanford.ejalbert.exception.UnsupportedOperatingSystemException;
 @SuppressWarnings("serial")
 public class URLLabel extends JLabel {
 
-	private static Log logger = LogFactory.getLog(URLLabel.class);
+	private final static Log logger = LogFactory.getLog(URLLabel.class);
 
 	private String url, text;
 

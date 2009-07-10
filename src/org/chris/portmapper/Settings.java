@@ -39,10 +39,6 @@ public class Settings implements Serializable {
 		presets = new ArrayList<PortMappingPreset>();
 		routerFactoryClassName = SBBIRouterFactory.class.getName();
 		propertyChangeSupport = new PropertyChangeSupport(this);
-		// routerFactoryClassName =
-		// "org.chris.portmapper.router.weupnp.WeUPnPRouterFactory";
-		// routerFactoryClassName =
-		// "org.chris.portmapper.router.dummy.DummyRouterFactory";
 	}
 
 	public void addPropertyChangeListener(String property,

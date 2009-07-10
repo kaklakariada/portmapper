@@ -58,5 +58,4 @@ public class SinglePortMapping implements Cloneable, Serializable {
 		port.protocol = this.protocol;
 		return port;
 	}
-
 }

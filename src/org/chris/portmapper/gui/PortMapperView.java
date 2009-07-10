@@ -67,7 +67,7 @@ public class PortMapperView extends FrameView {
 	private static final String ACTION_REMOVE_PRESET_MAPPING = "mainFrame.preset_mappings.remove";
 	private static final String ACTION_USE_PRESET_MAPPING = "mainFrame.preset_mappings.use";
 
-	private Log logger = LogFactory.getLog(this.getClass());
+	private final Log logger = LogFactory.getLog(this.getClass());
 
 	private static final String PROPERTY_MAPPING_SELECTED = "mappingSelected";
 	private static final String PROPERTY_ROUTER_CONNECTED = "connectedToRouter";

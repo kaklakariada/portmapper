@@ -20,8 +20,8 @@ import org.chris.portmapper.Settings;
 public class PresetListModel extends AbstractListModel implements
 		PropertyChangeListener {
 
-	private Log logger = LogFactory.getLog(this.getClass());
-	private Settings settings;
+	private final Log logger = LogFactory.getLog(this.getClass());
+	private final Settings settings;
 
 	public PresetListModel(Settings settings) {
 		super();

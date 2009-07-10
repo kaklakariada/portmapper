@@ -28,7 +28,7 @@ import org.wetorrent.upnp.WeUPnPException;
  */
 public class WeUPnPRouter extends AbstractRouter {
 
-	private Log logger = LogFactory.getLog(this.getClass());
+	private final Log logger = LogFactory.getLog(this.getClass());
 	private GatewayDevice device;
 
 	/**

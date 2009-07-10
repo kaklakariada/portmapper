@@ -35,7 +35,7 @@ import org.jdesktop.application.Action;
 @SuppressWarnings("serial")
 public class SettingsDialog extends JDialog {
 
-	private Log logger = LogFactory.getLog(this.getClass());
+	private final Log logger = LogFactory.getLog(this.getClass());
 
 	private final static String DIALOG_NAME = "settings_dialog";
 

@@ -21,7 +21,7 @@ public class TextNumberCellEditor extends AbstractCellEditor implements
 		TableCellEditor, KeyListener {
 
 	private Integer currentPortNumber;
-	private JTextField textField;
+	private final JTextField textField;
 
 	/**
 	 * 

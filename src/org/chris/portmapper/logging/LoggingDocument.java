@@ -12,7 +12,5 @@ public class LoggingDocument extends PlainDocument {
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
-
 	}
-
 }

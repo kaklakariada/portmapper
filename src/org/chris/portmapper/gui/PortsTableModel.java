@@ -21,7 +21,7 @@ import org.chris.portmapper.model.SinglePortMapping;
 public class PortsTableModel extends AbstractTableModel implements
 		PropertyChangeListener {
 
-	List<SinglePortMapping> ports;
+	private final List<SinglePortMapping> ports;
 
 	public PortsTableModel(List<SinglePortMapping> ports) {
 		super();
