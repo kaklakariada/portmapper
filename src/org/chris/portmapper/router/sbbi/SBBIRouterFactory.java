@@ -13,7 +13,6 @@ import org.chris.portmapper.router.RouterException;
  */
 public class SBBIRouterFactory implements IRouterFactory {
 
-	@Override
 	public AbstractRouter findRouter() throws RouterException {
 		return SBBIRouter.findRouter();
 	}

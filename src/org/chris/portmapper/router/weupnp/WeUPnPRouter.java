@@ -38,7 +38,6 @@ public class WeUPnPRouter extends AbstractRouter {
 		this.device = device;
 	}
 
-	@Override
 	public void addPortMapping(PortMapping mapping) throws RouterException {
 		try {
 			device.addPortMapping(mapping.getExternalPort(), mapping
@@ -49,7 +48,6 @@ public class WeUPnPRouter extends AbstractRouter {
 		}
 	}
 
-	@Override
 	public void addPortMappings(Collection<PortMapping> mappings)
 			throws RouterException {
 		for (PortMapping mapping : mappings) {
@@ -57,12 +55,10 @@ public class WeUPnPRouter extends AbstractRouter {
 		}
 	}
 
-	@Override
 	public void disconnect() {
 		device = null;
 	}
 
-	@Override
 	public String getExternalIPAddress() throws RouterException {
 		try {
 			return device.getExternalIPAddress();
@@ -71,7 +67,6 @@ public class WeUPnPRouter extends AbstractRouter {
 		}
 	}
 
-	@Override
 	public String getInternalHostName() throws RouterException {
 		try {
 			return new URL(device.getPresentationURL()).getHost();
@@ -80,7 +75,6 @@ public class WeUPnPRouter extends AbstractRouter {
 		}
 	}
 
-	@Override
 	public int getInternalPort() throws RouterException {
 		try {
 			return new URL(device.getPresentationURL()).getPort();
@@ -89,12 +83,10 @@ public class WeUPnPRouter extends AbstractRouter {
 		}
 	}
 
-	@Override
 	public String getName() throws RouterException {
 		return device.getFriendlyName();
 	}
 
-	@Override
 	public Collection<PortMapping> getPortMappings() throws RouterException {
 		Collection<PortMapping> mappings = new LinkedList<PortMapping>();
 		boolean morePortMappings = true;
@@ -127,13 +119,11 @@ public class WeUPnPRouter extends AbstractRouter {
 		return mappings;
 	}
 
-	@Override
 	public long getUpTime() throws RouterException {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	@Override
 	public void logRouterInfo() throws RouterException {
 		Map<String, String> info = new HashMap<String, String>();
 		info.put("friendlyName", device.getFriendlyName());
@@ -151,13 +141,11 @@ public class WeUPnPRouter extends AbstractRouter {
 		logger.info("device type " + device.getDeviceType());
 	}
 
-	@Override
 	public void removeMapping(PortMapping mapping) throws RouterException {
 		this.removePortMapping(mapping.getProtocol(), mapping.getRemoteHost(),
 				mapping.getExternalPort());
 	}
 
-	@Override
 	public void removePortMapping(Protocol protocol, String remoteHost,
 			int externalPort) throws RouterException {
 		try {

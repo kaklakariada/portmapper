@@ -13,7 +13,6 @@ import org.chris.portmapper.router.RouterException;
  */
 public class DummyRouterFactory implements IRouterFactory {
 
-	@Override
 	public IRouter findRouter() throws RouterException {
 		return new DummyRouter();
 	}

@@ -19,7 +19,6 @@ import org.wetorrent.upnp.WeUPnPException;
 public class WeUPnPRouterFactory implements IRouterFactory {
 	private Log logger = LogFactory.getLog(this.getClass());
 
-	@Override
 	public AbstractRouter findRouter() throws RouterException {
 		GatewayDiscover discover = new GatewayDiscover();
 		logger.debug("Searching for gateway devices...");

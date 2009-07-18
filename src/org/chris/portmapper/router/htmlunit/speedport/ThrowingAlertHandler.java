@@ -19,7 +19,6 @@ public class ThrowingAlertHandler implements AlertHandler {
 	 * com.gargoylesoftware.htmlunit.AlertHandler#handleAlert(com.gargoylesoftware
 	 * .htmlunit.Page, java.lang.String)
 	 */
-	@Override
 	public void handleAlert(Page page, String alert) {
 		throw new RuntimeException("Got alert '" + alert + "' on page " + page);
 

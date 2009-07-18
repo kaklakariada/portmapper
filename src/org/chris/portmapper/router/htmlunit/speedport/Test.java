@@ -220,7 +220,7 @@ public class Test {
 		String[] values = text.split(",");
 		List<Integer> intValues = new ArrayList<Integer>(values.length);
 		for (String value : values) {
-			if (!value.trim().isEmpty()) {
+			if (value.trim().length() > 0) {
 				intValues.add(Integer.decode(value.trim()));
 			}
 		}

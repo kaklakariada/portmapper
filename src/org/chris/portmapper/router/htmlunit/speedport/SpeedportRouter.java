@@ -70,74 +70,62 @@ public class SpeedportRouter extends AbstractRouter {
 		return null;
 	}
 
-	@Override
 	public void addPortMapping(PortMapping mapping) throws RouterException {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	public void addPortMappings(Collection<PortMapping> mappings)
 			throws RouterException {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	public void disconnect() {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	public String getExternalIPAddress() throws RouterException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public String getInternalHostName() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public int getInternalPort() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	@Override
 	public String getName() throws RouterException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public Collection<PortMapping> getPortMappings() throws RouterException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public long getUpTime() throws RouterException {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	@Override
 	public void logRouterInfo() throws RouterException {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	public void removeMapping(PortMapping mapping) throws RouterException {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	public void removePortMapping(Protocol protocol, String remoteHost,
 			int externalPort) throws RouterException {
 		// TODO Auto-generated method stub
