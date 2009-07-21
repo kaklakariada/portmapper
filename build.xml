@@ -11,7 +11,6 @@
 
 	<property name="main-class" value="org.chris.portmapper.PortMapperApp" />
 
-	<buildnumber />
 	<property name="lib.dir" location="${project.dir}/lib" />
 
 	<property name="one-jar.version" value="0.96" />
@@ -37,7 +36,6 @@
 			<arg path="${project.dir}" />
 		</exec>
 		<echo>Version number:      ${version.number}</echo>
-		<echo>Build number:        ${build.number}</echo>
 		<echo>SNV revision number: ${svn.revision.number}</echo>
 	</target>
 
@@ -87,7 +85,6 @@
 		<copy file="${build.resources.dir}/PortMapperApp_en.properties" tofile="${build.resources.dir}/PortMapperApp.properties" />
 		<copy file="${build.resources.dir}/ConnectTask_en.properties" tofile="${build.resources.dir}/ConnectTask.properties" />
 		<replace casesensitive="false" dir="${classes.dir}" includes="**/*.properties" token="@@VERSION_NUMBER@@" value="${version.number}" />
-		<replace casesensitive="false" dir="${classes.dir}" includes="**/*.properties" token="@@BUILD_NUMBER@@" value="${build.number}" />
 		<replace casesensitive="false" dir="${classes.dir}" includes="**/*.properties" token="@@SVN_REVISION_NUMBER@@" value="${svn.revision.number}" />
 	</target>
 
