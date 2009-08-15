@@ -44,7 +44,7 @@ import org.jdesktop.application.Action;
  * This class represents the edit preset dialog.
  * 
  * @author chris
- * 
+ * @version $Id$
  */
 @SuppressWarnings("serial")
 public class EditPresetDialog extends JDialog {

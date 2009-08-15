@@ -32,8 +32,12 @@ import org.jdesktop.application.Action;
  * @author chris
  * 
  */
-@SuppressWarnings("serial")
 public class SettingsDialog extends JDialog {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private final Log logger = LogFactory.getLog(this.getClass());
 

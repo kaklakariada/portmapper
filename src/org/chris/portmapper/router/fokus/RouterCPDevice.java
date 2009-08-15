@@ -1,6 +1,10 @@
 package org.chris.portmapper.router.fokus;
 
-
+/**
+ * 
+ * @author chris
+ * @version $Id$
+ */
 public class RouterCPDevice {
 
 	// private CPDevice device;

@@ -24,7 +24,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
@@ -45,7 +44,7 @@ import org.jdesktop.application.Task;
 
 /**
  * @author chris
- * 
+ * @version $Id$
  */
 public class PortMapperView extends FrameView {
 
@@ -167,12 +166,12 @@ public class PortMapperView extends FrameView {
 
 	private JComponent getLogPanel() {
 
-		JTextArea logTextArea = new JTextArea();
+		LogTextArea logTextArea = new LogTextArea();
 		logTextArea.setEditable(false);
 		logTextArea.setWrapStyleWord(true);
 		logTextArea.setLineWrap(true);
 
-		PortMapperApp.getInstance().setLoggingTextArea(logTextArea);
+		PortMapperApp.getInstance().setLogMessageListener(logTextArea);
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setViewportView(logTextArea);

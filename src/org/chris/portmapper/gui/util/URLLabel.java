@@ -21,10 +21,14 @@ import edu.stanford.ejalbert.exception.UnsupportedOperatingSystemException;
  * can click on it and the URL is opened in a browser.
  * 
  * @author chris
- * 
+ * @version $Id$
  */
-@SuppressWarnings("serial")
 public class URLLabel extends JLabel {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private final static Log logger = LogFactory.getLog(URLLabel.class);
 

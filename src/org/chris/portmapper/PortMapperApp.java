@@ -5,10 +5,7 @@ package org.chris.portmapper;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.util.EventObject;
-
-import javax.swing.JTextArea;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -16,7 +13,8 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.WriterAppender;
 import org.chris.portmapper.gui.PortMapperView;
-import org.chris.portmapper.logging.TextAreaWriter;
+import org.chris.portmapper.logging.LogMessageListener;
+import org.chris.portmapper.logging.LogMessageWriter;
 import org.chris.portmapper.model.PortMappingPreset;
 import org.chris.portmapper.router.IRouter;
 import org.chris.portmapper.router.IRouterFactory;
@@ -26,7 +24,7 @@ import org.jdesktop.application.SingleFrameApplication;
 
 /**
  * @author chris
- * 
+ * @version $Id$
  */
 public class PortMapperApp extends SingleFrameApplication {
 
@@ -45,7 +43,7 @@ public class PortMapperApp extends SingleFrameApplication {
 
 	private IRouter router;
 	private Settings settings;
-	private TextAreaWriter logWriter;
+	private LogMessageWriter logWriter;
 
 	/**
 	 * @see org.jdesktop.application.Application#startup()
@@ -146,12 +144,12 @@ public class PortMapperApp extends SingleFrameApplication {
 	private void initTextAreaLogger() {
 		WriterAppender writerAppender = (WriterAppender) Logger.getLogger(
 				"org.chris.portmapper").getAppender("jtextarea");
-		logWriter = new TextAreaWriter();
+		logWriter = new LogMessageWriter();
 		writerAppender.setWriter(logWriter);
 	}
 
-	public void setLoggingTextArea(JTextArea textArea) {
-		this.logWriter.setTextArea(textArea);
+	public void setLogMessageListener(LogMessageListener listener) {
+		this.logWriter.registerListener(listener);
 	}
 
 	@Override
@@ -232,12 +230,9 @@ public class PortMapperApp extends SingleFrameApplication {
 
 		IRouterFactory routerFactory;
 		logger.debug("Creating a new instance of the router factory class "
-				+ routerFactoryClass.getName());
+				+ routerFactoryClass);
 		try {
-			Constructor<IRouterFactory> constructor = routerFactoryClass
-					.getConstructor(new Class[0]);
-			logger.debug("Found constructor, invoke it");
-			routerFactory = constructor.newInstance(new Object[0]);
+			routerFactory = routerFactoryClass.newInstance();
 		} catch (Exception e) {
 			throw new RouterException(
 					"Could not create a router factory for name "

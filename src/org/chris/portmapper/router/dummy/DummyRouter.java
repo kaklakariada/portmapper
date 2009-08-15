@@ -13,7 +13,7 @@ import org.chris.portmapper.router.RouterException;
 /**
  * 
  * @author chris
- * 
+ * @version $Id$
  */
 public class DummyRouter implements IRouter {
 

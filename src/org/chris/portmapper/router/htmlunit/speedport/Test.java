@@ -31,7 +31,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlSelect;
 
 /**
  * @author chris
- * 
+ * @version $Id$
  */
 public class Test {
 

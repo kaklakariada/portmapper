@@ -14,7 +14,7 @@ import org.wetorrent.upnp.WeUPnPException;
 
 /**
  * @author chris
- * 
+ * @version $Id$
  */
 public class WeUPnPRouterFactory implements IRouterFactory {
 	private Log logger = LogFactory.getLog(this.getClass());

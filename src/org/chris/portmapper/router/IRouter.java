@@ -10,7 +10,7 @@ import org.chris.portmapper.model.Protocol;
 
 /**
  * @author chris
- * 
+ * @version $Id$
  */
 public interface IRouter {
 

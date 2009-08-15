@@ -16,7 +16,7 @@ import java.io.Serializable;
  *         not want to do this.
  * @see {@linkplain http 
  *      ://weblogs.java.net/blog/malenkov/archive/2006/08/how_to_encode_e.html}
- * 
+ * @version $Id$
  */
 public class Protocol implements Serializable {
 

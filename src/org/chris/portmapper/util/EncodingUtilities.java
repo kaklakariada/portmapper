@@ -8,7 +8,7 @@ import java.util.Map;
 
 /**
  * @author chris
- * 
+ * @version $Id$
  */
 public class EncodingUtilities {
 
@@ -23,8 +23,8 @@ public class EncodingUtilities {
 
 	/**
 	 * Replace all special characters with their html entities. This was found
-	 * at
-	 * {@link http://www.owasp.org/index.php/How_to_perform_HTML_entity_encoding_in_Java}
+	 * at {@link http
+	 * ://www.owasp.org/index.php/How_to_perform_HTML_entity_encoding_in_Java}
 	 * 
 	 * @param s
 	 *            the string in which to replace the special characters.

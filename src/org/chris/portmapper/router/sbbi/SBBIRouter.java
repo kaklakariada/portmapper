@@ -27,7 +27,7 @@ import org.chris.portmapper.util.EncodingUtilities;
  * mappings and getting information about the router.
  * 
  * @author chris
- * 
+ * @version $Id$
  */
 public class SBBIRouter extends AbstractRouter {
 

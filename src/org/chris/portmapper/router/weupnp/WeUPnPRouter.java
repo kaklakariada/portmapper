@@ -24,7 +24,7 @@ import org.wetorrent.upnp.WeUPnPException;
 
 /**
  * @author chris
- * 
+ * @version $Id$
  */
 public class WeUPnPRouter extends AbstractRouter {
 

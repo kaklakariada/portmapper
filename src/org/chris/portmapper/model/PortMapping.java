@@ -5,6 +5,11 @@ import java.util.Map;
 
 import net.sbbi.upnp.messages.ActionResponse;
 
+/**
+ * 
+ * @author chris
+ * @version $Id$
+ */
 public class PortMapping implements Cloneable {
 
 	private final int externalPort;

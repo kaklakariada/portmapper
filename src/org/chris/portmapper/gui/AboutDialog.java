@@ -19,9 +19,17 @@ import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.gui.util.URLLabel;
 import org.jdesktop.application.Action;
 
-@SuppressWarnings("serial")
+/**
+ * 
+ * @author chris
+ * @version $Id$
+ */
 public class AboutDialog extends JDialog {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final static String DIALOG_NAME = "about_dialog";
 	private final static String ACTION_CLOSE = "about_dialog.close";
 

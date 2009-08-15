@@ -14,12 +14,15 @@ import javax.swing.table.TableCellEditor;
 
 /**
  * @author chris
- * 
+ * @version $Id$
  */
-@SuppressWarnings("serial")
 public class TextNumberCellEditor extends AbstractCellEditor implements
 		TableCellEditor, KeyListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Integer currentPortNumber;
 	private final JTextField textField;
 

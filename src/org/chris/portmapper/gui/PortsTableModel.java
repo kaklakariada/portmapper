@@ -15,12 +15,15 @@ import org.chris.portmapper.model.SinglePortMapping;
 
 /**
  * @author chris
- * 
+ * @version $Id$
  */
-@SuppressWarnings("serial")
 public class PortsTableModel extends AbstractTableModel implements
 		PropertyChangeListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final List<SinglePortMapping> ports;
 
 	public PortsTableModel(List<SinglePortMapping> ports) {

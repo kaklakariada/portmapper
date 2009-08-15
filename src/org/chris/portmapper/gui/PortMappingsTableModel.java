@@ -8,9 +8,17 @@ import javax.swing.table.AbstractTableModel;
 import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.model.PortMapping;
 
-@SuppressWarnings("serial")//$NON-NLS-1$
+/**
+ * @author chris
+ * @version $Id$
+ * 
+ */
 public class PortMappingsTableModel extends AbstractTableModel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final ArrayList<PortMapping> mappings;
 	private boolean remoteHostGiven = true;
 

@@ -15,7 +15,7 @@ import org.chris.portmapper.router.sbbi.SBBIRouterFactory;
 
 /**
  * @author chris
- * 
+ * @version $Id$
  */
 public class Settings implements Serializable {
 

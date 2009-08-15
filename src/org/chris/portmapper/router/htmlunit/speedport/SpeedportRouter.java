@@ -24,7 +24,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 /**
  * @author chris
- * 
+ * @version $Id$
  */
 public class SpeedportRouter extends AbstractRouter {
 

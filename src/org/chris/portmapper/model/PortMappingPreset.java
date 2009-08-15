@@ -7,6 +7,11 @@ import java.util.List;
 
 import org.chris.portmapper.Settings;
 
+/**
+ * 
+ * @author chris
+ * @version $Id$
+ */
 public class PortMappingPreset implements Cloneable, Serializable {
 
 	/**

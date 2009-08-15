@@ -15,12 +15,15 @@ import javax.swing.table.TableCellEditor;
 
 /**
  * @author chris
- * 
+ * @version $Id$
  */
-@SuppressWarnings("serial")
 public class SpinnerCellEditor extends AbstractCellEditor implements
 		TableCellEditor, ChangeListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Integer currentPortNumber;
 	private final JSpinner spinner;
 

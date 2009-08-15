@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 /**
  * @author chris
- * 
+ * @version $Id$
  */
 public class SinglePortMapping implements Cloneable, Serializable {
 

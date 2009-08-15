@@ -3,6 +3,11 @@ package org.chris.portmapper.router.fokus;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * 
+ * @author chris
+ * @version $Id$
+ */
 public class RouterControlPoint {
 	// public class RouterControlPoint extends TemplateControlPoint {
 

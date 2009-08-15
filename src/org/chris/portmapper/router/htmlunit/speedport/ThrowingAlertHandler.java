@@ -8,7 +8,7 @@ import com.gargoylesoftware.htmlunit.Page;
 
 /**
  * @author chris
- * 
+ * @version $Id$
  */
 public class ThrowingAlertHandler implements AlertHandler {
 

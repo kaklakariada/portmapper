@@ -1,9 +1,8 @@
 package org.chris.portmapper.router.fokus;
 
-
 /**
  * @author chris
- * 
+ * @version $Id$
  */
 public class FokusRouterEntity {
 	// public class FokusRouterEntity extends TemplateEntity {

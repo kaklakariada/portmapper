@@ -14,12 +14,15 @@ import org.chris.portmapper.Settings;
 
 /**
  * @author chris
- * 
+ * @version $Id$
  */
-@SuppressWarnings("serial")
 public class PresetListModel extends AbstractListModel implements
 		PropertyChangeListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final Log logger = LogFactory.getLog(this.getClass());
 	private final Settings settings;
 

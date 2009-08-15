@@ -13,7 +13,7 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * @author chris
- * 
+ * @version $Id$
  */
 public abstract class AbstractRouter implements IRouter {
 
