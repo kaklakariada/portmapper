@@ -1,7 +1,16 @@
 package org.chris.portmapper.router;
 
-@SuppressWarnings("serial")
+/**
+ * 
+ * @author chris
+ * @version $Id$
+ */
 public class RouterException extends Exception {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public RouterException(String arg0, Throwable arg1) {
 		super(arg0, arg1);

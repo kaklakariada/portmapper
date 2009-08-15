@@ -1,4 +1,4 @@
-<project name="PortMapper" basedir="." default="build-one-jar">
+<project name="PortMapper" basedir="." default="jar">
 
 	<property name="project.dir" location="./" />
 	<property name="src.dir" location="${project.dir}/src" />
@@ -12,9 +12,6 @@
 	<property name="main-class" value="org.chris.portmapper.PortMapperApp" />
 
 	<property name="lib.dir" location="${project.dir}/lib" />
-
-	<property name="one-jar.version" value="0.96" />
-	<taskdef name="one-jar" classname="com.simontuffs.onejar.ant.OneJarTask" classpath="${lib.dir}/one-jar-ant-task-${one-jar.version}.jar" onerror="report" />
 
 	<path id="classpath" description="The JARs needed for compiling">
 		<fileset dir="${lib.dir}" includes="**/*.jar" />
@@ -88,29 +85,27 @@
 		<replace casesensitive="false" dir="${classes.dir}" includes="**/*.properties" token="@@SVN_REVISION_NUMBER@@" value="${svn.revision.number}" />
 	</target>
 
-	<target name="jar" depends="clean, compile, prepare_language_files" description="Create a JAR containing the class files">
-		<jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
+	<target name="jar" depends="clean,get_version_number,compile,prepare_language_files" description="Create a JAR file containing all necessary libraries">
+		<mkdir dir="${jar.dir}" />
+		<jar destfile="${jar.dir}/${ant.project.name}-${version.number}.jar" duplicate="fail" update="false">
 			<manifest>
 				<attribute name="Main-Class" value="${main-class}" />
 			</manifest>
+
+			<zipfileset dir="${classes.dir}" />
+
+			<zipfileset src="${lib.dir}/BrowserLauncher2-1_3.jar" excludes="META-INF/*" />
+			<zipfileset src="${lib.dir}/AppFramework-1.03.jar" excludes="META-INF/*" />
+			<zipfileset src="${lib.dir}/commons-jxpath-1.1.jar" excludes="META-INF/*" />
+			<zipfileset src="${lib.dir}/commons-logging.jar" excludes="META-INF/*" />
+			<zipfileset src="${lib.dir}/log4j-1.2.15.jar" excludes="META-INF/*" />
+			<zipfileset src="${lib.dir}/miglayout-3.7.1.jar" excludes="META-INF/*" />
+			<zipfileset src="${lib.dir}/sbbi-upnplib-1.0.4.jar" excludes="META-INF/*" />
+			<zipfileset src="${lib.dir}/swing-worker.jar" excludes="META-INF/*" />
 		</jar>
 	</target>
 
-	<target name="build-one-jar" depends="clean,get_version_number,compile,prepare_language_files" description="Create a JAR file containing all necessary libraries">
-		<mkdir dir="${jar.dir}" />
-		<!-- Construct the One-JAR file -->
-		<one-jar destfile="${jar.dir}/${ant.project.name}-${version.number}.jar" manifest="one-jar.mf">
-			<main>
-				<!-- Construct main.jar from classes and source code -->
-				<fileset dir="${classes.dir}" />
-			</main>
-			<lib>
-				<fileset file="${lib.dir}/*.jar" />
-			</lib>
-		</one-jar>
-	</target>
-
-	<target name="run" depends="build-one-jar" description="Run PortMapper">
+	<target name="run" depends="jar" description="Run PortMapper">
 		<java jar="${jar.dir}/${ant.project.name}-${version.number}.jar" fork="true" />
 	</target>
 

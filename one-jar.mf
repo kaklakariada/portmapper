@@ -1,2 +1,0 @@
-Main-Class: OneJar
-One-Jar-Main-Class: org.chris.portmapper.PortMapperApp

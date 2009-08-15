@@ -5,7 +5,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/commons-jxpath-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging.jar"/>
-	<classpathentry kind="lib" path="lib/commons-logging-api.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.15.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://logging.apache.org/log4j/1.2/apidocs/"/>
@@ -45,10 +44,6 @@
 			<attribute name="javadoc_location" value="http://browserlaunch2.sourceforge.net/api"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/miglayout-3.7.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="http://www.migcalendar.com/miglayout/javadoc/"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="lib" path="lib/miglayout-3.7.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
