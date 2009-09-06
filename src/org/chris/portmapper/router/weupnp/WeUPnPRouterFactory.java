@@ -35,4 +35,13 @@ public class WeUPnPRouterFactory implements IRouterFactory {
 		return new WeUPnPRouter(device);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "weupnp lib";
+	}
 }

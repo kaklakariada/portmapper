@@ -17,4 +17,13 @@ public class DummyRouterFactory implements IRouterFactory {
 		return new DummyRouter();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Dummy lib";
+	}
 }

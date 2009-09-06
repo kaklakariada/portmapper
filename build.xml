@@ -109,4 +109,22 @@
 		<java jar="${jar.dir}/${ant.project.name}-${version.number}.jar" fork="true" />
 	</target>
 
+	<!-- Applet targets -->
+
+	<target name="build_applet" depends="compile" description="Build the JAR containing the applet">
+		<mkdir dir="${jar.dir}" />
+		<jar destfile="${jar.dir}/PortMapperApplet.jar" duplicate="fail" update="false">
+			<zipfileset dir="${classes.dir}" excludes="log4j.properties" />
+
+			<zipfileset src="${lib.dir}/commons-logging.jar" excludes="META-INF/*" />
+			<zipfileset src="${lib.dir}/sbbi-upnplib-1.0.4.jar" excludes="META-INF/*" />
+		</jar>
+	</target>
+	
+	<target name="build_signed_applet" depends="build_applet" description="Sign the applet JAR">
+		<input addproperty="keystore.alias" message="Please enter the alias of the key:"/>
+		<input addproperty="keystore.passphrase" message="Please enter the password of the keystore:"/>
+		<signjar alias="${keystore.alias}" jar="${jar.dir}/PortMapperApplet.jar" storepass="${keystore.passphrase}" verbose="true"/>
+	</target>
+	
 </project>
