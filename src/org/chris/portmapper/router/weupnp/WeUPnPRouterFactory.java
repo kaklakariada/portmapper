@@ -42,6 +42,16 @@ public class WeUPnPRouterFactory implements IRouterFactory {
 	 */
 	@Override
 	public String toString() {
+		return getName();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.chris.portmapper.router.IRouterFactory#getName()
+	 */
+	@Override
+	public String getName() {
 		return "weupnp lib";
 	}
 }

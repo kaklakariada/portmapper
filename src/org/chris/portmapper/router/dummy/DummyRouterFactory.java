@@ -24,6 +24,16 @@ public class DummyRouterFactory implements IRouterFactory {
 	 */
 	@Override
 	public String toString() {
-		return "Dummy lib";
+		return getName();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.chris.portmapper.router.IRouterFactory#getName()
+	 */
+	@Override
+	public String getName() {
+		return "Dummy library";
 	}
 }
