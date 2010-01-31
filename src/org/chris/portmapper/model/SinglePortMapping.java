@@ -20,6 +20,10 @@ public class SinglePortMapping implements Cloneable, Serializable {
 	private int internalPort;
 	private Protocol protocol;
 
+	public SinglePortMapping() {
+		this(Protocol.TCP, 1, 1);
+	}
+
 	/**
 	 * @param protocol
 	 * @param internalPort

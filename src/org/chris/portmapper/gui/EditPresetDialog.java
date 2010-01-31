@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeSupport;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -290,9 +291,22 @@ public class EditPresetDialog extends JDialog {
 
 	@Action(name = ACTION_REMOVE_PORT, enabledProperty = PROPERTY_PORT_SELECTED)
 	public void removePort() {
-		for (int i : portsTable.getSelectedRows()) {
-			this.ports.remove(i);
+
+		// We have to delete the rows in descending order, else the wrong
+		// row could be deleted. When removing a row, the indices of the
+		// following rows will change. So we will delete the wrong row
+		// when we try to delete a following row.
+		// An IndexOutOfBoundsException could also occur.
+
+		final int[] selectedRows = portsTable.getSelectedRows();
+		Arrays.sort(selectedRows);
+
+		for (int i = selectedRows.length - 1; i >= 0; i--) {
+			final int row = selectedRows[i];
+			logger.debug("Removing row " + row);
+			this.ports.remove(row);
 		}
+
 		firePropertyChange(PROPERTY_PORT_SELECTED, false, isPortSelected());
 		propertyChangeSupport.firePropertyChange(PROPERTY_PORTS, null,
 				this.ports);
