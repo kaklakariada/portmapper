@@ -3,6 +3,8 @@
  */
 package org.chris.portmapper.router;
 
+import java.util.Collection;
+
 /**
  * @author chris
  * @version $Id$
@@ -17,12 +19,13 @@ public interface IRouterFactory {
 	public String getName();
 
 	/**
-	 * Search for a router on the network.
+	 * Search for routers on the network.
 	 * 
-	 * @return the router if it was found.
+	 * @return the found router or an empty {@link Collection} if no router was
+	 *         found.
 	 * @throws RouterException
-	 *             if no router was found.
+	 *             if something goes wrong during discovery.
 	 */
-	public IRouter findRouter() throws RouterException;
+	public Collection<IRouter> findRouters() throws RouterException;
 
 }

@@ -3,6 +3,9 @@
  */
 package org.chris.portmapper.router.dummy;
 
+import java.util.Collection;
+import java.util.LinkedList;
+
 import org.chris.portmapper.router.IRouter;
 import org.chris.portmapper.router.IRouterFactory;
 import org.chris.portmapper.router.RouterException;
@@ -13,8 +16,11 @@ import org.chris.portmapper.router.RouterException;
  */
 public class DummyRouterFactory implements IRouterFactory {
 
-	public IRouter findRouter() throws RouterException {
-		return new DummyRouter();
+	public Collection<IRouter> findRouters() throws RouterException {
+		final Collection<IRouter> routers = new LinkedList<IRouter>();
+		routers.add(new DummyRouter("Dummy 1"));
+		routers.add(new DummyRouter("Dummy 2"));
+		return routers;
 	}
 
 	/*

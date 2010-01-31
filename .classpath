@@ -11,7 +11,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/sbbi-upnplib-1.0.4.jar" sourcepath="/SBBI UPnP/src"/>
-	<classpathentry kind="lib" path="lib/AppFramework-1.03.jar">
+	<classpathentry kind="lib" path="lib/AppFramework-1.03.jar" sourcepath="lib/source/AppFramework-1.03-src.zip">
 		<attributes>
 			<attribute name="javadoc_location" value="https://appframework.dev.java.net/nonav/javadoc/AppFramework-1.03"/>
 		</attributes>

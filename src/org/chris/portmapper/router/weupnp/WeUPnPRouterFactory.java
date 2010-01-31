@@ -3,9 +3,15 @@
  */
 package org.chris.portmapper.router.weupnp;
 
+import java.net.InetAddress;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.chris.portmapper.router.AbstractRouter;
+import org.chris.portmapper.router.IRouter;
 import org.chris.portmapper.router.IRouterFactory;
 import org.chris.portmapper.router.RouterException;
 import org.wetorrent.upnp.GatewayDevice;
@@ -17,22 +23,30 @@ import org.wetorrent.upnp.WeUPnPException;
  * @version $Id$
  */
 public class WeUPnPRouterFactory implements IRouterFactory {
-	private Log logger = LogFactory.getLog(this.getClass());
+	private final Log logger = LogFactory.getLog(this.getClass());
 
-	public AbstractRouter findRouter() throws RouterException {
-		GatewayDiscover discover = new GatewayDiscover();
+	private final GatewayDiscover discover = new GatewayDiscover();
+
+	public Collection<IRouter> findRouters() throws RouterException {
 		logger.debug("Searching for gateway devices...");
-		GatewayDevice device = null;
+		final Map<InetAddress, GatewayDevice> devices;
 		try {
-			discover.discover();
-			device = discover.getValidGateway();
+			devices = discover.discover();
 		} catch (WeUPnPException e) {
 			throw new RouterException(
 					"Could not discover a valid gateway device: "
 							+ e.getMessage(), e);
 		}
 
-		return new WeUPnPRouter(device);
+		if (devices == null || devices.size() == 0) {
+			return Collections.emptyList();
+		}
+
+		final Collection<IRouter> routers = new LinkedList<IRouter>();
+		for (GatewayDevice device : devices.values()) {
+			routers.add(new WeUPnPRouter(device));
+		}
+		return routers;
 	}
 
 	/*

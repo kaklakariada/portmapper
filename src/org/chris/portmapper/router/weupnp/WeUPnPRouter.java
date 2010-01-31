@@ -29,12 +29,13 @@ import org.wetorrent.upnp.WeUPnPException;
 public class WeUPnPRouter extends AbstractRouter {
 
 	private final Log logger = LogFactory.getLog(this.getClass());
-	private GatewayDevice device;
+	private final GatewayDevice device;
 
 	/**
 	 * @param device
 	 */
 	WeUPnPRouter(GatewayDevice device) {
+		super(device.getFriendlyName());
 		this.device = device;
 	}
 
@@ -56,7 +57,7 @@ public class WeUPnPRouter extends AbstractRouter {
 	}
 
 	public void disconnect() {
-		device = null;
+		// noting to do right now
 	}
 
 	public String getExternalIPAddress() throws RouterException {
@@ -67,11 +68,12 @@ public class WeUPnPRouter extends AbstractRouter {
 		}
 	}
 
-	public String getInternalHostName() throws RouterException {
+	public String getInternalHostName() {
 		try {
 			return new URL(device.getPresentationURL()).getHost();
 		} catch (MalformedURLException e) {
-			throw new RouterException("Could not get internal port", e);
+			logger.warn("Could not get internal host name", e);
+			return device.getPresentationURL();
 		}
 	}
 
@@ -81,10 +83,6 @@ public class WeUPnPRouter extends AbstractRouter {
 		} catch (MalformedURLException e) {
 			throw new RouterException("Could not get internal port", e);
 		}
-	}
-
-	public String getName() throws RouterException {
-		return device.getFriendlyName();
 	}
 
 	public Collection<PortMapping> getPortMappings() throws RouterException {

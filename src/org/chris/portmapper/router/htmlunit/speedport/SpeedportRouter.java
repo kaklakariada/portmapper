@@ -32,6 +32,7 @@ public class SpeedportRouter extends AbstractRouter {
 	private final WebClient webClient;
 
 	private SpeedportRouter(WebClient webClient) {
+		super("SpeedPort");
 		this.webClient = webClient;
 	}
 
@@ -99,11 +100,6 @@ public class SpeedportRouter extends AbstractRouter {
 	public int getInternalPort() {
 		// TODO Auto-generated method stub
 		return 0;
-	}
-
-	public String getName() throws RouterException {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	public Collection<PortMapping> getPortMappings() throws RouterException {

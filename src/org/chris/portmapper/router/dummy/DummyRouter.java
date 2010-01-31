@@ -7,7 +7,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.chris.portmapper.model.PortMapping;
 import org.chris.portmapper.model.Protocol;
-import org.chris.portmapper.router.IRouter;
+import org.chris.portmapper.router.AbstractRouter;
 import org.chris.portmapper.router.RouterException;
 
 /**
@@ -15,13 +15,14 @@ import org.chris.portmapper.router.RouterException;
  * @author chris
  * @version $Id$
  */
-public class DummyRouter implements IRouter {
+public class DummyRouter extends AbstractRouter {
 
 	private final Log logger = LogFactory.getLog(this.getClass());
 
 	private final Collection<PortMapping> mappings;
 
-	public DummyRouter() {
+	public DummyRouter(String name) {
+		super(name);
 		logger.debug("Created new DummyRouter");
 		mappings = new LinkedList<PortMapping>();
 	}
@@ -52,10 +53,6 @@ public class DummyRouter implements IRouter {
 		return 42;
 	}
 
-	public String getName() {
-		return "DummyRouterName";
-	}
-
 	public Collection<PortMapping> getPortMappings() {
 		return mappings;
 	}
@@ -65,7 +62,7 @@ public class DummyRouter implements IRouter {
 	}
 
 	public void logRouterInfo() {
-		logger.info("DummyRouter");
+		logger.info("DummyRouter " + getName());
 	}
 
 	public void removeMapping(PortMapping mapping) {
@@ -74,7 +71,6 @@ public class DummyRouter implements IRouter {
 
 	public void removePortMapping(Protocol protocol, String remoteHost,
 			int externalPort) {
-		// TODO Auto-generated method stub
 	}
 
 	public String getLocalHostAddress() throws RouterException {

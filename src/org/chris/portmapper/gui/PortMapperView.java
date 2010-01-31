@@ -277,13 +277,7 @@ public class PortMapperView extends FrameView {
 				"mainFrame.router.updating"));
 		internalIPLabel.setText(PortMapperApp.getResourceMap().getString(
 				"mainFrame.router.updating"));
-
-		try {
-			internalIPLabel.setText(router.getInternalHostName());
-		} catch (RouterException e) {
-			internalIPLabel.setText("");
-			logger.error("Did not get internal IP address", e);
-		}
+		internalIPLabel.setText(router.getInternalHostName());
 		try {
 			externalIPLabel.setText(router.getExternalIPAddress());
 		} catch (RouterException e) {
@@ -442,7 +436,6 @@ public class PortMapperView extends FrameView {
 
 	public boolean isConnectedToRouter() {
 		return PortMapperApp.getInstance().isConnected();
-		// return true;
 	}
 
 	public boolean isMappingSelected() {

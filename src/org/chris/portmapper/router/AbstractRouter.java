@@ -19,6 +19,19 @@ public abstract class AbstractRouter implements IRouter {
 
 	private final Log logger = LogFactory.getLog(this.getClass());
 
+	private final String name;
+
+	public AbstractRouter(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
 	public String getLocalHostAddress() throws RouterException {
 		logger.debug("Get IP of localhost...");
 
@@ -79,5 +92,18 @@ public abstract class AbstractRouter implements IRouter {
 
 		return localHostIP.getHostAddress();
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append(getName()).append(" (").append(getInternalHostName()).append(
+				")");
+		return sb.toString();
 	}
 }

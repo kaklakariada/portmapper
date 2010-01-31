@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.net.SocketPermission;
 import java.security.AccessControlException;
 import java.security.AccessController;
+import java.util.Collection;
 
 import javax.swing.JApplet;
 import javax.swing.JButton;
@@ -154,7 +155,7 @@ public class PortMapperApplet extends JApplet {
 	 *            the router factory used to connect.
 	 */
 	private void connect(final IRouterFactory routerFactory) {
-		logMessage("Using my UPnP library " + routerFactory.toString());
+		logMessage("Using UPnP library " + routerFactory.toString());
 		if (router != null) {
 			logMessage("Disconnecting...");
 			router.disconnect();
@@ -162,12 +163,23 @@ public class PortMapperApplet extends JApplet {
 		}
 
 		logMessage("Searching for router...");
+		final Collection<IRouter> routers;
 		try {
-			router = routerFactory.findRouter();
-			logMessage("Connected to " + router.getName());
+			routers = routerFactory.findRouters();
+			logMessage("Found " + routers.size() + " router.");
 		} catch (RouterException e) {
 			logMessage("Failed to connect", e);
+			return;
 		}
+
+		if (routers == null || routers.size() == 0) {
+			logMessage("Found no routers");
+			return;
+		}
+
+		router = routers.iterator().next();
+		logMessage("Connected to " + router.getName());
+
 	}
 
 	/**

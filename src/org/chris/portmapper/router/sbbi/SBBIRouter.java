@@ -36,12 +36,7 @@ public class SBBIRouter extends AbstractRouter {
 	/**
 	 * The wrapped router device.
 	 */
-	private InternetGatewayDevice router = null;
-
-	/**
-	 * The timeout in milliseconds for finding a router device.
-	 */
-	private final static int DISCOVERY_TIMEOUT = 5000;
+	final private InternetGatewayDevice router;
 
 	/**
 	 * The maximum number of port mappings that we will try to retrieve from the
@@ -49,55 +44,12 @@ public class SBBIRouter extends AbstractRouter {
 	 */
 	private final static int MAX_NUM_PORTMAPPINGS = 100;
 
-	private SBBIRouter(InternetGatewayDevice router) {
+	SBBIRouter(InternetGatewayDevice router) {
+		super(router.getIGDRootDevice().getModelName());
 		if (router == null) {
 			throw new IllegalArgumentException("No router given");
 		}
 		this.router = router;
-	}
-
-	/**
-	 * Find the router device in the network.
-	 * 
-	 * @return the router device.
-	 * @throws RouterException
-	 *             if no or more than one router devices where found.
-	 */
-	public static AbstractRouter findRouter() throws RouterException {
-		InternetGatewayDevice device = findInternetGatewayDevice();
-		AbstractRouter r = new SBBIRouter(device);
-		return r;
-	}
-
-	/**
-	 * Find all router devices in the network and check, that only one is found.
-	 * 
-	 * @return the router device.
-	 * @throws RouterException
-	 *             if no or more than one router devices where found.
-	 */
-	private static InternetGatewayDevice findInternetGatewayDevice()
-			throws RouterException {
-		InternetGatewayDevice[] devices;
-		try {
-			devices = InternetGatewayDevice.getDevices(DISCOVERY_TIMEOUT);
-		} catch (IOException e) {
-			throw new RouterException("Could not find devices", e);
-		}
-
-		if (devices == null || devices.length == 0) {
-			throw new RouterException("No router devices found");
-		}
-
-		if (devices.length != 1) {
-			throw new RouterException("Found more than one router devices ("
-					+ devices.length + ")");
-		}
-		return devices[0];
-	}
-
-	public String getName() throws RouterException {
-		return router.getIGDRootDevice().getModelName();
 	}
 
 	public String getExternalIPAddress() throws RouterException {
@@ -116,22 +68,23 @@ public class SBBIRouter extends AbstractRouter {
 
 	public String getInternalHostName() {
 		logger.debug("Get internal IP address...");
-		String ipAddress;
-		ipAddress = router.getIGDRootDevice().getPresentationURL().getHost();
+		final String ipAddress = router.getIGDRootDevice().getPresentationURL()
+				.getHost();
 		logger.info("Got internal host name '" + ipAddress + "' for router.");
 		return ipAddress;
 	}
 
 	public int getInternalPort() {
 		logger.debug("Get internal port of router...");
-		int port = router.getIGDRootDevice().getPresentationURL().getPort();
+		final int port = router.getIGDRootDevice().getPresentationURL()
+				.getPort();
 		logger.info("Got internal port " + port + " for router.");
 		return port;
 	}
 
 	public Collection<PortMapping> getPortMappings() throws RouterException {
 		logger.info("Get all port mappings...");
-		Collection<PortMapping> mappings = new LinkedList<PortMapping>();
+		final Collection<PortMapping> mappings = new LinkedList<PortMapping>();
 		try {
 
 			/*
@@ -213,8 +166,8 @@ public class SBBIRouter extends AbstractRouter {
 	 * @see org.chris.portmapper.router.IRouter#logRouterInfo()
 	 */
 	public void logRouterInfo() throws RouterException {
-		Map<String, String> info = new HashMap<String, String>();
-		UPNPRootDevice rootDevice = router.getIGDRootDevice();
+		final Map<String, String> info = new HashMap<String, String>();
+		final UPNPRootDevice rootDevice = router.getIGDRootDevice();
 		info.put("friendlyName", rootDevice.getFriendlyName());
 		info.put("manufacturer", rootDevice.getManufacturer());
 		info.put("modelDescription", rootDevice.getModelDescription());

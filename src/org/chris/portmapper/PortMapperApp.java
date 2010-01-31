@@ -5,7 +5,10 @@ package org.chris.portmapper;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.EventObject;
+
+import javax.swing.JOptionPane;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -182,11 +185,11 @@ public class PortMapperApp extends SingleFrameApplication {
 		return (PortMapperView) PortMapperApp.getInstance().getMainView();
 	}
 
-	public boolean connectRouter() throws RouterException {
+	public void connectRouter() throws RouterException {
 		if (this.router != null) {
 			logger
 					.warn("Already connected to router. Cannot create a second connection.");
-			return false;
+			return;
 		}
 
 		IRouterFactory routerFactory;
@@ -194,24 +197,45 @@ public class PortMapperApp extends SingleFrameApplication {
 			routerFactory = createRouterFactory();
 		} catch (RouterException e) {
 			logger.error("Could not create router factory", e);
-			return false;
+			return;
 		}
-		logger.info("Searching for router...");
-		this.router = routerFactory.findRouter();
+		logger.info("Searching for routers...");
 
-		if (router == null) {
+		final Collection<IRouter> foundRouters = routerFactory.findRouters();
+
+		// No routers found
+		if (foundRouters == null || foundRouters.size() == 0) {
 			throw new RouterException("Did not find a router");
 		}
 
-		try {
+		// One router found: use it.
+		if (foundRouters.size() == 1) {
+			router = foundRouters.iterator().next();
 			logger.info("Connected to router " + router.getName());
-		} catch (RouterException e) {
-			throw new RouterException("Could not get router name", e);
+			this.getView().fireConnectionStateChange();
+			return;
 		}
 
-		boolean isConnected = this.router != null;
+		// More than one router found: ask user.
+		logger.info("Found more than one router: ask user.");
+
+		ResourceMap resourceMap = PortMapperApp.getResourceMap();
+		String string = resourceMap.getString("messages.select_router.message");
+
+		final IRouter selectedRouter = (IRouter) JOptionPane.showInputDialog(
+				this.getView().getFrame(), string, resourceMap
+						.getString("messages.select_router.title"),
+				JOptionPane.QUESTION_MESSAGE, null, foundRouters.toArray(),
+				null);
+
+		if (selectedRouter == null) {
+			logger.info("No router selected.");
+			return;
+		}
+
+		this.router = selectedRouter;
 		this.getView().fireConnectionStateChange();
-		return isConnected;
+
 	}
 
 	@SuppressWarnings("unchecked")

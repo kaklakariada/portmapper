@@ -14,7 +14,7 @@ import org.chris.portmapper.model.Protocol;
  */
 public interface IRouter {
 
-	public abstract String getName() throws RouterException;
+	public abstract String getName();
 
 	/**
 	 * Get the IP address of the local host.
@@ -38,7 +38,7 @@ public interface IRouter {
 	 * @return the internal host name or IP of the router.
 	 * @throws RouterException
 	 */
-	public abstract String getInternalHostName() throws RouterException;
+	public abstract String getInternalHostName();
 
 	/**
 	 * Get the internal port of the router.
