@@ -5,8 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeSupport;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -39,6 +37,7 @@ import org.chris.portmapper.model.PortMappingPreset;
 import org.chris.portmapper.model.Protocol;
 import org.chris.portmapper.model.SinglePortMapping;
 import org.jdesktop.application.Action;
+import org.jdesktop.application.ResourceMap;
 
 /**
  * This class represents the edit preset dialog.
@@ -64,6 +63,8 @@ public class EditPresetDialog extends JDialog {
 	private final static String ACTION_SAVE = DIALOG_NAME + ".save";
 	private final static String ACTION_CANCEL = DIALOG_NAME + ".cancel";
 	private static final String ACTION_ADD_PORT = DIALOG_NAME + ".add_port";
+	private static final String ACTION_ADD_PORT_RANGE = DIALOG_NAME
+			+ ".add_port_range";
 	private static final String ACTION_REMOVE_PORT = DIALOG_NAME
 			+ ".remove_port";
 	private static final String PROPERTY_PORT_SELECTED = "portSelected";
@@ -212,10 +213,10 @@ public class EditPresetDialog extends JDialog {
 	 * @return
 	 */
 	private Component getPortsPanel() {
-		ActionMap actionMap = PortMapperApp.getInstance().getContext()
+		final ActionMap actionMap = PortMapperApp.getInstance().getContext()
 				.getActionMap(this.getClass(), this);
 
-		JPanel portsPanel = new JPanel(new MigLayout("", "", ""));
+		final JPanel portsPanel = new JPanel(new MigLayout("", "", ""));
 		portsPanel.setBorder(BorderFactory.createTitledBorder(PortMapperApp
 				.getResourceMap().getString("preset_dialog.ports.title")));
 
@@ -246,9 +247,11 @@ public class EditPresetDialog extends JDialog {
 		// portsTable.getColumnModel().getColumn(2).setCellEditor(
 		// new TextNumberCellEditor(1, 5));
 
-		portsPanel.add(new JScrollPane(portsTable), "spany 2");
+		portsPanel.add(new JScrollPane(portsTable), "spany 3");
 
 		portsPanel.add(new JButton(actionMap.get(ACTION_ADD_PORT)), "wrap");
+		portsPanel.add(new JButton(actionMap.get(ACTION_ADD_PORT_RANGE)),
+				"wrap");
 		portsPanel.add(new JButton(actionMap.get(ACTION_REMOVE_PORT)), "wrap");
 
 		return portsPanel;
@@ -267,10 +270,22 @@ public class EditPresetDialog extends JDialog {
 
 	@Action(name = ACTION_ADD_PORT)
 	public void addPort() {
-		this.ports.add(new SinglePortMapping());
+		addPort(Protocol.TCP, 1, 1);
+	}
+
+	public void addPort(final Protocol protocol, final int internalPort,
+			final int externalPort) {
+		this.ports.add(new SinglePortMapping(protocol, internalPort,
+				externalPort));
 		firePropertyChange(PROPERTY_PORT_SELECTED, false, isPortSelected());
 		propertyChangeSupport.firePropertyChange(PROPERTY_PORTS, null,
 				this.ports);
+	}
+
+	@Action(name = ACTION_ADD_PORT_RANGE)
+	public void addPortRange() {
+		logger.debug("Open port range dialog");
+		PortMapperApp.getInstance().show(new AddPortRangeDialog(this));
 	}
 
 	@Action(name = ACTION_REMOVE_PORT, enabledProperty = PROPERTY_PORT_SELECTED)
@@ -294,13 +309,27 @@ public class EditPresetDialog extends JDialog {
 	@Action(name = ACTION_SAVE)
 	public void save() {
 
+		final String description = descriptionTextField.getText();
+		if (description == null || description.trim().isEmpty()) {
+			showErrorMessage("preset_dialog.error.title",
+					"preset_dialog.error.no_description");
+			return;
+		}
+
+		if (tableModel.getRowCount() == 0) {
+			showErrorMessage("preset_dialog.error.title",
+					"preset_dialog.error.no_ports");
+			return;
+
+		}
+
 		if (useLocalhostCheckBox.isSelected()) {
 			editedPreset.setInternalClient(null);
 		} else {
 			editedPreset.setInternalClient(internalClientTextField.getText());
 		}
 		editedPreset.setRemoteHost(remoteHostTextField.getText());
-		editedPreset.setDescription(descriptionTextField.getText());
+		editedPreset.setDescription(description);
 		editedPreset.setPorts(this.ports);
 
 		editedPreset.save(PortMapperApp.getInstance().getSettings());
@@ -316,39 +345,9 @@ public class EditPresetDialog extends JDialog {
 		this.dispose();
 	}
 
-	private String getResourceString(String name, Object... args) {
-		return PortMapperApp.getResourceMap().getString(name, args);
-	}
-
-	private String validateIP(String ipAddress, boolean optional,
-			String fieldName) {
-
-		if (ipAddress == null || ipAddress.trim().length() == 0) {
-			if (!optional) {
-				JOptionPane.showMessageDialog(this, getResourceString(
-						"preset_dialog.error.no_host_name_given", fieldName),
-						getResourceString("preset_dialog.error.title"),
-						JOptionPane.WARNING_MESSAGE);
-			}
-			return null;
-		}
-
-		InetAddress address = null;
-		try {
-			address = InetAddress.getByName(ipAddress.trim());
-		} catch (UnknownHostException e) {
-			JOptionPane.showMessageDialog(this, getResourceString(
-					"preset_dialog.error.unresolved_host_name", ipAddress,
-					fieldName), getResourceString("preset_dialog.error.title"),
-					JOptionPane.WARNING_MESSAGE);
-			return null;
-		}
-		if (address == null) {
-			JOptionPane.showMessageDialog(this, getResourceString(
-					"preset_dialog.error.invalid_host_name", ipAddress,
-					fieldName), getResourceString("preset_dialog.error.title"),
-					JOptionPane.WARNING_MESSAGE);
-		}
-		return address.getHostAddress();
+	private void showErrorMessage(String titleKey, String messageKey) {
+		final ResourceMap resourceMap = PortMapperApp.getResourceMap();
+		JOptionPane.showMessageDialog(this, resourceMap.getString(messageKey),
+				resourceMap.getString(titleKey), JOptionPane.ERROR_MESSAGE);
 	}
 }

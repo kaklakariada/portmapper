@@ -219,12 +219,11 @@ public class PortMapperApp extends SingleFrameApplication {
 		// More than one router found: ask user.
 		logger.info("Found more than one router: ask user.");
 
-		ResourceMap resourceMap = PortMapperApp.getResourceMap();
-		String string = resourceMap.getString("messages.select_router.message");
-
+		final ResourceMap resourceMap = PortMapperApp.getResourceMap();
 		final IRouter selectedRouter = (IRouter) JOptionPane.showInputDialog(
-				this.getView().getFrame(), string, resourceMap
-						.getString("messages.select_router.title"),
+				this.getView().getFrame(), resourceMap
+						.getString("messages.select_router.message"),
+				resourceMap.getString("messages.select_router.title"),
 				JOptionPane.QUESTION_MESSAGE, null, foundRouters.toArray(),
 				null);
 
@@ -235,7 +234,6 @@ public class PortMapperApp extends SingleFrameApplication {
 
 		this.router = selectedRouter;
 		this.getView().fireConnectionStateChange();
-
 	}
 
 	@SuppressWarnings("unchecked")

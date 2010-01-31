@@ -234,6 +234,7 @@ public class PortMapperView extends FrameView {
 
 		tableModel = new PortMappingsTableModel();
 		mappingsTable = new JTable(tableModel);
+		mappingsTable.setAutoCreateRowSorter(true);
 		mappingsTable
 				.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		mappingsTable.setSize(new Dimension(400, 100));

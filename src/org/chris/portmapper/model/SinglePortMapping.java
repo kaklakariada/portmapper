@@ -20,11 +20,17 @@ public class SinglePortMapping implements Cloneable, Serializable {
 	private int internalPort;
 	private Protocol protocol;
 
-	public SinglePortMapping() {
+	/**
+	 * @param protocol
+	 * @param internalPort
+	 * @param externalPort
+	 */
+	public SinglePortMapping(Protocol protocol, int internalPort,
+			int externalPort) {
 		super();
-		this.internalPort = 1;
-		this.externalPort = 1;
-		this.protocol = Protocol.TCP;
+		this.protocol = protocol;
+		this.internalPort = internalPort;
+		this.externalPort = externalPort;
 	}
 
 	public int getExternalPort() {
@@ -52,10 +58,6 @@ public class SinglePortMapping implements Cloneable, Serializable {
 	}
 
 	public Object clone() {
-		SinglePortMapping port = new SinglePortMapping();
-		port.externalPort = this.externalPort;
-		port.internalPort = this.internalPort;
-		port.protocol = this.protocol;
-		return port;
+		return new SinglePortMapping(protocol, internalPort, externalPort);
 	}
 }

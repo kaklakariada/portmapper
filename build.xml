@@ -103,6 +103,7 @@
 			<zipfileset src="${lib.dir}/sbbi-upnplib-1.0.4.jar" excludes="META-INF/*" />
 			<zipfileset src="${lib.dir}/swing-worker.jar" excludes="META-INF/*" />
 		</jar>
+		<delete dir="${classes.dir}"/>
 	</target>
 
 	<target name="run" depends="jar" description="Run PortMapper">
