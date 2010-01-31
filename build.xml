@@ -99,7 +99,7 @@
 			<zipfileset src="${lib.dir}/commons-jxpath-1.1.jar" excludes="META-INF/*" />
 			<zipfileset src="${lib.dir}/commons-logging.jar" excludes="META-INF/*" />
 			<zipfileset src="${lib.dir}/log4j-1.2.15.jar" excludes="META-INF/*" />
-			<zipfileset src="${lib.dir}/miglayout-3.7.1.jar" excludes="META-INF/*" />
+			<zipfileset src="${lib.dir}/miglayout-3.7.2.jar" excludes="META-INF/*" />
 			<zipfileset src="${lib.dir}/sbbi-upnplib-1.0.4.jar" excludes="META-INF/*" />
 			<zipfileset src="${lib.dir}/swing-worker.jar" excludes="META-INF/*" />
 		</jar>
