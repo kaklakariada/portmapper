@@ -9,7 +9,7 @@
 	<property name="src.resources.dir" location="${src.dir}/org/chris/portmapper/resources/" />
 	<property name="jar.dir" location="${build.dir}/jar" />
 
-	<property name="main-class" value="org.chris.portmapper.PortMapperApp" />
+	<property name="main-class" value="org.chris.portmapper.PortMapperStarter" />
 
 	<property name="lib.dir" location="${project.dir}/lib" />
 
@@ -102,6 +102,7 @@
 			<zipfileset src="${lib.dir}/miglayout-3.7.2.jar" excludes="META-INF/*" />
 			<zipfileset src="${lib.dir}/sbbi-upnplib-1.0.4.jar" excludes="META-INF/*" />
 			<zipfileset src="${lib.dir}/swing-worker.jar" excludes="META-INF/*" />
+			<zipfileset src="${lib.dir}/commons-cli-1.2.jar" excludes="META-INF/*" />
 		</jar>
 		<delete dir="${classes.dir}"/>
 	</target>

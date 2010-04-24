@@ -45,5 +45,10 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/miglayout-3.7.2.jar"/>
+	<classpathentry kind="lib" path="lib/commons-cli-1.2.jar" sourcepath="lib/source/commons-cli-1.2-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://commons.apache.org/cli/api-release/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

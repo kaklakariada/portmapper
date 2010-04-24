@@ -9,7 +9,6 @@
  */
 package org.chris.portmapper.logging;
 
-import java.io.IOException;
 import java.io.Writer;
 import java.util.LinkedList;
 import java.util.List;
@@ -43,16 +42,15 @@ public class LogMessageWriter extends Writer {
 	 * registered, so that all added text is stored in a buffer.
 	 */
 	public LogMessageWriter() {
-		super();
 		unprocessedMessagesBuffer = new LinkedList<String>();
 	}
 
 	@Override
-	public void close() throws IOException {
+	public void close() {
 	}
 
 	@Override
-	public void flush() throws IOException {
+	public void flush() {
 	}
 
 	@Override

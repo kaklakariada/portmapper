@@ -317,12 +317,4 @@ public class PortMapperApp extends SingleFrameApplication {
 		Logger.getLogger("org.chris.portmapper").setLevel(
 				Level.toLevel(logLevel));
 	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		launch(PortMapperApp.class, args);
-	}
-
 }
