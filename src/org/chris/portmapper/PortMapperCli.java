@@ -6,6 +6,7 @@ package org.chris.portmapper;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Arrays;
+import java.util.Collection;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -19,6 +20,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Logger;
 import org.apache.log4j.WriterAppender;
+import org.chris.portmapper.model.PortMapping;
+import org.chris.portmapper.model.Protocol;
+import org.chris.portmapper.router.IRouter;
+import org.chris.portmapper.router.IRouterFactory;
+import org.chris.portmapper.router.RouterException;
 import org.chris.portmapper.router.sbbi.SBBIRouterFactory;
 import org.jdesktop.application.Application;
 
@@ -134,68 +140,124 @@ public class PortMapperCli {
 			logger.info("Using router factory class '"
 					+ this.routerFactoryClassName + "'");
 		}
-
 		if (commandLine.hasOption(HELP_OPTION)) {
 			printHelp();
-		} else if (commandLine.hasOption(ADD_OPTION)) {
-			addPortForwarding(commandLine.getOptionValues(ADD_OPTION));
-		} else if (commandLine.hasOption(STATUS_OPTION)) {
-			printStatus();
-		} else if (commandLine.hasOption(DELETE_OPTION)) {
-			deletePortForwardings(commandLine.getOptionValues(DELETE_OPTION));
-		} else if (commandLine.hasOption(LIST_OPTION)) {
-			printPortForwardings();
-		} else if (commandLine.hasOption(ADD_LOCALHOST_OPTION)) {
-			addLocalhostPortForwardings(commandLine.getOptionValues(ADD_OPTION));
-		} else {
-			System.err.println("Incorrect usage");
-			printHelp();
-			System.exit(1);
+			return;
+		}
+		try {
+			final IRouter router = connect();
+			if (router == null) {
+				logger.error("No router found: exit");
+				return;
+			}
+			if (commandLine.hasOption(ADD_OPTION)) {
+				addPortForwarding(router, commandLine
+						.getOptionValues(ADD_OPTION));
+			} else if (commandLine.hasOption(STATUS_OPTION)) {
+				printStatus(router);
+			} else if (commandLine.hasOption(DELETE_OPTION)) {
+				deletePortForwardings(router, commandLine
+						.getOptionValues(DELETE_OPTION));
+			} else if (commandLine.hasOption(LIST_OPTION)) {
+				printPortForwardings(router);
+			} else if (commandLine.hasOption(ADD_LOCALHOST_OPTION)) {
+				addLocalhostPortForwardings(router, commandLine
+						.getOptionValues(ADD_OPTION));
+			} else {
+				router.disconnect();
+				System.err.println("Incorrect usage");
+				printHelp();
+				System.exit(1);
+			}
+			router.disconnect();
+		} catch (RouterException e) {
+			logger.error("An error occured", e);
 		}
 		System.exit(0);
 	}
 
 	/**
 	 * @param optionValues
+	 * @throws RouterException
 	 */
-	private void addLocalhostPortForwardings(String[] optionValues) {
+	private void addLocalhostPortForwardings(IRouter router,
+			String[] optionValues) throws RouterException {
 		// TODO Auto-generated method stub
 		System.out.println("add port forwardings "
 				+ Arrays.toString(optionValues));
+
+		final Protocol protocol = null;
+		final String remoteHost = null;
+		final int externalPort = 0;
+		final String internalClient = router.getLocalHostAddress();
+		final int internalPort = 0;
+		final String description = null;
+		final PortMapping mapping = new PortMapping(protocol, remoteHost,
+				externalPort, internalClient, internalPort, description);
+		router.addPortMapping(mapping);
 	}
 
 	/**
+	 * @throws RouterException
 	 * 
 	 */
-	private void printPortForwardings() {
-		// TODO Auto-generated method stub
-		System.out.println("print forwardings");
+	private void printPortForwardings(IRouter router) throws RouterException {
+
+		Collection<PortMapping> mappings = router.getPortMappings();
+		if (mappings.size() == 0) {
+			logger.info("No port mappings found");
+			return;
+		}
+		StringBuilder b = new StringBuilder();
+		for (PortMapping mapping : mappings) {
+			b.append(mapping.getCompleteDescription());
+			b.append("\n");
+		}
+		System.out.println(b);
 	}
 
 	/**
 	 * @param optionValues
+	 * @throws RouterException
 	 */
-	private void deletePortForwardings(String[] optionValues) {
+	private void deletePortForwardings(IRouter router, String[] optionValues)
+			throws RouterException {
 		// TODO Auto-generated method stub
 		System.out.println("delete port forwardings "
 				+ Arrays.toString(optionValues));
+
+		final Protocol protocol = null;
+		final String remoteHost = null;
+		final int externalPort = 0;
+		router.removePortMapping(protocol, remoteHost, externalPort);
 	}
 
 	/**
+	 * @throws RouterException
 	 * 
 	 */
-	private void printStatus() {
-		// TODO Auto-generated method stub
-		System.out.println("print status");
+	private void printStatus(IRouter router) throws RouterException {
+		router.logRouterInfo();
 	}
 
 	/**
 	 * @param optionValues
+	 * @throws RouterException
 	 */
-	private void addPortForwarding(String[] optionValues) {
+	private void addPortForwarding(IRouter router, String[] optionValues)
+			throws RouterException {
 		// TODO Auto-generated method stub
 		System.out.println("add port forwarding "
 				+ Arrays.toString(optionValues));
+		final Protocol protocol = null;
+		final String remoteHost = null;
+		final int externalPort = 0;
+		final String internalClient = null;
+		final int internalPort = 0;
+		final String description = null;
+		final PortMapping mapping = new PortMapping(protocol, remoteHost,
+				externalPort, internalClient, internalPort, description);
+		router.addPortMapping(mapping);
 	}
 
 	private void printHelp() {
@@ -252,5 +314,62 @@ public class PortMapperCli {
 		@Override
 		public void write(char[] cbuf, int off, int len) throws IOException {
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private IRouterFactory createRouterFactory() throws RouterException {
+		Class<IRouterFactory> routerFactoryClass;
+		logger.info("Creating router factory for class "
+				+ routerFactoryClassName);
+		try {
+			routerFactoryClass = (Class<IRouterFactory>) Class
+					.forName(routerFactoryClassName);
+		} catch (ClassNotFoundException e1) {
+			throw new RouterException(
+					"Did not find router factory class for name "
+							+ routerFactoryClassName, e1);
+		}
+
+		IRouterFactory routerFactory;
+		logger.debug("Creating a new instance of the router factory class "
+				+ routerFactoryClass);
+		try {
+			routerFactory = routerFactoryClass.newInstance();
+		} catch (Exception e) {
+			throw new RouterException(
+					"Could not create a router factory for name "
+							+ routerFactoryClassName, e);
+		}
+		logger.debug("Router factory created");
+		return routerFactory;
+	}
+
+	private IRouter connect() throws RouterException {
+		IRouterFactory routerFactory;
+		try {
+			routerFactory = createRouterFactory();
+		} catch (RouterException e) {
+			logger.error("Could not create router factory", e);
+			return null;
+		}
+		logger.info("Searching for routers...");
+
+		Collection<IRouter> foundRouters = routerFactory.findRouters();
+
+		IRouter router;
+		// One router found: use it.
+		if (foundRouters.size() == 1) {
+			router = foundRouters.iterator().next();
+			logger.info("Connected to router " + router.getName());
+			return router;
+		} else {
+			// LATER: let user choose which router to use.
+			logger.error("Found no or more than one router.");
+			return null;
+		}
+	}
+
+	private void disconnect(IRouter router) {
+		router.disconnect();
 	}
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 import net.sbbi.upnp.messages.ActionResponse;
 
 /**
+ * This immutable class represents a port mapping / forwarding on a router.
  * 
  * @author chris
  * @version $Id$
@@ -16,13 +17,20 @@ public class PortMapping implements Cloneable {
 	private final Protocol protocol;
 	private final int internalPort;
 	private final String description;
-	private String internalClient;
+	private final String internalClient;
 	private final String remoteHost;
-	private boolean enabled;
-	private long leaseDuration;
+	private final boolean enabled;
+	private final long leaseDuration;
 
 	public PortMapping(Protocol protocol, String remoteHost, int externalPort,
 			String internalClient, int internalPort, String description) {
+		this(protocol, remoteHost, externalPort, internalClient, internalPort,
+				description, true);
+	}
+
+	private PortMapping(Protocol protocol, String remoteHost, int externalPort,
+			String internalClient, int internalPort, String description,
+			boolean enabled) {
 		super();
 		this.protocol = protocol;
 		this.remoteHost = remoteHost;
@@ -30,28 +38,29 @@ public class PortMapping implements Cloneable {
 		this.internalClient = internalClient;
 		this.internalPort = internalPort;
 		this.description = description;
-		this.enabled = true;
+		this.enabled = enabled;
+		this.leaseDuration = -1;
 	}
 
 	private PortMapping(ActionResponse response) {
-		Map<String, String> values = new HashMap<String, String>();
+		final Map<String, String> values = new HashMap<String, String>();
 
 		for (Object argObj : response.getOutActionArgumentNames()) {
-			String argName = (String) argObj;
+			final String argName = (String) argObj;
 			values.put(argName, response.getOutActionArgumentValue(argName));
 		}
 
 		externalPort = Integer.parseInt(values.get("NewExternalPort"));
 		internalPort = Integer.parseInt(values.get("NewInternalPort"));
-		String protocolString = values.get("NewProtocol");
+		final String protocolString = values.get("NewProtocol");
 		protocol = (protocolString.equalsIgnoreCase("TCP") ? Protocol.TCP
 				: Protocol.UDP);
 		description = values.get("NewPortMappingDescription");
 		internalClient = values.get("NewInternalClient");
 		remoteHost = values.get("NewRemoteHost");
-		leaseDuration = Long.parseLong(values.get("NewLeaseDuration"));
-		String enabledString = values.get("NewEnabled");
+		final String enabledString = values.get("NewEnabled");
 		enabled = enabledString != null && enabledString.equals("1");
+		leaseDuration = Long.parseLong(values.get("NewLeaseDuration"));
 	}
 
 	public static PortMapping create(ActionResponse response) {
@@ -59,23 +68,11 @@ public class PortMapping implements Cloneable {
 		return mapping;
 	}
 
-	@Override
-	public String toString() {
-		return description;
-		// StringBuffer b = new StringBuffer();
-		// b.append("PortMappping: ");
-		// b.append(protocol);
-		// b.append(" ");
-		// b.append(externalPort);
-		// b.append(" -> ");
-		// b.append(internalClient);
-		// b.append(":");
-		// b.append(internalPort);
-		// b.append(" ");
-		// b.append(enabled ? "enabled" : "not enabled");
-		// b.append(" ");
-		// b.append(description);
-		// return b.toString();
+	/**
+	 * @return the leaseDuration
+	 */
+	public long getLeaseDuration() {
+		return leaseDuration;
 	}
 
 	public int getExternalPort() {
@@ -98,10 +95,6 @@ public class PortMapping implements Cloneable {
 		return internalClient;
 	}
 
-	public void setInternalClient(String internalClient) {
-		this.internalClient = internalClient;
-	}
-
 	public String getRemoteHost() {
 		return remoteHost;
 	}
@@ -110,12 +103,8 @@ public class PortMapping implements Cloneable {
 		return enabled;
 	}
 
-	public long getLeaseDuration() {
-		return leaseDuration;
-	}
-
 	public String getCompleteDescription() {
-		StringBuffer b = new StringBuffer();
+		StringBuilder b = new StringBuilder();
 		b.append(protocol);
 		b.append(" ");
 		b.append(remoteHost);
@@ -132,11 +121,15 @@ public class PortMapping implements Cloneable {
 		return b.toString();
 	}
 
+	@Override
+	public String toString() {
+		return description;
+	}
+
 	public Object clone() {
 		PortMapping clonedMapping = new PortMapping(protocol, remoteHost,
-				externalPort, internalClient, internalPort, description);
-		clonedMapping.enabled = this.enabled;
-		clonedMapping.leaseDuration = this.leaseDuration;
+				externalPort, internalClient, internalPort, description,
+				enabled);
 		return clonedMapping;
 	}
 }
