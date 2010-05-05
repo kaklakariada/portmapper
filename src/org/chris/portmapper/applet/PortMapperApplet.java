@@ -92,7 +92,6 @@ public class PortMapperApplet extends JApplet {
 		JButton connectButton = new JButton("Connect");
 		connectButton.setEnabled(permissionsGranted);
 		connectButton.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent event) {
 				IRouterFactory routerFactory = (IRouterFactory) factoryComboBox
 						.getSelectedItem();
@@ -103,7 +102,6 @@ public class PortMapperApplet extends JApplet {
 		JButton addPortMappingButton = new JButton("Add port mapping");
 		addPortMappingButton.setEnabled(permissionsGranted);
 		addPortMappingButton.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				addPortMapping();
 			}

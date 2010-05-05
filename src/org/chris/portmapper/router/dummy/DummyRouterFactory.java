@@ -38,7 +38,6 @@ public class DummyRouterFactory implements IRouterFactory {
 	 * 
 	 * @see org.chris.portmapper.router.IRouterFactory#getName()
 	 */
-	@Override
 	public String getName() {
 		return "Dummy library";
 	}

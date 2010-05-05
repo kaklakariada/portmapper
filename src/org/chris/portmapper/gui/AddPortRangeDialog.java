@@ -114,38 +114,32 @@ public class AddPortRangeDialog extends JDialog {
 		externalPortTo = new JTextField(5);
 
 		externalPortFrom.addKeyListener(new KeyListener() {
-			@Override
 			public void keyReleased(KeyEvent e) {
 				if (internalEqualsExternalPorts.isSelected()) {
 					internalPortFrom.setText(externalPortFrom.getText());
 				}
 			}
 
-			@Override
 			public void keyTyped(KeyEvent e) {
 				// ignored
 			}
 
-			@Override
 			public void keyPressed(KeyEvent e) {
 				// ignored
 			}
 		});
 
 		externalPortTo.addKeyListener(new KeyListener() {
-			@Override
 			public void keyReleased(KeyEvent e) {
 				if (internalEqualsExternalPorts.isSelected()) {
 					internalPortTo.setText(externalPortTo.getText());
 				}
 			}
 
-			@Override
 			public void keyTyped(KeyEvent e) {
 				// ignored
 			}
 
-			@Override
 			public void keyPressed(KeyEvent e) {
 				// ignored
 			}
@@ -162,7 +156,6 @@ public class AddPortRangeDialog extends JDialog {
 				.setName("add_port_range_dialog.external_equal_internal");
 		internalEqualsExternalPorts.setSelected(true);
 		internalEqualsExternalPorts.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				logger.debug("Checkbox value changed");
 				internalPortFrom.setEnabled(!internalEqualsExternalPorts

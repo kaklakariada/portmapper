@@ -62,7 +62,6 @@ public class SBBIRouterFactory implements IRouterFactory {
 	 * 
 	 * @see org.chris.portmapper.router.IRouterFactory#getName()
 	 */
-	@Override
 	public String getName() {
 		return "SBBI UPnP lib";
 	}

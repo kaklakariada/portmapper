@@ -96,20 +96,12 @@ public class GatewayDiscover {
 						new byte[1536], 1536);
 				try {
 					ssdp.receive(receivePacket);
+					InetAddress localAddress = receivePacket.getAddress();
 					byte[] receivedData = new byte[receivePacket.getLength()];
 					System.arraycopy(receivePacket.getData(), 0, receivedData,
 							0, receivePacket.getLength());
 
-					// TODO: devices should be a map, and receivePacket.address
-					// should be the key ;)
 					GatewayDevice d = parseMSearchReplay(receivedData);
-
-					/* Get local address as it appears to the Gateway */
-					DatagramSocket sock = new DatagramSocket();
-					sock.connect(receivePacket.getSocketAddress());
-					InetAddress localAddress = sock.getLocalAddress();
-					sock.disconnect();
-					sock = null;
 
 					d.setLocalAddress(localAddress);
 					devices.put(localAddress, d);
