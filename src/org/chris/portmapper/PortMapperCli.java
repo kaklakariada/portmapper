@@ -5,8 +5,8 @@ package org.chris.portmapper;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
@@ -80,7 +80,7 @@ public class PortMapperCli {
 
 		final Option delete = new Option(DELETE_OPTION, useLongOpts ? "delete"
 				: null, true, "Delete port forwarding");
-		delete.setArgs(2);
+		delete.setArgs(20);
 		delete.setArgName("external_port protocol [...]");
 		delete.setValueSeparator(' ');
 		delete.setType(String.class);
@@ -94,7 +94,7 @@ public class PortMapperCli {
 		final Option addLocalhost = new Option(ADD_LOCALHOST_OPTION,
 				useLongOpts ? "addlocalhost" : null, true,
 				"Add all forwardings to the current host");
-		addLocalhost.setArgs(2);
+		addLocalhost.setArgs(20);
 		addLocalhost.setArgName("port protocol [...]");
 		addLocalhost.setValueSeparator(' ');
 		addLocalhost.setType(String.class);
@@ -169,6 +169,7 @@ public class PortMapperCli {
 			final IRouter router = connect();
 			if (router == null) {
 				logger.error("No router found: exit");
+				System.exit(1);
 				return;
 			}
 			if (commandLine.hasOption(ADD_OPTION)) {
@@ -183,16 +184,19 @@ public class PortMapperCli {
 				printPortForwardings(router);
 			} else if (commandLine.hasOption(ADD_LOCALHOST_OPTION)) {
 				addLocalhostPortForwardings(router, commandLine
-						.getOptionValues(ADD_OPTION));
+						.getOptionValues(ADD_LOCALHOST_OPTION));
 			} else {
 				router.disconnect();
 				System.err.println("Incorrect usage");
 				printHelp();
 				System.exit(1);
+				return;
 			}
 			router.disconnect();
 		} catch (RouterException e) {
 			logger.error("An error occured", e);
+			System.exit(1);
+			return;
 		}
 		System.exit(0);
 	}
@@ -203,19 +207,25 @@ public class PortMapperCli {
 	 */
 	private void addLocalhostPortForwardings(IRouter router,
 			String[] optionValues) throws RouterException {
-		// TODO Auto-generated method stub
-		System.out.println("add port forwardings "
-				+ Arrays.toString(optionValues));
 
-		final Protocol protocol = null;
-		final String remoteHost = null;
-		final int externalPort = 0;
+		if (optionValues.length == 0 || optionValues.length % 2 != 0) {
+			logger.error("Invalid number of arguments for option "
+					+ ADD_LOCALHOST_OPTION);
+			return;
+		}
+
 		final String internalClient = router.getLocalHostAddress();
-		final int internalPort = 0;
-		final String description = null;
-		final PortMapping mapping = new PortMapping(protocol, remoteHost,
-				externalPort, internalClient, internalPort, description);
-		router.addPortMapping(mapping);
+		for (int i = 0; i < optionValues.length; i += 2) {
+			final int port = Integer.parseInt(optionValues[i]);
+			final Protocol protocol = Protocol.getProtocol(optionValues[i + 1]);
+			final String description = "PortMapper forwarding for " + protocol
+					+ "/" + internalClient + ":" + port;
+			final PortMapping mapping = new PortMapping(protocol, null, port,
+					internalClient, port, description);
+			logger.info("Adding mapping " + mapping.getCompleteDescription());
+			router.addPortMapping(mapping);
+		}
+		printPortForwardings(router);
 	}
 
 	/**
@@ -230,11 +240,17 @@ public class PortMapperCli {
 			return;
 		}
 		StringBuilder b = new StringBuilder();
-		for (PortMapping mapping : mappings) {
+		for (Iterator<PortMapping> iterator = mappings.iterator(); iterator
+				.hasNext();) {
+			PortMapping mapping = (PortMapping) iterator.next();
 			b.append(mapping.getCompleteDescription());
-			b.append("\n");
+			if (iterator.hasNext()) {
+				b.append("\n");
+			}
+
 		}
-		System.out.println(b);
+		logger.info("Found " + mappings.size() + " port forwardings:\n"
+				+ b.toString());
 	}
 
 	/**
@@ -243,14 +259,22 @@ public class PortMapperCli {
 	 */
 	private void deletePortForwardings(IRouter router, String[] optionValues)
 			throws RouterException {
-		// TODO Auto-generated method stub
-		System.out.println("delete port forwardings "
-				+ Arrays.toString(optionValues));
 
-		final Protocol protocol = null;
+		if (optionValues.length == 0 || optionValues.length % 2 != 0) {
+			logger.error("Invalid number of arguments for option "
+					+ DELETE_OPTION);
+			return;
+		}
+
 		final String remoteHost = null;
-		final int externalPort = 0;
-		router.removePortMapping(protocol, remoteHost, externalPort);
+		for (int i = 0; i < optionValues.length; i += 2) {
+			final int port = Integer.parseInt(optionValues[i]);
+			final Protocol protocol = Protocol.getProtocol(optionValues[i + 1]);
+			logger.info("Deleting mapping for protocol " + protocol
+					+ " and external port " + port);
+			router.removePortMapping(protocol, remoteHost, port);
+		}
+		printPortForwardings(router);
 	}
 
 	/**
@@ -267,18 +291,21 @@ public class PortMapperCli {
 	 */
 	private void addPortForwarding(IRouter router, String[] optionValues)
 			throws RouterException {
-		// TODO Auto-generated method stub
-		System.out.println("add port forwarding "
-				+ Arrays.toString(optionValues));
-		final Protocol protocol = null;
+
 		final String remoteHost = null;
-		final int externalPort = 0;
-		final String internalClient = null;
-		final int internalPort = 0;
-		final String description = null;
+		final String internalClient = optionValues[0];
+		final int internalPort = Integer.parseInt(optionValues[1]);
+		final int externalPort = Integer.parseInt(optionValues[2]);
+		final Protocol protocol = Protocol.getProtocol(optionValues[3]);
+
+		final String description = "PortMapper forwarding for " + protocol
+				+ "/" + internalClient + ":" + internalPort;
+		;
 		final PortMapping mapping = new PortMapping(protocol, remoteHost,
 				externalPort, internalClient, internalPort, description);
+		logger.info("Adding mapping " + mapping);
 		router.addPortMapping(mapping);
+		printPortForwardings(router);
 	}
 
 	private void printHelp() {
@@ -391,7 +418,7 @@ public class PortMapperCli {
 			final IRouter router = foundRouters.iterator().next();
 			logger.info("Connected to router " + router.getName());
 			return router;
-		} else if (foundRouters.size() == 1) {
+		} else if (foundRouters.size() == 0) {
 			logger.error("Found no router");
 			return null;
 		} else if (foundRouters.size() > 1 && routerIndex == null) {
@@ -415,9 +442,5 @@ public class PortMapperCli {
 					+ (foundRouters.size() - 1));
 			return null;
 		}
-	}
-
-	private void disconnect(IRouter router) {
-		router.disconnect();
 	}
 }

@@ -62,8 +62,6 @@ public class TextNumberCellEditor extends AbstractCellEditor implements
 	 * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
 	 */
 	public void keyPressed(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/*
@@ -72,8 +70,6 @@ public class TextNumberCellEditor extends AbstractCellEditor implements
 	 * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
 	 */
 	public void keyReleased(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/*

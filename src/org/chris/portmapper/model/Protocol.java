@@ -44,4 +44,15 @@ public class Protocol implements Serializable {
 	public String getValue() {
 		return value;
 	}
+
+	public static Protocol getProtocol(String name) {
+		if (name != null && name.equalsIgnoreCase(TCP.getValue())) {
+			return TCP;
+		}
+		if (name != null && name.equalsIgnoreCase(UDP.getValue())) {
+			return UDP;
+		}
+		throw new IllegalArgumentException("Invalid protocol name '" + name
+				+ "'");
+	}
 };
