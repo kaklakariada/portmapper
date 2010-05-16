@@ -107,7 +107,9 @@ public class PortMapping implements Cloneable {
 		StringBuilder b = new StringBuilder();
 		b.append(protocol);
 		b.append(" ");
-		b.append(remoteHost);
+		if (remoteHost != null) {
+			b.append(remoteHost);
+		}
 		b.append(":");
 		b.append(externalPort);
 		b.append(" -> ");

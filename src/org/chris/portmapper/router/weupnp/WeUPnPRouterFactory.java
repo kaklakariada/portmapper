@@ -4,9 +4,9 @@
 package org.chris.portmapper.router.weupnp;
 
 import java.net.InetAddress;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -27,7 +27,7 @@ public class WeUPnPRouterFactory implements IRouterFactory {
 
 	private final GatewayDiscover discover = new GatewayDiscover();
 
-	public Collection<IRouter> findRouters() throws RouterException {
+	public List<IRouter> findRouters() throws RouterException {
 		logger.debug("Searching for gateway devices...");
 		final Map<InetAddress, GatewayDevice> devices;
 		try {
@@ -42,7 +42,7 @@ public class WeUPnPRouterFactory implements IRouterFactory {
 			return Collections.emptyList();
 		}
 
-		final Collection<IRouter> routers = new LinkedList<IRouter>();
+		final List<IRouter> routers = new ArrayList<IRouter>(devices.size());
 		for (GatewayDevice device : devices.values()) {
 			routers.add(new WeUPnPRouter(device));
 		}

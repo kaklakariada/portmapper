@@ -4,9 +4,9 @@
 package org.chris.portmapper.router.sbbi;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
+import java.util.List;
 
 import net.sbbi.upnp.impls.InternetGatewayDevice;
 
@@ -25,7 +25,7 @@ public class SBBIRouterFactory implements IRouterFactory {
 	 */
 	private final static int DISCOVERY_TIMEOUT = 5000;
 
-	public Collection<IRouter> findRouters() throws RouterException {
+	public List<IRouter> findRouters() throws RouterException {
 
 		final InternetGatewayDevice[] devices;
 		try {
@@ -38,7 +38,7 @@ public class SBBIRouterFactory implements IRouterFactory {
 			return Collections.emptyList();
 		}
 
-		final Collection<IRouter> routers = new LinkedList<IRouter>();
+		final List<IRouter> routers = new ArrayList<IRouter>(devices.length);
 
 		for (InternetGatewayDevice device : devices) {
 			routers.add(new SBBIRouter(device));

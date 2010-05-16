@@ -4,6 +4,7 @@
 package org.chris.portmapper.router;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author chris
@@ -26,6 +27,6 @@ public interface IRouterFactory {
 	 * @throws RouterException
 	 *             if something goes wrong during discovery.
 	 */
-	public Collection<IRouter> findRouters() throws RouterException;
+	public List<IRouter> findRouters() throws RouterException;
 
 }

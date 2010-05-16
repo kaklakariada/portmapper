@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -25,7 +26,9 @@ import org.chris.portmapper.model.Protocol;
 import org.chris.portmapper.router.IRouter;
 import org.chris.portmapper.router.IRouterFactory;
 import org.chris.portmapper.router.RouterException;
+import org.chris.portmapper.router.dummy.DummyRouterFactory;
 import org.chris.portmapper.router.sbbi.SBBIRouterFactory;
+import org.chris.portmapper.router.weupnp.WeUPnPRouterFactory;
 import org.jdesktop.application.Application;
 
 /**
@@ -44,10 +47,12 @@ public class PortMapperCli {
 	private static final String LIST_OPTION = "l";
 	private static final String ADD_LOCALHOST_OPTION = "r";
 	private static final String UPNP_LIB_OPTION = "u";
+	private static final String ROUTER_INDEX_OPTION = "i";
 
 	private final Options options;
 	private final CommandLineParser parser;
 	private String routerFactoryClassName = SBBIRouterFactory.class.getName();
+	private Integer routerIndex = null;
 
 	public PortMapperCli() {
 		options = createOptions();
@@ -97,12 +102,15 @@ public class PortMapperCli {
 		final Option upnpLib = new Option(UPNP_LIB_OPTION,
 				useLongOpts ? "delete" : null, true, "UPnP library");
 		upnpLib.setArgs(1);
-		// add.setArgName("class name (" + SBBIRouterFactory.class.getName() +
-		// "|"
-		// + WeUPnPRouterFactory.class.getName() + "|"
-		// + DummyRouterFactory.class.getName() + ")");
 		upnpLib.setArgName("class name");
 		upnpLib.setType(String.class);
+
+		final Option routerIndex = new Option(ROUTER_INDEX_OPTION,
+				useLongOpts ? "index" : null, true,
+				"Router index (if more than one is found)");
+		routerIndex.setArgs(1);
+		routerIndex.setArgName("index");
+		routerIndex.setType(Integer.class);
 
 		final OptionGroup optionGroup = new OptionGroup();
 		optionGroup.setRequired(false);
@@ -117,6 +125,7 @@ public class PortMapperCli {
 		// create Options object
 		final Options options = new Options();
 		options.addOption(upnpLib);
+		options.addOption(routerIndex);
 		options.addOptionGroup(optionGroup);
 
 		return options;
@@ -140,6 +149,18 @@ public class PortMapperCli {
 			logger.info("Using router factory class '"
 					+ this.routerFactoryClassName + "'");
 		}
+
+		if (commandLine.hasOption(ROUTER_INDEX_OPTION)) {
+			try {
+				this.routerIndex = Integer.parseInt(commandLine
+						.getOptionValue(ROUTER_INDEX_OPTION));
+			} catch (NumberFormatException e) {
+				printHelp();
+				System.exit(1);
+			}
+			logger.info("Using router index " + this.routerIndex);
+		}
+
 		if (commandLine.hasOption(HELP_OPTION)) {
 			printHelp();
 			return;
@@ -265,12 +286,21 @@ public class PortMapperCli {
 		formatter.setWidth(80);
 		// formatter.setDescPadding(0);
 		// formatter.setLeftPadding(0);
-		String header = "header";
+		String header = "";
 		String cmdLineSyntax = "java -jar PortMapper.jar";
-		String footer = "protocol is UDP or TCP";
+		StringBuilder footer = new StringBuilder();
+		footer.append("Protocol is UDP or TCP\n");
+		footer.append("UPnP library class names:\n");
+		footer.append("- ");
+		footer.append(SBBIRouterFactory.class.getName());
+		footer.append(" (default)\n");
+		footer.append("- ");
+		footer.append(WeUPnPRouterFactory.class.getName());
+		footer.append("\n- ");
+		footer.append(DummyRouterFactory.class.getName());
 
 		formatter.printHelp(formatter.getWidth(), cmdLineSyntax, header,
-				options, footer, true);
+				options, footer.toString(), true);
 	}
 
 	private boolean isStartGuiRequired(CommandLine commandLine) {
@@ -280,9 +310,9 @@ public class PortMapperCli {
 		return !(commandLine.hasOption(HELP_OPTION)
 				|| commandLine.hasOption(ADD_LOCALHOST_OPTION)
 				|| commandLine.hasOption(ADD_OPTION)
-				|| commandLine.hasOption(STATUS_OPTION) || commandLine
-				.hasOption(LIST_OPTION)
-				&& commandLine.hasOption(DELETE_OPTION));
+				|| commandLine.hasOption(STATUS_OPTION)
+				|| commandLine.hasOption(LIST_OPTION) || commandLine
+				.hasOption(DELETE_OPTION));
 	}
 
 	private void initDummyLogAppender() {
@@ -354,17 +384,35 @@ public class PortMapperCli {
 		}
 		logger.info("Searching for routers...");
 
-		Collection<IRouter> foundRouters = routerFactory.findRouters();
+		List<IRouter> foundRouters = routerFactory.findRouters();
 
-		IRouter router;
 		// One router found: use it.
 		if (foundRouters.size() == 1) {
-			router = foundRouters.iterator().next();
+			final IRouter router = foundRouters.iterator().next();
 			logger.info("Connected to router " + router.getName());
 			return router;
+		} else if (foundRouters.size() == 1) {
+			logger.error("Found no router");
+			return null;
+		} else if (foundRouters.size() > 1 && routerIndex == null) {
+			// let user choose which router to use.
+			logger.error("Found more than one router. Use option -i <index>");
+
+			int index = 0;
+			for (IRouter iRouter : foundRouters) {
+				logger.error("- index " + index + ": " + iRouter.getName());
+				index++;
+			}
+			return null;
+		} else if (routerIndex >= 0 && routerIndex < foundRouters.size()) {
+			final IRouter router = foundRouters.get(routerIndex);
+			logger
+					.info("Found more than one router, using "
+							+ router.getName());
+			return router;
 		} else {
-			// LATER: let user choose which router to use.
-			logger.error("Found no or more than one router.");
+			logger.error("Index must be between 0 and "
+					+ (foundRouters.size() - 1));
 			return null;
 		}
 	}
