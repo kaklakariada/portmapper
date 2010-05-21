@@ -16,6 +16,7 @@ import net.sbbi.upnp.messages.UPNPResponseException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.chris.portmapper.PortMapperApp;
+import org.chris.portmapper.Settings;
 import org.chris.portmapper.model.PortMapping;
 import org.chris.portmapper.model.Protocol;
 import org.chris.portmapper.router.AbstractRouter;
@@ -183,10 +184,10 @@ public class SBBIRouter extends AbstractRouter {
 				.toExternalForm());
 		info.put("urlBase", rootDevice.getURLBase().toExternalForm());
 
-		SortedSet<String> sortedKeys = new TreeSet<String>(info.keySet());
+		final SortedSet<String> sortedKeys = new TreeSet<String>(info.keySet());
 
 		for (String key : sortedKeys) {
-			String value = info.get(key);
+			final String value = info.get(key);
 			logger.info("Router Info: " + key + " \t= " + value);
 		}
 
@@ -203,14 +204,17 @@ public class SBBIRouter extends AbstractRouter {
 	private boolean addPortMapping(String description, Protocol protocol,
 			String remoteHost, int externalPort, String internalClient,
 			int internalPort, int leaseDuration) throws RouterException {
-		String protocolString = (protocol.equals(Protocol.TCP) ? "TCP" : "UDP");
 
-		if (PortMapperApp.getInstance().getSettings().isUseEntityEncoding()) {
+		final String protocolString = (protocol.equals(Protocol.TCP) ? "TCP"
+				: "UDP");
+
+		final Settings settings = PortMapperApp.getInstance().getSettings();
+		if (settings == null || settings.isUseEntityEncoding()) {
 			description = EncodingUtilities.htmlEntityEncode(description);
 		}
 
 		try {
-			boolean success = router.addPortMapping(description, null,
+			final boolean success = router.addPortMapping(description, null,
 					internalPort, externalPort, internalClient, leaseDuration,
 					protocolString);
 			return success;
@@ -244,7 +248,8 @@ public class SBBIRouter extends AbstractRouter {
 
 	public void removePortMapping(Protocol protocol, String remoteHost,
 			int externalPort) throws RouterException {
-		String protocolString = (protocol.equals(Protocol.TCP) ? "TCP" : "UDP");
+		final String protocolString = (protocol.equals(Protocol.TCP) ? "TCP"
+				: "UDP");
 		try {
 			router.deletePortMapping(remoteHost, externalPort, protocolString);
 		} catch (IOException e) {

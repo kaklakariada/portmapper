@@ -298,8 +298,8 @@ public class PortMapperCli {
 		final int externalPort = Integer.parseInt(optionValues[2]);
 		final Protocol protocol = Protocol.getProtocol(optionValues[3]);
 
-		final String description = "PortMapper forwarding for " + protocol
-				+ "/" + internalClient + ":" + internalPort;
+		final String description = "PortMapper " + protocol + "/"
+				+ internalClient + ":" + internalPort;
 		;
 		final PortMapping mapping = new PortMapping(protocol, remoteHost,
 				externalPort, internalClient, internalPort, description);
