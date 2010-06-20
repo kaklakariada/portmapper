@@ -11,7 +11,9 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 
 import javax.swing.ActionMap;
@@ -448,16 +450,28 @@ public class PortMapperView extends FrameView {
 		return this.portMappingPresets.getSelectedValue() != null;
 	}
 
+	/**
+	 * Get the port mappings currently selected in the table.
+	 * 
+	 * @return the currently selected port mappings.
+	 */
 	public Collection<PortMapping> getSelectedPortMappings() {
-		int[] selectedRows = mappingsTable.getSelectedRows();
-		Collection<PortMapping> selectedMappings = new LinkedList<PortMapping>();
-		if (selectedRows != null) {
-			for (int rowNumber : selectedRows) {
-				if (rowNumber >= 0) {
-					PortMapping mapping = tableModel.getPortMapping(rowNumber);
-					if (mapping != null) {
-						selectedMappings.add(mapping);
-					}
+		final int[] selectedRows = mappingsTable.getSelectedRows();
+		if (selectedRows == null || selectedRows.length == 0) {
+			return Collections.emptyList();
+		}
+		final Collection<PortMapping> selectedMappings = new ArrayList<PortMapping>(
+				selectedRows.length);
+		for (int rowIndex : selectedRows) {
+			if (rowIndex >= 0) {
+				// The table could be sorted, so convert the row index for
+				// the model
+				final int modelRowIndex = mappingsTable
+						.convertRowIndexToModel(rowIndex);
+				final PortMapping mapping = tableModel
+						.getPortMapping(modelRowIndex);
+				if (mapping != null) {
+					selectedMappings.add(mapping);
 				}
 			}
 		}

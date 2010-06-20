@@ -30,13 +30,10 @@ import org.jdesktop.application.Action;
  * This class represents the settings dialog.
  * 
  * @author chris
- * 
+ * @version $Id$
  */
 public class SettingsDialog extends JDialog {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private final Log logger = LogFactory.getLog(this.getClass());

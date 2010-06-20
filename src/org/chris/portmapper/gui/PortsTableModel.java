@@ -20,9 +20,6 @@ import org.chris.portmapper.model.SinglePortMapping;
 public class PortsTableModel extends AbstractTableModel implements
 		PropertyChangeListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private final List<SinglePortMapping> ports;
 

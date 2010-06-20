@@ -19,9 +19,6 @@ import org.chris.portmapper.Settings;
 public class PresetListModel extends AbstractListModel implements
 		PropertyChangeListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private final Log logger = LogFactory.getLog(this.getClass());
 	private final Settings settings;
@@ -57,5 +54,4 @@ public class PresetListModel extends AbstractListModel implements
 		}
 		return settings.getPresets().size();
 	}
-
 }
