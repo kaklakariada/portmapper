@@ -69,13 +69,16 @@ public class WeUPnPRouter extends AbstractRouter {
 	}
 
 	public String getInternalHostName() {
+		final String url = device.getPresentationURL();
+		if (url == null || url.trim().length() == 0) {
+			return null;
+		}
 		try {
-			return new URL(device.getPresentationURL()).getHost();
+			return new URL(url).getHost();
 		} catch (MalformedURLException e) {
-			logger.warn(
-					"Could not get URL for internal host name '"
-							+ device.getPresentationURL() + "'", e);
-			return device.getPresentationURL();
+			logger.warn("Could not get URL for internal host name '" + url
+					+ "'", e);
+			return url;
 		}
 	}
 

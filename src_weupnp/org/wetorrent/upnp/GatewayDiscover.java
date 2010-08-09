@@ -140,9 +140,7 @@ public class GatewayDiscover {
 
 		while (line != null && line.trim().length() > 0) {
 
-			if (line.startsWith("HTTP/1.")) {
-
-			} else {
+			if (!line.contains("HTTP/1.")) {
 				String key = line.substring(0, line.indexOf(':'));
 				String value = line.length() > key.length() + 1 ? line
 						.substring(key.length() + 1) : null;
