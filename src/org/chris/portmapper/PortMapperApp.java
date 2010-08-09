@@ -5,8 +5,13 @@ package org.chris.portmapper;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EventObject;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -95,9 +100,8 @@ public class PortMapperApp extends SingleFrameApplication {
 				System.exit(1);
 			}
 			if (!dir.canRead() || !dir.canWrite()) {
-				logger
-						.error("Can not read or write to custom configuration directory '"
-								+ customConfigurationDir + "'.");
+				logger.error("Can not read or write to custom configuration directory '"
+						+ customConfigurationDir + "'.");
 				System.exit(1);
 			}
 			logger.info("Using custom configuration directory '"
@@ -135,8 +139,7 @@ public class PortMapperApp extends SingleFrameApplication {
 		}
 
 		if (settings == null) {
-			logger
-					.debug("Settings were not loaded from file: create new settings");
+			logger.debug("Settings were not loaded from file: create new settings");
 			settings = new Settings();
 		} else {
 			logger.debug("Got settings " + settings);
@@ -187,8 +190,7 @@ public class PortMapperApp extends SingleFrameApplication {
 
 	public void connectRouter() throws RouterException {
 		if (this.router != null) {
-			logger
-					.warn("Already connected to router. Cannot create a second connection.");
+			logger.warn("Already connected to router. Cannot create a second connection.");
 			return;
 		}
 
@@ -221,8 +223,8 @@ public class PortMapperApp extends SingleFrameApplication {
 
 		final ResourceMap resourceMap = PortMapperApp.getResourceMap();
 		final IRouter selectedRouter = (IRouter) JOptionPane.showInputDialog(
-				this.getView().getFrame(), resourceMap
-						.getString("messages.select_router.message"),
+				this.getView().getFrame(),
+				resourceMap.getString("messages.select_router.message"),
 				resourceMap.getString("messages.select_router.title"),
 				JOptionPane.QUESTION_MESSAGE, null, foundRouters.toArray(),
 				null);
@@ -300,15 +302,72 @@ public class PortMapperApp extends SingleFrameApplication {
 	 * @throws RouterException
 	 */
 	public String getLocalHostAddress() {
-		logger.debug("Get IP of localhost...");
-		if (router != null) {
-			try {
+
+		logger.debug("Connected to router, get IP of localhost...");
+		try {
+			if (router != null) {
 				return router.getLocalHostAddress();
-			} catch (RouterException e) {
-				logger.warn("Could not get address of localhost.", e);
-				logger
-						.warn("Could not get address of localhost. Please enter it manually.");
 			}
+
+			final InetAddress address = getLocalhostAddressFromNetworkInterface();
+			if (address != null) {
+				return address.getHostAddress();
+			}
+
+		} catch (RouterException e) {
+			logger.warn("Could not get address of localhost.", e);
+			logger.warn("Could not get address of localhost. Please enter it manually.");
+		}
+		return null;
+	}
+
+	/**
+	 * @return
+	 * @throws RouterException
+	 */
+	private InetAddress getLocalhostAddressFromNetworkInterface()
+			throws RouterException {
+		try {
+			final List<NetworkInterface> networkInterfaces = Collections
+					.list(NetworkInterface.getNetworkInterfaces());
+			logger.trace("Found network interfaces " + networkInterfaces);
+			for (NetworkInterface nInterface : networkInterfaces) {
+				if (nInterface.isLoopback()) {
+					logger.debug("Found loopback network interface "
+							+ nInterface.getDisplayName() + "/"
+							+ nInterface.getName() + " with IPs "
+							+ nInterface.getInterfaceAddresses() + ": ignore.");
+				} else if (!nInterface.isUp()) {
+					logger.debug("Found inactive network interface "
+							+ nInterface.getDisplayName() + "/"
+							+ nInterface.getName() + " with IPs "
+							+ nInterface.getInterfaceAddresses() + ": ignore.");
+				} else {
+					logger.debug("Found network interface "
+							+ nInterface.getDisplayName() + "/"
+							+ nInterface.getName() + " with IPs "
+							+ nInterface.getInterfaceAddresses()
+							+ ": use this one.");
+					final List<InetAddress> addresses = Collections
+							.list(nInterface.getInetAddresses());
+					if (addresses.size() > 0) {
+						final InetAddress address = addresses.get(0);
+						if (addresses.size() > 1) {
+							logger.warn("Found more than one address for network interface "
+									+ nInterface.getName()
+									+ ": using "
+									+ address);
+						}
+						logger.debug("Found one address for network interface "
+								+ nInterface.getName() + ": using " + address);
+						return address;
+					}
+					logger.debug("Network interface " + nInterface.getName()
+							+ " has no addresses.");
+				}
+			}
+		} catch (SocketException e) {
+			throw new RouterException("Did not get network interfaces.", e);
 		}
 		return null;
 	}

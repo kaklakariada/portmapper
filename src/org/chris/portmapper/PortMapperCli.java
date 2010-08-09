@@ -173,18 +173,18 @@ public class PortMapperCli {
 				return;
 			}
 			if (commandLine.hasOption(ADD_OPTION)) {
-				addPortForwarding(router, commandLine
-						.getOptionValues(ADD_OPTION));
+				addPortForwarding(router,
+						commandLine.getOptionValues(ADD_OPTION));
 			} else if (commandLine.hasOption(STATUS_OPTION)) {
 				printStatus(router);
 			} else if (commandLine.hasOption(DELETE_OPTION)) {
-				deletePortForwardings(router, commandLine
-						.getOptionValues(DELETE_OPTION));
+				deletePortForwardings(router,
+						commandLine.getOptionValues(DELETE_OPTION));
 			} else if (commandLine.hasOption(LIST_OPTION)) {
 				printPortForwardings(router);
 			} else if (commandLine.hasOption(ADD_LOCALHOST_OPTION)) {
-				addLocalhostPortForwardings(router, commandLine
-						.getOptionValues(ADD_LOCALHOST_OPTION));
+				addLocalhostPortForwardings(router,
+						commandLine.getOptionValues(ADD_LOCALHOST_OPTION));
 			} else {
 				router.disconnect();
 				System.err.println("Incorrect usage");
@@ -217,7 +217,7 @@ public class PortMapperCli {
 		final String internalClient = router.getLocalHostAddress();
 		for (int i = 0; i < optionValues.length; i += 2) {
 			final int port = Integer.parseInt(optionValues[i]);
-			final Protocol protocol = Protocol.getProtocol(optionValues[i + 1]);
+			final Protocol protocol = Protocol.valueOf(optionValues[i + 1]);
 			final String description = "PortMapper forwarding for " + protocol
 					+ "/" + internalClient + ":" + port;
 			final PortMapping mapping = new PortMapping(protocol, null, port,
@@ -269,7 +269,7 @@ public class PortMapperCli {
 		final String remoteHost = null;
 		for (int i = 0; i < optionValues.length; i += 2) {
 			final int port = Integer.parseInt(optionValues[i]);
-			final Protocol protocol = Protocol.getProtocol(optionValues[i + 1]);
+			final Protocol protocol = Protocol.valueOf(optionValues[i + 1]);
 			logger.info("Deleting mapping for protocol " + protocol
 					+ " and external port " + port);
 			router.removePortMapping(protocol, remoteHost, port);
@@ -296,7 +296,7 @@ public class PortMapperCli {
 		final String internalClient = optionValues[0];
 		final int internalPort = Integer.parseInt(optionValues[1]);
 		final int externalPort = Integer.parseInt(optionValues[2]);
-		final Protocol protocol = Protocol.getProtocol(optionValues[3]);
+		final Protocol protocol = Protocol.valueOf(optionValues[3]);
 
 		final String description = "PortMapper " + protocol + "/"
 				+ internalClient + ":" + internalPort;
@@ -433,9 +433,7 @@ public class PortMapperCli {
 			return null;
 		} else if (routerIndex >= 0 && routerIndex < foundRouters.size()) {
 			final IRouter router = foundRouters.get(routerIndex);
-			logger
-					.info("Found more than one router, using "
-							+ router.getName());
+			logger.info("Found more than one router, using " + router.getName());
 			return router;
 		} else {
 			logger.error("Index must be between 0 and "

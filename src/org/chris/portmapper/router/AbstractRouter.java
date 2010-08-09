@@ -33,8 +33,30 @@ public abstract class AbstractRouter implements IRouter {
 	}
 
 	public String getLocalHostAddress() throws RouterException {
-		logger.debug("Get IP of localhost...");
+		logger.debug("Get IP of localhost");
 
+		InetAddress localHostIP = null;
+
+		if (localHostIP == null) {
+			localHostIP = getLocalHostAddressFromSocket();
+		}
+
+		// We do not want an address like 127.0.0.1
+		if (localHostIP.getHostAddress().startsWith("127.")) {
+			throw new RouterException(
+					"Only found an address that begins with 127.");
+		}
+
+		return localHostIP.getHostAddress();
+
+	}
+
+	/**
+	 * @param localHostIP
+	 * @return
+	 * @throws RouterException
+	 */
+	private InetAddress getLocalHostAddressFromSocket() throws RouterException {
 		InetAddress localHostIP = null;
 		try {
 
@@ -70,9 +92,8 @@ public abstract class AbstractRouter implements IRouter {
 			// so we have to use the traditional method.
 			if (localHostIP == null) {
 
-				logger
-						.debug("Not connected to router or got invalid port number, can not use socket to determine the address of the localhost. "
-								+ "If no address is found, please connect to the router.");
+				logger.debug("Not connected to router or got invalid port number, can not use socket to determine the address of the localhost. "
+						+ "If no address is found, please connect to the router.");
 
 				localHostIP = InetAddress.getLocalHost();
 
@@ -83,15 +104,7 @@ public abstract class AbstractRouter implements IRouter {
 		} catch (IOException e) {
 			throw new RouterException("Could not get IP of localhost.", e);
 		}
-
-		// We do not want an address like 127.0.0.1
-		if (localHostIP.getHostAddress().startsWith("127.")) {
-			throw new RouterException(
-					"Only found an address that begins with 127.");
-		}
-
-		return localHostIP.getHostAddress();
-
+		return localHostIP;
 	}
 
 	/*
@@ -102,8 +115,8 @@ public abstract class AbstractRouter implements IRouter {
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
-		sb.append(getName()).append(" (").append(getInternalHostName()).append(
-				")");
+		sb.append(getName()).append(" (").append(getInternalHostName())
+				.append(")");
 		return sb.toString();
 	}
 }

@@ -6,6 +6,10 @@ package org.chris.portmapper.model;
 import java.io.Serializable;
 
 /**
+ * This class is used by {@link PortMapping} to store the information about a
+ * single port mapping, i.e. the protocol (TCP or UDP) and internal and extern
+ * port.
+ * 
  * @author chris
  * @version $Id$
  */
@@ -14,7 +18,7 @@ public class SinglePortMapping implements Cloneable, Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3055383170284209747L;
+	private static final long serialVersionUID = 7458514232916039775L;
 
 	private int externalPort;
 	private int internalPort;

@@ -3,56 +3,27 @@
  */
 package org.chris.portmapper.model;
 
-import java.beans.PersistenceDelegate;
-import java.beans.XMLEncoder;
-import java.io.Serializable;
-
 /**
- * @author chris
+ * This class represents the protocol ({@link #TCP} or {@link #UDP}) of a
+ * {@link SinglePortMapping}.
  * 
- *         Note: it would be better to use a simple <code>enum</code>, but the
- *         {@link XMLEncoder} of JDK 5.0 does not know how to serialize enums.
- *         It would be possible to write a {@link PersistenceDelegate}, but I do
- *         not want to do this.
- * @see {@linkplain http 
- *      ://weblogs.java.net/blog/malenkov/archive/2006/08/how_to_encode_e.html}
+ * 
+ * @author chris
  * @version $Id$
  */
-public class Protocol implements Serializable {
+public enum Protocol {
+	TCP("TCP"), UDP("UDP");
+
+	private final String name;
+
+	private Protocol(String name) {
+		this.name = name;
+	}
 
 	/**
-	 * 
+	 * @return the name
 	 */
-	private static final long serialVersionUID = -8825654573118875844L;
-
-	public final static Protocol TCP = new Protocol("TCP");
-	public final static Protocol UDP = new Protocol("UDP");
-
-	private final String value;
-
-	/**
-	 * @param string
-	 */
-	private Protocol(String string) {
-		this.value = string;
-	}
-
-	public String toString() {
-		return value;
-	}
-
-	public String getValue() {
-		return value;
-	}
-
-	public static Protocol getProtocol(String name) {
-		if (name != null && name.equalsIgnoreCase(TCP.getValue())) {
-			return TCP;
-		}
-		if (name != null && name.equalsIgnoreCase(UDP.getValue())) {
-			return UDP;
-		}
-		throw new IllegalArgumentException("Invalid protocol name '" + name
-				+ "'");
+	public String getName() {
+		return name;
 	}
 };

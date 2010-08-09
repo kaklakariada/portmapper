@@ -181,10 +181,13 @@ public class EditPresetDialog extends JDialog {
 				.getLocalHostAddress();
 
 		if (localHostAddress != null) {
+			logger.debug("Found localhost address " + localHostAddress
+					+ ". Enable localhost checkbox.");
 			internalClientTextField.setText(localHostAddress);
 			internalClientTextField.setEnabled(false);
 			useLocalhostCheckBox.setEnabled(true);
 		} else {
+			logger.debug("Did not find localhost address: disable localhost checkbox.");
 			useLocalhostCheckBox.setSelected(false);
 			useLocalhostCheckBox.setEnabled(false);
 			internalClientTextField.setEnabled(true);
@@ -235,8 +238,8 @@ public class EditPresetDialog extends JDialog {
 		JComboBox protocolComboBox = new JComboBox();
 		protocolComboBox.addItem(Protocol.TCP);
 		protocolComboBox.addItem(Protocol.UDP);
-		portsTable.getColumnModel().getColumn(0).setCellEditor(
-				new DefaultCellEditor(protocolComboBox));
+		portsTable.getColumnModel().getColumn(0)
+				.setCellEditor(new DefaultCellEditor(protocolComboBox));
 
 		// portsTable.getColumnModel().getColumn(1).setCellEditor(
 		// new SpinnerCellEditor(1, 1, 65535, 1));

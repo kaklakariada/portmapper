@@ -41,9 +41,9 @@ public class WeUPnPRouter extends AbstractRouter {
 
 	public void addPortMapping(PortMapping mapping) throws RouterException {
 		try {
-			device.addPortMapping(mapping.getExternalPort(), mapping
-					.getInternalPort(), mapping.getInternalClient(), mapping
-					.getProtocol().getValue(), mapping.getDescription());
+			device.addPortMapping(mapping.getExternalPort(),
+					mapping.getInternalPort(), mapping.getInternalClient(),
+					mapping.getProtocol().getName(), mapping.getDescription());
 		} catch (WeUPnPException e) {
 			throw new RouterException("Could not add portmapping", e);
 		}
@@ -72,7 +72,9 @@ public class WeUPnPRouter extends AbstractRouter {
 		try {
 			return new URL(device.getPresentationURL()).getHost();
 		} catch (MalformedURLException e) {
-			logger.warn("Could not get internal host name", e);
+			logger.warn(
+					"Could not get URL for internal host name '"
+							+ device.getPresentationURL() + "'", e);
 			return device.getPresentationURL();
 		}
 	}
@@ -97,16 +99,16 @@ public class WeUPnPRouter extends AbstractRouter {
 				logger.debug("Got port mapping " + index + ": " + entry);
 			} catch (WeUPnPException e) {
 				morePortMappings = false;
-				logger.debug("Got an exception for index " + index
-						+ ", stop getting more mappings", e);
+				// logger.trace("Got an exception for index " + index
+				// + ", stop getting more mappings", e);
 			}
 
 			if (entry != null) {
 				Protocol protocol = entry.getProtocol().equalsIgnoreCase("TCP") ? Protocol.TCP
 						: Protocol.UDP;
 				PortMapping m = new PortMapping(protocol,
-						entry.getRemoteHost(), entry.getExternalPort(), entry
-								.getInternalClient(), entry.getInternalPort(),
+						entry.getRemoteHost(), entry.getExternalPort(),
+						entry.getInternalClient(), entry.getInternalPort(),
 						entry.getPortMappingDescription());
 				mappings.add(m);
 			} else {
@@ -147,7 +149,7 @@ public class WeUPnPRouter extends AbstractRouter {
 	public void removePortMapping(Protocol protocol, String remoteHost,
 			int externalPort) throws RouterException {
 		try {
-			device.deletePortMapping(externalPort, protocol.getValue());
+			device.deletePortMapping(externalPort, protocol.getName());
 		} catch (WeUPnPException e) {
 			throw new RouterException("Could not delete port mapping", e);
 		}

@@ -8,6 +8,8 @@ import java.util.List;
 import org.chris.portmapper.Settings;
 
 /**
+ * This class stores a port mapping preset containing a description, internal
+ * and remote host and a {@link List} of {@link SinglePortMapping}s.
  * 
  * @author chris
  * @version $Id$
