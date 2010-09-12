@@ -36,6 +36,7 @@ import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.model.PortMapping;
 import org.chris.portmapper.model.PortMappingPreset;
 import org.chris.portmapper.model.Protocol;
+import org.chris.portmapper.model.RefreshRate;
 import org.chris.portmapper.model.SinglePortMapping;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
@@ -57,6 +58,7 @@ public class EditPresetDialog extends JDialog {
 	private PropertyChangeSupport propertyChangeSupport;
 
 	private JCheckBox useLocalhostCheckBox;
+	private JComboBox refreshRateComboBox;
 	private JTable portsTable;
 
 	private final static String DIALOG_NAME = "preset_dialog";
@@ -198,6 +200,11 @@ public class EditPresetDialog extends JDialog {
 				"align label");
 		dialogPane.add(internalClientTextField, "growx");
 		dialogPane.add(useLocalhostCheckBox, "wrap");
+
+		refreshRateComboBox = new JComboBox(RefreshRate.values());
+		refreshRateComboBox.setSelectedItem(editedPreset.getRefreshRate());
+		dialogPane.add(createLabel("preset_dialog.refresh_rate"));
+		dialogPane.add(refreshRateComboBox, "span 2, grow, wrap");
 
 		dialogPane.add(getPortsPanel(), "span 3, grow, wrap");
 
@@ -348,6 +355,8 @@ public class EditPresetDialog extends JDialog {
 		editedPreset.setRemoteHost(remoteHostTextField.getText());
 		editedPreset.setDescription(description);
 		editedPreset.setPorts(this.ports);
+		editedPreset.setRefreshRate((RefreshRate) refreshRateComboBox
+				.getSelectedItem());
 
 		editedPreset.save(PortMapperApp.getInstance().getSettings());
 

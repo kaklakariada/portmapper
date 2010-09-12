@@ -38,6 +38,7 @@ import org.apache.commons.logging.LogFactory;
 import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.model.PortMapping;
 import org.chris.portmapper.model.PortMappingPreset;
+import org.chris.portmapper.model.RefreshRate;
 import org.chris.portmapper.router.IRouter;
 import org.chris.portmapper.router.RouterException;
 import org.jdesktop.application.Action;
@@ -112,8 +113,9 @@ public class PortMapperView extends FrameView {
 		routerPanel.setBorder(BorderFactory.createTitledBorder(PortMapperApp
 				.getResourceMap().getString("mainFrame.router.title")));
 
-		routerPanel.add(new JLabel(PortMapperApp.getResourceMap().getString(
-				"mainFrame.router.external_address")), "align label"); //$NON-NLS-2$
+		routerPanel.add(
+				new JLabel(PortMapperApp.getResourceMap().getString(
+						"mainFrame.router.external_address")), "align label"); //$NON-NLS-2$
 		externalIPLabel = new JLabel(PortMapperApp.getResourceMap().getString(
 				"mainFrame.router.not_connected"));
 		routerPanel.add(externalIPLabel, "width 130!");
@@ -123,8 +125,9 @@ public class PortMapperView extends FrameView {
 		routerPanel.add(new JButton(actionMap.get(ACTION_UPDATE_ADDRESSES)),
 				"wrap, spany 2, aligny base, sizegroup router");
 
-		routerPanel.add(new JLabel(PortMapperApp.getResourceMap().getString(
-				"mainFrame.router.internal_address")), "align label");
+		routerPanel.add(
+				new JLabel(PortMapperApp.getResourceMap().getString(
+						"mainFrame.router.internal_address")), "align label");
 		internalIPLabel = new JLabel(PortMapperApp.getResourceMap().getString(
 				"mainFrame.router.not_connected"));
 		routerPanel.add(internalIPLabel, "width 130!");
@@ -132,8 +135,8 @@ public class PortMapperView extends FrameView {
 				new JButton(actionMap.get(ACTION_COPY_INTERNAL_ADDRESS)),
 				"wrap, sizegroup router");
 
-		connectDisconnectButton = new JButton(actionMap
-				.get(ACTION_CONNECT_ROUTER));
+		connectDisconnectButton = new JButton(
+				actionMap.get(ACTION_CONNECT_ROUTER));
 		routerPanel.add(connectDisconnectButton, "");
 		routerPanel.add(new JButton(actionMap.get(ACTION_DISPLAY_ROUTER_INFO)),
 				"sizegroup router");
@@ -261,8 +264,9 @@ public class PortMapperView extends FrameView {
 
 		mappingsPanel.add(new JButton(actionMap.get(ACTION_REMOVE_MAPPINGS)),
 				"");
-		mappingsPanel.add(new JButton(actionMap
-				.get(ACTION_UPDATE_PORT_MAPPINGS)), "wrap");
+		mappingsPanel
+				.add(new JButton(actionMap.get(ACTION_UPDATE_PORT_MAPPINGS)),
+						"wrap");
 		return mappingsPanel;
 	}
 
@@ -372,7 +376,7 @@ public class PortMapperView extends FrameView {
 	public void updatePortMappings() {
 		IRouter router = PortMapperApp.getInstance().getRouter();
 		if (router == null) {
-			this.tableModel.setMappings(new LinkedList<PortMapping>());
+			this.tableModel.setMappings(Collections.<PortMapping> emptyList());
 			return;
 		}
 		try {
@@ -393,8 +397,9 @@ public class PortMapperView extends FrameView {
 					.getLocalHostAddress();
 			if (selectedItem.useLocalhostAsInternalClient()
 					&& localHostAddress == null) {
-				JOptionPane.showMessageDialog(this.getFrame(), PortMapperApp
-						.getResourceMap().getString(
+				JOptionPane.showMessageDialog(
+						this.getFrame(),
+						PortMapperApp.getResourceMap().getString(
 								"messages.error_getting_localhost_address"),
 						PortMapperApp.getResourceMap().getString(
 								"messages.error"), JOptionPane.ERROR_MESSAGE);
@@ -429,6 +434,8 @@ public class PortMapperView extends FrameView {
 	public void removePresetMapping() {
 		PortMappingPreset selectedPreset = (PortMappingPreset) this.portMappingPresets
 				.getSelectedValue();
+		// Disable auto refresh of deleted preset
+		selectedPreset.setRefreshRate(RefreshRate.DEACTIVATED);
 		PortMapperApp.getInstance().getSettings().removePresets(selectedPreset);
 	}
 

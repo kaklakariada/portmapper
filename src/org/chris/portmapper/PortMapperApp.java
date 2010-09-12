@@ -236,6 +236,7 @@ public class PortMapperApp extends SingleFrameApplication {
 
 		this.router = selectedRouter;
 		this.getView().fireConnectionStateChange();
+		this.setupAutoRefreshTimers();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -278,8 +279,15 @@ public class PortMapperApp extends SingleFrameApplication {
 		this.router.disconnect();
 		this.router = null;
 		this.getView().fireConnectionStateChange();
-
+		this.setupAutoRefreshTimers();
 		return true;
+	}
+
+	private void setupAutoRefreshTimers() {
+		List<PortMappingPreset> presets = getSettings().getPresets();
+		for (PortMappingPreset preset : presets) {
+			preset.setupTimer();
+		}
 	}
 
 	public IRouter getRouter() {
