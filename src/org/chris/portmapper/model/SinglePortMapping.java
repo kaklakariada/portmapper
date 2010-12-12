@@ -15,11 +15,6 @@ import java.io.Serializable;
  */
 public class SinglePortMapping implements Cloneable, Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7458514232916039775L;
-
 	private int externalPort;
 	private int internalPort;
 	private Protocol protocol;

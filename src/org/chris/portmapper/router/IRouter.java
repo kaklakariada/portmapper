@@ -58,26 +58,56 @@ public interface IRouter {
 	public abstract Collection<PortMapping> getPortMappings()
 			throws RouterException;
 
+	/**
+	 * Write information about the router to the log.
+	 * 
+	 * @throws RouterException
+	 */
 	public abstract void logRouterInfo() throws RouterException;
 
+	/**
+	 * Add the given port mappings to the router.
+	 * 
+	 * @param mappings
+	 *            the port mappings to add.
+	 * @throws RouterException
+	 */
 	public abstract void addPortMappings(Collection<PortMapping> mappings)
 			throws RouterException;
 
+	/**
+	 * Add the given port mapping to the router.
+	 * 
+	 * @param mapping
+	 *            the port mapping to add.
+	 * @throws RouterException
+	 */
 	public abstract void addPortMapping(PortMapping mapping)
 			throws RouterException;
 
+	/**
+	 * Remove the given port mapping from the router.
+	 * 
+	 * @param mapping
+	 *            the port mapping to remove.
+	 * @throws RouterException
+	 */
 	public abstract void removeMapping(PortMapping mapping)
 			throws RouterException;
 
+	/**
+	 * Remove the port mapping with the given data from the router.
+	 * 
+	 * @param protocol
+	 * @param remoteHost
+	 * @param externalPort
+	 * @throws RouterException
+	 */
 	public abstract void removePortMapping(Protocol protocol,
 			String remoteHost, int externalPort) throws RouterException;
 
-	public abstract void disconnect();
-
 	/**
-	 * @return
-	 * @throws RouterException
+	 * Disconnect from the router.
 	 */
-	public abstract long getUpTime() throws RouterException;
-
+	public abstract void disconnect();
 }

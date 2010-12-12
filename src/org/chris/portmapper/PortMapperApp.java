@@ -236,7 +236,6 @@ public class PortMapperApp extends SingleFrameApplication {
 
 		this.router = selectedRouter;
 		this.getView().fireConnectionStateChange();
-		this.setupAutoRefreshTimers();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -279,15 +278,7 @@ public class PortMapperApp extends SingleFrameApplication {
 		this.router.disconnect();
 		this.router = null;
 		this.getView().fireConnectionStateChange();
-		this.setupAutoRefreshTimers();
 		return true;
-	}
-
-	private void setupAutoRefreshTimers() {
-		List<PortMappingPreset> presets = getSettings().getPresets();
-		for (PortMappingPreset preset : presets) {
-			preset.setupTimer();
-		}
 	}
 
 	public IRouter getRouter() {
@@ -311,15 +302,18 @@ public class PortMapperApp extends SingleFrameApplication {
 	 */
 	public String getLocalHostAddress() {
 
-		logger.debug("Connected to router, get IP of localhost...");
 		try {
 			if (router != null) {
+				logger.debug("Connected to router, get IP of localhost from socket...");
 				return router.getLocalHostAddress();
 			}
 
+			logger.debug("Not connected to router, get IP of localhost from network interface...");
 			final InetAddress address = getLocalhostAddressFromNetworkInterface();
 			if (address != null) {
 				return address.getHostAddress();
+			} else {
+				logger.warn("Did not get IP of localhost from network interface");
 			}
 
 		} catch (RouterException e) {
@@ -361,7 +355,7 @@ public class PortMapperApp extends SingleFrameApplication {
 					if (addresses.size() > 0) {
 						final InetAddress address = addresses.get(0);
 						if (addresses.size() > 1) {
-							logger.warn("Found more than one address for network interface "
+							logger.info("Found more than one address for network interface "
 									+ nInterface.getName()
 									+ ": using "
 									+ address);

@@ -14,7 +14,6 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 
 import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
@@ -38,7 +37,6 @@ import org.apache.commons.logging.LogFactory;
 import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.model.PortMapping;
 import org.chris.portmapper.model.PortMappingPreset;
-import org.chris.portmapper.model.RefreshRate;
 import org.chris.portmapper.router.IRouter;
 import org.chris.portmapper.router.RouterException;
 import org.jdesktop.application.Action;
@@ -434,8 +432,6 @@ public class PortMapperView extends FrameView {
 	public void removePresetMapping() {
 		PortMappingPreset selectedPreset = (PortMappingPreset) this.portMappingPresets
 				.getSelectedValue();
-		// Disable auto refresh of deleted preset
-		selectedPreset.setRefreshRate(RefreshRate.DEACTIVATED);
 		PortMapperApp.getInstance().getSettings().removePresets(selectedPreset);
 	}
 

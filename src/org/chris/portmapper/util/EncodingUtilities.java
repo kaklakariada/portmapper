@@ -23,8 +23,10 @@ public class EncodingUtilities {
 
 	/**
 	 * Replace all special characters with their html entities. This was found
-	 * at {@link http
-	 * ://www.owasp.org/index.php/How_to_perform_HTML_entity_encoding_in_Java}
+	 * at <a href=
+	 * "http://www.owasp.org/index.php/How_to_perform_HTML_entity_encoding_in_Java"
+	 * >http://www.owasp.org/index.php/
+	 * How_to_perform_HTML_entity_encoding_in_Java</a>
 	 * 
 	 * @param s
 	 *            the string in which to replace the special characters.

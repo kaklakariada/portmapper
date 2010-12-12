@@ -33,10 +33,10 @@ import net.miginfocom.swing.MigLayout;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.chris.portmapper.PortMapperApp;
+import org.chris.portmapper.Settings;
 import org.chris.portmapper.model.PortMapping;
 import org.chris.portmapper.model.PortMappingPreset;
 import org.chris.portmapper.model.Protocol;
-import org.chris.portmapper.model.RefreshRate;
 import org.chris.portmapper.model.SinglePortMapping;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
@@ -53,12 +53,11 @@ public class EditPresetDialog extends JDialog {
 	public static final String PROPERTY_PORTS = "ports";
 
 	private JTextField remoteHostTextField, internalClientTextField,
-			descriptionTextField;
+			presetNameTextField;
 	private List<SinglePortMapping> ports;
 	private PropertyChangeSupport propertyChangeSupport;
 
 	private JCheckBox useLocalhostCheckBox;
-	private JComboBox refreshRateComboBox;
 	private JTable portsTable;
 
 	private final static String DIALOG_NAME = "preset_dialog";
@@ -107,7 +106,7 @@ public class EditPresetDialog extends JDialog {
 
 	private void copyValuesFromPreset() {
 		remoteHostTextField.setText(editedPreset.getRemoteHost());
-		descriptionTextField.setText(editedPreset.getDescription());
+		presetNameTextField.setText(editedPreset.getDescription());
 
 		for (SinglePortMapping port : editedPreset.getPorts()) {
 			this.ports.add((SinglePortMapping) port.clone());
@@ -146,9 +145,9 @@ public class EditPresetDialog extends JDialog {
 				"[right]rel[left,grow 100]", // Column Constraints
 				"")); // Row Constraints
 
-		descriptionTextField = new JTextField();
+		presetNameTextField = new JTextField();
 		dialogPane.add(createLabel("preset_dialog.description"), "align label");
-		dialogPane.add(descriptionTextField, "span 2, growx, wrap");
+		dialogPane.add(presetNameTextField, "span 2, growx, wrap");
 
 		remoteHostTextField = new JTextField();
 		remoteHostTextField.setColumns(10);
@@ -200,11 +199,6 @@ public class EditPresetDialog extends JDialog {
 				"align label");
 		dialogPane.add(internalClientTextField, "growx");
 		dialogPane.add(useLocalhostCheckBox, "wrap");
-
-		refreshRateComboBox = new JComboBox(RefreshRate.values());
-		refreshRateComboBox.setSelectedItem(editedPreset.getRefreshRate());
-		dialogPane.add(createLabel("preset_dialog.refresh_rate"));
-		dialogPane.add(refreshRateComboBox, "span 2, grow, wrap");
 
 		dialogPane.add(getPortsPanel(), "span 3, grow, wrap");
 
@@ -269,7 +263,7 @@ public class EditPresetDialog extends JDialog {
 	}
 
 	protected void presetSelected(PortMapping item) {
-		this.descriptionTextField.setText(item.getDescription());
+		this.presetNameTextField.setText(item.getDescription());
 		this.remoteHostTextField.setText(item.getRemoteHost());
 		// this.externalPortSpinner.setValue(item.getExternalPort());
 		// this.internalPortSpinner.setValue(item.getInternalPort());
@@ -333,18 +327,31 @@ public class EditPresetDialog extends JDialog {
 	@Action(name = ACTION_SAVE)
 	public void save() {
 
-		final String description = descriptionTextField.getText();
-		if (description == null || description.trim().isEmpty()) {
+		// Check, if the user entered a name for the preset and show an error
+		// message.
+		final String name = presetNameTextField.getText();
+		if (name == null || name.trim().isEmpty()) {
 			showErrorMessage("preset_dialog.error.title",
 					"preset_dialog.error.no_description");
 			return;
 		}
 
+		// Check, if a preset with the same name already exists.
+		final Settings settings = PortMapperApp.getInstance().getSettings();
+		for (PortMappingPreset preset : settings.getPresets()) {
+			if (preset != editedPreset && preset.getDescription() != null
+					&& preset.getDescription().equals(name)) {
+				showErrorMessage("preset_dialog.error.title",
+						"preset_dialog.error.duplicate_name");
+				return;
+			}
+		}
+
+		// Check, if the user added at least one port mapping to the preset.
 		if (tableModel.getRowCount() == 0) {
 			showErrorMessage("preset_dialog.error.title",
 					"preset_dialog.error.no_ports");
 			return;
-
 		}
 
 		if (useLocalhostCheckBox.isSelected()) {
@@ -353,12 +360,10 @@ public class EditPresetDialog extends JDialog {
 			editedPreset.setInternalClient(internalClientTextField.getText());
 		}
 		editedPreset.setRemoteHost(remoteHostTextField.getText());
-		editedPreset.setDescription(description);
+		editedPreset.setDescription(name);
 		editedPreset.setPorts(this.ports);
-		editedPreset.setRefreshRate((RefreshRate) refreshRateComboBox
-				.getSelectedItem());
 
-		editedPreset.save(PortMapperApp.getInstance().getSettings());
+		editedPreset.save(settings);
 
 		logger.info("Saved preset '" + editedPreset.toString() + "'.");
 

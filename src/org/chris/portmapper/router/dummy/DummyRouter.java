@@ -63,10 +63,6 @@ public class DummyRouter extends AbstractRouter {
 		return mappings;
 	}
 
-	public long getUpTime() {
-		return 0;
-	}
-
 	public void logRouterInfo() {
 		logger.info("DummyRouter " + getName());
 	}

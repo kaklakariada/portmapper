@@ -17,7 +17,7 @@ import edu.stanford.ejalbert.exception.BrowserLaunchingInitializingException;
 import edu.stanford.ejalbert.exception.UnsupportedOperatingSystemException;
 
 /**
- * This class implements a lable that looks and behaves like a link, i.e. you
+ * This class implements a label that looks and behaves like a link, i.e. you
  * can click on it and the URL is opened in a browser.
  * 
  * @author chris
@@ -39,15 +39,13 @@ public class URLLabel extends JLabel {
 		try {
 			launcher = new BrowserLauncher();
 		} catch (BrowserLaunchingInitializingException e) {
-			logger
-					.warn(
-							"Could not initialize browser launcher: links will not work",
-							e);
+			logger.warn(
+					"Could not initialize browser launcher: links will not work",
+					e);
 		} catch (UnsupportedOperatingSystemException e) {
-			logger
-					.warn(
-							"Could not initialize browser launcher: links will not work",
-							e);
+			logger.warn(
+					"Could not initialize browser launcher: links will not work",
+					e);
 		}
 	}
 
@@ -67,9 +65,8 @@ public class URLLabel extends JLabel {
 				if (launcher != null) {
 					launcher.openURLinBrowser(url);
 				} else {
-					logger
-							.warn("Browser launcher was not initialized, please open url manually: "
-									+ url);
+					logger.warn("Browser launcher was not initialized, please open url manually: "
+							+ url);
 				}
 			}
 

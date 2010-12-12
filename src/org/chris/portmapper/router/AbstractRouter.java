@@ -12,6 +12,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * This is the abstract super class for all routers.
+ * 
  * @author chris
  * @version $Id$
  */
@@ -32,6 +34,9 @@ public abstract class AbstractRouter implements IRouter {
 		return name;
 	}
 
+	/**
+	 * Get the the ip of the local host.
+	 */
 	public String getLocalHostAddress() throws RouterException {
 		logger.debug("Get IP of localhost");
 
@@ -52,15 +57,18 @@ public abstract class AbstractRouter implements IRouter {
 	}
 
 	/**
-	 * @param localHostIP
-	 * @return
+	 * Get the ip of the local host by connecting to the router and fetching the
+	 * ip from the socket. This only works when we are connected to the router
+	 * and know its internal upnp port.
+	 * 
+	 * @return the ip of the local host.
 	 * @throws RouterException
 	 */
 	private InetAddress getLocalHostAddressFromSocket() throws RouterException {
 		InetAddress localHostIP = null;
 		try {
 
-			// In order to use the Socked method to get the address, we have to
+			// In order to use the socket method to get the address, we have to
 			// be connected to the router.
 
 			int routerInternalPort = getInternalPort();

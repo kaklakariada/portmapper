@@ -17,12 +17,16 @@ import org.apache.commons.logging.LogFactory;
 import org.chris.portmapper.model.PortMapping;
 import org.chris.portmapper.model.Protocol;
 import org.chris.portmapper.router.AbstractRouter;
+import org.chris.portmapper.router.IRouter;
 import org.chris.portmapper.router.RouterException;
 import org.wetorrent.upnp.GatewayDevice;
 import org.wetorrent.upnp.PortMappingEntry;
 import org.wetorrent.upnp.WeUPnPException;
 
 /**
+ * This class is an implements an {@link IRouter} using the weupnp library's
+ * {@link GatewayDevice}.
+ * 
  * @author chris
  * @version $Id$
  */
@@ -120,11 +124,6 @@ public class WeUPnPRouter extends AbstractRouter {
 			index++;
 		}
 		return mappings;
-	}
-
-	public long getUpTime() throws RouterException {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 	public void logRouterInfo() throws RouterException {

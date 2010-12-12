@@ -25,7 +25,8 @@ import org.chris.portmapper.util.EncodingUtilities;
 
 /**
  * This class represents a router device and provides methods for managing port
- * mappings and getting information about the router.
+ * mappings and getting information about the router. It useses the SBBI
+ * library's {@link InternetGatewayDevice}.
  * 
  * @author chris
  * @version $Id$
@@ -47,9 +48,6 @@ public class SBBIRouter extends AbstractRouter {
 
 	SBBIRouter(InternetGatewayDevice router) {
 		super(router.getIGDRootDevice().getModelName());
-		if (router == null) {
-			throw new IllegalArgumentException("No router given");
-		}
 		this.router = router;
 	}
 
@@ -148,10 +146,9 @@ public class SBBIRouter extends AbstractRouter {
 			// Check, if the max number of entries is reached and print a
 			// warning message.
 			if (currentMappingNumber == MAX_NUM_PORTMAPPINGS) {
-				logger
-						.warn("Reached max number of port mappings to get ("
-								+ MAX_NUM_PORTMAPPINGS
-								+ "). Perhaps not all port mappings where retrieved. Try to increase Router.MAX_NUM_PORTMAPPINGS.");
+				logger.warn("Reached max number of port mappings to get ("
+						+ MAX_NUM_PORTMAPPINGS
+						+ "). Perhaps not all port mappings where retrieved. Try to increase Router.MAX_NUM_PORTMAPPINGS.");
 			}
 
 		} catch (IOException e) {
@@ -235,9 +232,9 @@ public class SBBIRouter extends AbstractRouter {
 
 	public void addPortMapping(PortMapping mapping) throws RouterException {
 		logger.info("Adding port mapping " + mapping.getCompleteDescription());
-		addPortMapping(mapping.getDescription(), mapping.getProtocol(), mapping
-				.getRemoteHost(), mapping.getExternalPort(), mapping
-				.getInternalClient(), mapping.getInternalPort(), 0);
+		addPortMapping(mapping.getDescription(), mapping.getProtocol(),
+				mapping.getRemoteHost(), mapping.getExternalPort(),
+				mapping.getInternalClient(), mapping.getInternalPort(), 0);
 	}
 
 	public void removeMapping(PortMapping mapping) throws RouterException {
@@ -263,12 +260,8 @@ public class SBBIRouter extends AbstractRouter {
 		// Nothing to do right now.
 	}
 
-	public long getValidityTime() {
-		return router.getIGDRootDevice().getValidityTime();
-	}
-
 	public long getUpTime() throws RouterException {
-		// TODO Auto-generated method stub
+		// The SBBI library does not provide a method for getting the uptime.
 		return 0;
 	}
 }
