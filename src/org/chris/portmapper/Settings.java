@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.chris.portmapper;
 
 import java.beans.PropertyChangeListener;
