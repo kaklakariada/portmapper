@@ -75,10 +75,22 @@ public class SBBIRouter extends AbstractRouter {
 
 	public int getInternalPort() {
 		logger.debug("Get internal port of router...");
-		final int port = router.getIGDRootDevice().getPresentationURL()
+		final int presentationUrlPort = router.getIGDRootDevice()
+				.getPresentationURL().getPort();
+		// https://sourceforge.net/tracker/?func=detail&aid=3198378&group_id=213879&atid=1027466
+		// Some routers send an invalid presentationURL, in this case use
+		// URLBase.
+		if (presentationUrlPort > 0) {
+			logger.debug("Got valid internal port " + presentationUrlPort
+					+ " from presentation URL.");
+			return presentationUrlPort;
+		}
+		final int urlBasePort = router.getIGDRootDevice().getURLBase()
 				.getPort();
-		logger.info("Got internal port " + port + " for router.");
-		return port;
+		logger.debug("Got invalid port " + presentationUrlPort
+				+ " from presentation URL: using url base port " + urlBasePort);
+
+		return urlBasePort;
 	}
 
 	public Collection<PortMapping> getPortMappings() throws RouterException {
