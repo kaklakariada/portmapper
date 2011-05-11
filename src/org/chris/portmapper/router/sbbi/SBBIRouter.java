@@ -1,6 +1,7 @@
 package org.chris.portmapper.router.sbbi;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -46,7 +47,7 @@ public class SBBIRouter extends AbstractRouter {
 	 */
 	private final static int MAX_NUM_PORTMAPPINGS = 100;
 
-	SBBIRouter(InternetGatewayDevice router) {
+	SBBIRouter(final InternetGatewayDevice router) {
 		super(router.getIGDRootDevice().getModelName());
 		this.router = router;
 	}
@@ -56,9 +57,9 @@ public class SBBIRouter extends AbstractRouter {
 		String ipAddress;
 		try {
 			ipAddress = router.getExternalIPAddress();
-		} catch (UPNPResponseException e) {
+		} catch (final UPNPResponseException e) {
 			throw new RouterException("Could not get external IP", e);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new RouterException("Could not get external IP", e);
 		}
 		logger.info("Got external IP address " + ipAddress + " for router.");
@@ -67,28 +68,42 @@ public class SBBIRouter extends AbstractRouter {
 
 	public String getInternalHostName() {
 		logger.debug("Get internal IP address...");
-		final String ipAddress = router.getIGDRootDevice().getPresentationURL()
-				.getHost();
+		final URL presentationURL = router.getIGDRootDevice()
+				.getPresentationURL();
+		if (presentationURL == null) {
+			logger.warn("Did not get presentation url");
+			return null;
+		}
+		final String ipAddress = presentationURL.getHost();
 		logger.info("Got internal host name '" + ipAddress + "' for router.");
 		return ipAddress;
 	}
 
 	public int getInternalPort() {
 		logger.debug("Get internal port of router...");
-		final int presentationUrlPort = router.getIGDRootDevice()
-				.getPresentationURL().getPort();
-		// https://sourceforge.net/tracker/?func=detail&aid=3198378&group_id=213879&atid=1027466
-		// Some routers send an invalid presentationURL, in this case use
-		// URLBase.
-		if (presentationUrlPort > 0) {
-			logger.debug("Got valid internal port " + presentationUrlPort
-					+ " from presentation URL.");
-			return presentationUrlPort;
+		final URL presentationURL = router.getIGDRootDevice()
+				.getPresentationURL();
+		// Presentation URL may be null in some situations.
+		if (presentationURL != null) {
+			final int presentationUrlPort = presentationURL.getPort();
+			// https://sourceforge.net/tracker/?func=detail&aid=3198378&group_id=213879&atid=1027466
+			// Some routers send an invalid presentationURL, in this case use
+			// URLBase.
+			if (presentationUrlPort > 0) {
+				logger.debug("Got valid internal port " + presentationUrlPort
+						+ " from presentation URL.");
+				return presentationUrlPort;
+			} else {
+				logger.debug("Got invalid port " + presentationUrlPort
+						+ " from presentation url " + presentationURL);
+			}
+		} else {
+			logger.debug("Presentation url is null");
 		}
 		final int urlBasePort = router.getIGDRootDevice().getURLBase()
 				.getPort();
-		logger.debug("Got invalid port " + presentationUrlPort
-				+ " from presentation URL: using url base port " + urlBasePort);
+		logger.debug("Presentation URL is null or returns invalid port: using url base port "
+				+ urlBasePort);
 
 		return urlBasePort;
 	}
@@ -115,7 +130,7 @@ public class SBBIRouter extends AbstractRouter {
 						+ currentMappingNumber + "...");
 
 				try {
-					ActionResponse response = router
+					final ActionResponse response = router
 							.getGenericPortMappingEntry(currentMappingNumber);
 
 					// Create a port mapping for the response.
@@ -126,7 +141,7 @@ public class SBBIRouter extends AbstractRouter {
 								+ currentMappingNumber
 								+ ". This may be a bug in UPNPLib.");
 					}
-				} catch (UPNPResponseException e) {
+				} catch (final UPNPResponseException e) {
 
 					// The error codes 713 and 714 mean, that no port mappings
 					// where found for the current entry. See bug reports
@@ -163,7 +178,7 @@ public class SBBIRouter extends AbstractRouter {
 						+ "). Perhaps not all port mappings where retrieved. Try to increase Router.MAX_NUM_PORTMAPPINGS.");
 			}
 
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new RouterException("Could not get NAT mappings", e);
 		}
 
@@ -189,13 +204,14 @@ public class SBBIRouter extends AbstractRouter {
 		info.put("modelURL", rootDevice.getModelURL());
 		info.put("manufacturerURL", rootDevice.getManufacturerURL()
 				.toExternalForm());
-		info.put("presentationURL", rootDevice.getPresentationURL()
-				.toExternalForm());
+		info.put("presentationURL",
+				rootDevice.getPresentationURL() != null ? rootDevice
+						.getPresentationURL().toExternalForm() : null);
 		info.put("urlBase", rootDevice.getURLBase().toExternalForm());
 
 		final SortedSet<String> sortedKeys = new TreeSet<String>(info.keySet());
 
-		for (String key : sortedKeys) {
+		for (final String key : sortedKeys) {
 			final String value = info.get(key);
 			logger.info("Router Info: " + key + " \t= " + value);
 		}
@@ -210,9 +226,10 @@ public class SBBIRouter extends AbstractRouter {
 		logger.info("udn " + rootDevice.getUDN());
 	}
 
-	private boolean addPortMapping(String description, Protocol protocol,
-			String remoteHost, int externalPort, String internalClient,
-			int internalPort, int leaseDuration) throws RouterException {
+	private boolean addPortMapping(String description, final Protocol protocol,
+			final String remoteHost, final int externalPort,
+			final String internalClient, final int internalPort,
+			final int leaseDuration) throws RouterException {
 
 		final String protocolString = (protocol.equals(Protocol.TCP) ? "TCP"
 				: "UDP");
@@ -227,43 +244,45 @@ public class SBBIRouter extends AbstractRouter {
 					internalPort, externalPort, internalClient, leaseDuration,
 					protocolString);
 			return success;
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new RouterException("Could not add port mapping", e);
-		} catch (UPNPResponseException e) {
+		} catch (final UPNPResponseException e) {
 			throw new RouterException("Could not add port mapping", e);
 		}
 	}
 
-	public void addPortMappings(Collection<PortMapping> mappings)
+	public void addPortMappings(final Collection<PortMapping> mappings)
 			throws RouterException {
-		for (PortMapping portMapping : mappings) {
+		for (final PortMapping portMapping : mappings) {
 			logger.info("Adding port mapping " + portMapping);
 			addPortMapping(portMapping);
 		}
 	}
 
-	public void addPortMapping(PortMapping mapping) throws RouterException {
+	public void addPortMapping(final PortMapping mapping)
+			throws RouterException {
 		logger.info("Adding port mapping " + mapping.getCompleteDescription());
 		addPortMapping(mapping.getDescription(), mapping.getProtocol(),
 				mapping.getRemoteHost(), mapping.getExternalPort(),
 				mapping.getInternalClient(), mapping.getInternalPort(), 0);
 	}
 
-	public void removeMapping(PortMapping mapping) throws RouterException {
+	public void removeMapping(final PortMapping mapping) throws RouterException {
 		removePortMapping(mapping.getProtocol(), mapping.getRemoteHost(),
 				mapping.getExternalPort());
 
 	}
 
-	public void removePortMapping(Protocol protocol, String remoteHost,
-			int externalPort) throws RouterException {
+	public void removePortMapping(final Protocol protocol,
+			final String remoteHost, final int externalPort)
+			throws RouterException {
 		final String protocolString = (protocol.equals(Protocol.TCP) ? "TCP"
 				: "UDP");
 		try {
 			router.deletePortMapping(remoteHost, externalPort, protocolString);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new RouterException("Could not remove port mapping", e);
-		} catch (UPNPResponseException e) {
+		} catch (final UPNPResponseException e) {
 			throw new RouterException("Could not remove port mapping", e);
 		}
 	}
