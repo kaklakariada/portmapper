@@ -38,24 +38,25 @@ public class WeUPnPRouter extends AbstractRouter {
 	/**
 	 * @param device
 	 */
-	WeUPnPRouter(GatewayDevice device) {
+	WeUPnPRouter(final GatewayDevice device) {
 		super(device.getFriendlyName());
 		this.device = device;
 	}
 
-	public void addPortMapping(PortMapping mapping) throws RouterException {
+	public void addPortMapping(final PortMapping mapping)
+			throws RouterException {
 		try {
 			device.addPortMapping(mapping.getExternalPort(),
 					mapping.getInternalPort(), mapping.getInternalClient(),
 					mapping.getProtocol().getName(), mapping.getDescription());
-		} catch (WeUPnPException e) {
+		} catch (final WeUPnPException e) {
 			throw new RouterException("Could not add portmapping", e);
 		}
 	}
 
-	public void addPortMappings(Collection<PortMapping> mappings)
+	public void addPortMappings(final Collection<PortMapping> mappings)
 			throws RouterException {
-		for (PortMapping mapping : mappings) {
+		for (final PortMapping mapping : mappings) {
 			this.addPortMapping(mapping);
 		}
 	}
@@ -67,7 +68,7 @@ public class WeUPnPRouter extends AbstractRouter {
 	public String getExternalIPAddress() throws RouterException {
 		try {
 			return device.getExternalIPAddress();
-		} catch (WeUPnPException e) {
+		} catch (final WeUPnPException e) {
 			throw new RouterException("Could not get external IP address", e);
 		}
 	}
@@ -79,7 +80,7 @@ public class WeUPnPRouter extends AbstractRouter {
 		}
 		try {
 			return new URL(url).getHost();
-		} catch (MalformedURLException e) {
+		} catch (final MalformedURLException e) {
 			logger.warn("Could not get URL for internal host name '" + url
 					+ "'", e);
 			return url;
@@ -87,15 +88,25 @@ public class WeUPnPRouter extends AbstractRouter {
 	}
 
 	public int getInternalPort() throws RouterException {
+		String url = device.getPresentationURL();
+		if (url == null) {
+			logger.info("Presentation url is null: use url base");
+			url = device.getURLBase();
+		}
+		if (url == null) {
+			throw new RouterException("Presentation URL and URL base are null");
+		}
+
 		try {
-			return new URL(device.getPresentationURL()).getPort();
-		} catch (MalformedURLException e) {
-			throw new RouterException("Could not get internal port", e);
+			return new URL(url).getPort();
+		} catch (final MalformedURLException e) {
+			throw new RouterException("Could not get internal port from URL '"
+					+ url + "'", e);
 		}
 	}
 
 	public Collection<PortMapping> getPortMappings() throws RouterException {
-		Collection<PortMapping> mappings = new LinkedList<PortMapping>();
+		final Collection<PortMapping> mappings = new LinkedList<PortMapping>();
 		boolean morePortMappings = true;
 		int index = 0;
 		while (morePortMappings) {
@@ -104,16 +115,16 @@ public class WeUPnPRouter extends AbstractRouter {
 				logger.debug("Getting port mapping " + index + "...");
 				entry = device.getGenericPortMappingEntry(index);
 				logger.debug("Got port mapping " + index + ": " + entry);
-			} catch (WeUPnPException e) {
+			} catch (final WeUPnPException e) {
 				morePortMappings = false;
 				// logger.trace("Got an exception for index " + index
 				// + ", stop getting more mappings", e);
 			}
 
 			if (entry != null) {
-				Protocol protocol = entry.getProtocol().equalsIgnoreCase("TCP") ? Protocol.TCP
-						: Protocol.UDP;
-				PortMapping m = new PortMapping(protocol,
+				final Protocol protocol = entry.getProtocol().equalsIgnoreCase(
+						"TCP") ? Protocol.TCP : Protocol.UDP;
+				final PortMapping m = new PortMapping(protocol,
 						entry.getRemoteHost(), entry.getExternalPort(),
 						entry.getInternalClient(), entry.getInternalPort(),
 						entry.getPortMappingDescription());
@@ -127,15 +138,15 @@ public class WeUPnPRouter extends AbstractRouter {
 	}
 
 	public void logRouterInfo() throws RouterException {
-		Map<String, String> info = new HashMap<String, String>();
+		final Map<String, String> info = new HashMap<String, String>();
 		info.put("friendlyName", device.getFriendlyName());
 		info.put("manufacturer", device.getManufacturer());
 		info.put("modelDescription", device.getModelDescription());
 
-		SortedSet<String> sortedKeys = new TreeSet<String>(info.keySet());
+		final SortedSet<String> sortedKeys = new TreeSet<String>(info.keySet());
 
-		for (String key : sortedKeys) {
-			String value = info.get(key);
+		for (final String key : sortedKeys) {
+			final String value = info.get(key);
 			logger.info("Router Info: " + key + " \t= " + value);
 		}
 
@@ -143,16 +154,17 @@ public class WeUPnPRouter extends AbstractRouter {
 		logger.info("device type " + device.getDeviceType());
 	}
 
-	public void removeMapping(PortMapping mapping) throws RouterException {
+	public void removeMapping(final PortMapping mapping) throws RouterException {
 		this.removePortMapping(mapping.getProtocol(), mapping.getRemoteHost(),
 				mapping.getExternalPort());
 	}
 
-	public void removePortMapping(Protocol protocol, String remoteHost,
-			int externalPort) throws RouterException {
+	public void removePortMapping(final Protocol protocol,
+			final String remoteHost, final int externalPort)
+			throws RouterException {
 		try {
 			device.deletePortMapping(externalPort, protocol.getName());
-		} catch (WeUPnPException e) {
+		} catch (final WeUPnPException e) {
 			throw new RouterException("Could not delete port mapping", e);
 		}
 	}
