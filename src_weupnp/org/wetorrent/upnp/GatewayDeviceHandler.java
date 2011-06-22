@@ -24,6 +24,8 @@
 
 package org.wetorrent.upnp;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -33,6 +35,8 @@ import org.xml.sax.helpers.DefaultHandler;
  * @author casta
  */
 public class GatewayDeviceHandler extends DefaultHandler {
+
+	private final Log logger = LogFactory.getLog(this.getClass());
 
 	/**
 	 * 
@@ -60,12 +64,14 @@ public class GatewayDeviceHandler extends DefaultHandler {
 	private short state = STATE_INITIALIZED;
 
 	/** Creates a new instance of GatewayDeviceHandler */
-	public GatewayDeviceHandler(GatewayDevice device) {
+	public GatewayDeviceHandler(final GatewayDevice device) {
 		this.device = device;
 	}
 
-	public void startElement(String uri, String localName, String qName,
-			Attributes attributes) throws SAXException {
+	@Override
+	public void startElement(final String uri, final String localName,
+			final String qName, final Attributes attributes)
+			throws SAXException {
 		currentElement = localName;
 		level++;
 		if (state == STATE_INITIALIZED && "serviceList".equals(currentElement)) {
@@ -73,15 +79,16 @@ public class GatewayDeviceHandler extends DefaultHandler {
 		}
 	}
 
-	public void endElement(String uri, String localName, String qName) {
+	@Override
+	public void endElement(final String uri, final String localName,
+			final String qName) {
 		currentElement = "";
 		level--;
 		if (localName.equals("service")) {
 			if (device.getServiceTypeCIF() != null
 					&& device
 							.getServiceTypeCIF()
-							.equals(
-									"urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1")) {
+							.equals("urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1")) {
 				state = STATE_WAN_COMMON_INTERFACE_CONFIG;
 			}
 			if (device.getServiceType() != null
@@ -92,42 +99,48 @@ public class GatewayDeviceHandler extends DefaultHandler {
 		}
 	}
 
-	public void characters(char[] ch, int start, int length) {
+	@Override
+	public void characters(final char[] ch, final int start, final int length) {
+		final String value = new String(ch, start, length).trim();
+		if (currentElement != null && !currentElement.isEmpty()
+				&& !value.isEmpty()) {
+			logger.trace("Current element '" + currentElement + "' has value '"
+					+ value + "'");
+		}
 		if (currentElement.equals("URLBase")) {
-			device.setURLBase(new String(ch, start, length));
+			device.setURLBase(value);
 		} else if (state == STATE_INITIALIZED || state == STATE_SERVICE_LIST) {
 			if (state == STATE_INITIALIZED) {
 				if ("friendlyName".equals(currentElement))
-					device.setFriendlyName(new String(ch, start, length));
+					device.setFriendlyName(value);
 				else if ("manufacturer".equals(currentElement))
-					device.setManufacturer(new String(ch, start, length));
+					device.setManufacturer(value);
 				else if ("modelDescription".equals(currentElement))
-					device.setModelDescription(new String(ch, start, length));
+					device.setModelDescription(value);
 				else if ("presentationURL".equals(currentElement))
-					device.setPresentationURL(new String(ch, start, length));
+					device.setPresentationURL(value);
 			}
 			if (currentElement.equals("serviceType"))
-				device.setServiceTypeCIF(new String(ch, start, length));
+				device.setServiceTypeCIF(value);
 			else if (currentElement.equals("controlURL"))
-				device.setControlURLCIF(new String(ch, start, length));
+				device.setControlURLCIF(value);
 			else if (currentElement.equals("eventSubURL"))
-				device.setEventSubURLCIF(new String(ch, start, length));
+				device.setEventSubURLCIF(value);
 			else if (currentElement.equals("SCPDURL"))
-				device.setSCPDURLCIF(new String(ch, start, length));
+				device.setSCPDURLCIF(value);
 			else if (currentElement.equals("deviceType"))
-				device.setDeviceTypeCIF(new String(ch, start, length));
+				device.setDeviceTypeCIF(value);
 		} else if (state == STATE_WAN_COMMON_INTERFACE_CONFIG) {
 			if (currentElement.equals("serviceType"))
-				device.setServiceType(new String(ch, start, length));
+				device.setServiceType(value);
 			else if (currentElement.equals("controlURL"))
-				device.setControlURL(new String(ch, start, length));
+				device.setControlURL(value);
 			else if (currentElement.equals("eventSubURL"))
-				device.setEventSubURL(new String(ch, start, length));
+				device.setEventSubURL(value);
 			else if (currentElement.equals("SCPDURL"))
-				device.setSCPDURL(new String(ch, start, length));
+				device.setSCPDURL(value);
 			else if (currentElement.equals("deviceType"))
-				device.setDeviceType(new String(ch, start, length));
+				device.setDeviceType(value);
 		}
 	}
-
 }

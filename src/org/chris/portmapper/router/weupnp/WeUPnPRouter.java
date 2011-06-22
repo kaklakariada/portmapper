@@ -117,8 +117,9 @@ public class WeUPnPRouter extends AbstractRouter {
 				logger.debug("Got port mapping " + index + ": " + entry);
 			} catch (final WeUPnPException e) {
 				morePortMappings = false;
-				// logger.trace("Got an exception for index " + index
-				// + ", stop getting more mappings", e);
+				logger.debug("Got an exception with message '" + e.getMessage()
+						+ "' for index " + index
+						+ ", stop getting more mappings");
 			}
 
 			if (entry != null) {

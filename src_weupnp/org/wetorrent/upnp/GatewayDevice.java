@@ -76,7 +76,7 @@ public class GatewayDevice {
 		return localAddress;
 	}
 
-	public void setLocalAddress(InetAddress localAddress) {
+	public void setLocalAddress(final InetAddress localAddress) {
 		this.localAddress = localAddress;
 	}
 
@@ -90,7 +90,7 @@ public class GatewayDevice {
 		return st;
 	}
 
-	public void setSt(String st) {
+	public void setSt(final String st) {
 		this.st = st;
 	}
 
@@ -98,11 +98,11 @@ public class GatewayDevice {
 		return location;
 	}
 
-	public void setLocation(String location) {
+	public void setLocation(final String location) {
 		this.location = location;
 	}
 
-	private String copyOrCatUrl(String dst, String src) {
+	private String copyOrCatUrl(String dst, final String src) {
 		if (src == null) {
 			return dst;
 		}
@@ -137,44 +137,44 @@ public class GatewayDevice {
 			else
 				ipConDescURL = location;
 
-			int lastSlashIndex = ipConDescURL.indexOf('/', 7);
+			final int lastSlashIndex = ipConDescURL.indexOf('/', 7);
 			if (lastSlashIndex > 0)
 				ipConDescURL = ipConDescURL.substring(0, lastSlashIndex);
 
 			sCPDURL = copyOrCatUrl(ipConDescURL, sCPDURL);
 			controlURL = copyOrCatUrl(ipConDescURL, controlURL);
 			controlURLCIF = copyOrCatUrl(ipConDescURL, controlURLCIF);
-		} catch (MalformedURLException e) {
+		} catch (final MalformedURLException e) {
 			throw new WeUPnPException("Could not load description", e);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new WeUPnPException("Could not load description", e);
-		} catch (SAXException e) {
+		} catch (final SAXException e) {
 			throw new WeUPnPException("Could not load description", e);
 		}
 	}
 
 	public boolean isConnected() throws WeUPnPException {
-		Map<String, String> nameValue = simpleUPnPcommand(controlURL,
+		final Map<String, String> nameValue = simpleUPnPcommand(controlURL,
 				serviceType, "GetStatusInfo", null);
-		String connectionStatus = nameValue.get("NewConnectionStatus");
+		final String connectionStatus = nameValue.get("NewConnectionStatus");
 		return connectionStatus != null
 				&& connectionStatus.equalsIgnoreCase("Connected");
 	}
 
-	public Map<String, String> simpleUPnPcommand(String url, String service,
-			String action, Map<String, String> args) throws WeUPnPException {
-		StringBuffer soapBody = new StringBuffer();
+	public Map<String, String> simpleUPnPcommand(final String url,
+			final String service, final String action,
+			final Map<String, String> args) throws WeUPnPException {
+		final StringBuffer soapBody = new StringBuffer();
 
-		soapBody
-				.append("<?xml version=\"1.0\"?>\r\n"
-						+ "<SOAP-ENV:Envelope "
-						+ "xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" "
-						+ "SOAP-ENV:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">"
-						+ "<SOAP-ENV:Body>" + "<m:" + action + " xmlns:m=\""
-						+ service + "\">");
+		soapBody.append("<?xml version=\"1.0\"?>\r\n"
+				+ "<SOAP-ENV:Envelope "
+				+ "xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" "
+				+ "SOAP-ENV:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">"
+				+ "<SOAP-ENV:Body>" + "<m:" + action + " xmlns:m=\"" + service
+				+ "\">");
 
 		if (args != null && args.size() > 0) {
-			for (String key : args.keySet()) {
+			for (final String key : args.keySet()) {
 				soapBody.append("<" + key + ">" + args.get(key) + "</" + key
 						+ ">");
 			}
@@ -186,26 +186,26 @@ public class GatewayDevice {
 
 		HttpURLConnection conn = null;
 		try {
-			URL postUrl = new URL(url);
+			final URL postUrl = new URL(url);
 			conn = (HttpURLConnection) postUrl.openConnection();
 
 			conn.setRequestMethod("POST");
 			conn.setDoOutput(true);
 			conn.setRequestProperty("Content-Type", "text/xml");
 
-			String soapAction = service + "#" + action;
+			final String soapAction = service + "#" + action;
 			conn.setRequestProperty("SOAPAction", soapAction);
 			conn.setRequestProperty("Connection", "Close");
 
-			byte[] soapBodyBytes = soapBody.toString().getBytes();
+			final byte[] soapBodyBytes = soapBody.toString().getBytes();
 
-			conn.setRequestProperty("Content-Length", Integer
-					.toString(soapBodyBytes.length));
+			conn.setRequestProperty("Content-Length",
+					Integer.toString(soapBodyBytes.length));
 
 			conn.getOutputStream().write(soapBodyBytes);
 
-			XMLReader parser = XMLReaderFactory.createXMLReader();
-			NameValueHandler nameValueHandler = new NameValueHandler();
+			final XMLReader parser = XMLReaderFactory.createXMLReader();
+			final NameValueHandler nameValueHandler = new NameValueHandler();
 			parser.setContentHandler(nameValueHandler);
 
 			if (conn.getResponseCode() == HttpURLConnection.HTTP_INTERNAL_ERROR) {
@@ -214,11 +214,11 @@ public class GatewayDevice {
 				parser.parse(new InputSource(conn.getInputStream()));
 			}
 			return nameValueHandler.getNameValue();
-		} catch (MalformedURLException e) {
+		} catch (final MalformedURLException e) {
 			throw new WeUPnPException("Could not send simple upnp command", e);
-		} catch (SAXException e) {
+		} catch (final SAXException e) {
 			throw new WeUPnPException("Could not send simple upnp command", e);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new WeUPnPException("Could not send simple upnp command", e);
 		} finally {
 			if (conn != null) {
@@ -229,15 +229,16 @@ public class GatewayDevice {
 	}
 
 	public String getExternalIPAddress() throws WeUPnPException {
-		Map<String, String> nameValue = simpleUPnPcommand(controlURL,
+		final Map<String, String> nameValue = simpleUPnPcommand(controlURL,
 				serviceType, "GetExternalIPAddress", null);
 		return nameValue.get("NewExternalIPAddress");
 	}
 
-	public boolean addPortMapping(int externalPort, int internalPort,
-			String internalClient, String protocol, String description)
+	public boolean addPortMapping(final int externalPort,
+			final int internalPort, final String internalClient,
+			final String protocol, final String description)
 			throws WeUPnPException {
-		Map<String, String> args = new HashMap<String, String>();
+		final Map<String, String> args = new HashMap<String, String>();
 		args.put("NewRemoteHost", "");
 		args.put("NewExternalPort", Integer.toString(externalPort));
 		args.put("NewProtocol", protocol);
@@ -247,27 +248,27 @@ public class GatewayDevice {
 		args.put("NewPortMappingDescription", description);
 		args.put("NewLeaseDuration", Integer.toString(0));
 
-		Map<String, String> nameValue = simpleUPnPcommand(controlURL,
+		final Map<String, String> nameValue = simpleUPnPcommand(controlURL,
 				serviceType, "AddPortMapping", args);
 
 		return nameValue.get("errorCode") == null;
 	}
 
-	public PortMappingEntry getSpecificPortMappingEntry(int externalPort,
-			String protocol, final PortMappingEntry portMappingEntry)
+	public PortMappingEntry getSpecificPortMappingEntry(final int externalPort,
+			final String protocol, final PortMappingEntry portMappingEntry)
 			throws WeUPnPException {
 		portMappingEntry.setExternalPort(externalPort);
 		portMappingEntry.setProtocol(protocol);
 
-		Map<String, String> args = new HashMap<String, String>();
+		final Map<String, String> args = new HashMap<String, String>();
 		args.put("NewRemoteHost", "");
 		args.put("NewExternalPort", Integer.toString(externalPort));
 		args.put("NewProtocol", protocol);
 
-		Map<String, String> nameValue = simpleUPnPcommand(controlURL,
+		final Map<String, String> nameValue = simpleUPnPcommand(controlURL,
 				serviceType, "GetSpecificPortMappingEntry", args);
-		String internalClient = nameValue.get("NewInternalClient");
-		String internalPort = nameValue.get("NewInternalPort");
+		final String internalClient = nameValue.get("NewInternalClient");
+		final String internalPort = nameValue.get("NewInternalPort");
 
 		if (internalClient == null) {
 			throw new WeUPnPException("Did not get internal client");
@@ -279,7 +280,7 @@ public class GatewayDevice {
 			try {
 				portMappingEntry
 						.setInternalPort(Integer.parseInt(internalPort));
-			} catch (NumberFormatException e) {
+			} catch (final NumberFormatException e) {
 				throw new WeUPnPException("Got invalid internal port number "
 						+ internalPort, e);
 			}
@@ -289,19 +290,21 @@ public class GatewayDevice {
 
 	}
 
-	public PortMappingEntry getGenericPortMappingEntry(int index)
+	public PortMappingEntry getGenericPortMappingEntry(final int index)
 			throws WeUPnPException {
-		Map<String, String> args = new HashMap<String, String>();
+		final Map<String, String> args = new HashMap<String, String>();
 		args.put("NewPortMappingIndex", Integer.toString(index));
 
-		Map<String, String> nameValue = simpleUPnPcommand(controlURL,
+		final Map<String, String> nameValue = simpleUPnPcommand(controlURL,
 				serviceType, "GetGenericPortMappingEntry", args);
 
-		PortMappingEntry portMappingEntry = new PortMappingEntry();
+		final PortMappingEntry portMappingEntry = new PortMappingEntry();
 
 		if (nameValue.get("NewExternalPort") != null) {
-			portMappingEntry.setExternalPort(parseInt(nameValue
-					.get("NewExternalPort")));
+			final Integer externalPort = parseInt(nameValue
+					.get("NewExternalPort"));
+			portMappingEntry
+					.setExternalPort(externalPort != null ? externalPort : -1);
 		} else {
 			portMappingEntry.setExternalPort(-1);
 		}
@@ -311,8 +314,10 @@ public class GatewayDevice {
 		portMappingEntry.setProtocol(nameValue.get("NewProtocol"));
 
 		if (nameValue.get("NewInternalPort") != null) {
-			portMappingEntry.setInternalPort(parseInt(nameValue
-					.get("NewInternalPort")));
+			final Integer internalPort = parseInt(nameValue
+					.get("NewInternalPort"));
+			portMappingEntry
+					.setInternalPort(internalPort != null ? internalPort : -1);
 		} else {
 			portMappingEntry.setInternalPort(-1);
 		}
@@ -330,10 +335,10 @@ public class GatewayDevice {
 		return portMappingEntry;
 	}
 
-	private Integer parseInt(String value) {
+	private Integer parseInt(final String value) {
 		try {
 			return Integer.parseInt(value);
-		} catch (NumberFormatException e) {
+		} catch (final NumberFormatException e) {
 			// TODO: log warning
 			return null;
 		}
@@ -341,27 +346,27 @@ public class GatewayDevice {
 
 	public int getPortMappingNumberOfEntries() throws WeUPnPException {
 
-		Map<String, String> nameValue = simpleUPnPcommand(controlURL,
+		final Map<String, String> nameValue = simpleUPnPcommand(controlURL,
 				serviceType, "GetPortMappingNumberOfEntries", null);
 
-		String portMappingNumberString = nameValue
+		final String portMappingNumberString = nameValue
 				.get("NewPortMappingNumberOfEntries");
 
 		try {
 			return Integer.parseInt(portMappingNumberString);
-		} catch (NumberFormatException e) {
+		} catch (final NumberFormatException e) {
 			throw new WeUPnPException("Got invalid port number '"
 					+ portMappingNumberString + "'", e);
 		}
 	}
 
-	public boolean deletePortMapping(int externalPort, String protocol)
-			throws WeUPnPException {
-		Map<String, String> args = new HashMap<String, String>();
+	public boolean deletePortMapping(final int externalPort,
+			final String protocol) throws WeUPnPException {
+		final Map<String, String> args = new HashMap<String, String>();
 		args.put("NewRemoteHost", "");
 		args.put("NewExternalPort", Integer.toString(externalPort));
 		args.put("NewProtocol", protocol);
-		Map<String, String> nameValue = simpleUPnPcommand(controlURL,
+		final Map<String, String> nameValue = simpleUPnPcommand(controlURL,
 				serviceType, "DeletePortMapping", args);
 		// TODO: check, if port mapping was deleted
 		// return nameValue.get("errorCode") == null;
@@ -372,7 +377,7 @@ public class GatewayDevice {
 		return serviceType;
 	}
 
-	public void setServiceType(String serviceType) {
+	public void setServiceType(final String serviceType) {
 		this.serviceType = serviceType;
 	}
 
@@ -380,7 +385,7 @@ public class GatewayDevice {
 		return serviceTypeCIF;
 	}
 
-	public void setServiceTypeCIF(String serviceTypeCIF) {
+	public void setServiceTypeCIF(final String serviceTypeCIF) {
 		this.serviceTypeCIF = serviceTypeCIF;
 	}
 
@@ -388,7 +393,7 @@ public class GatewayDevice {
 		return controlURL;
 	}
 
-	public void setControlURL(String controlURL) {
+	public void setControlURL(final String controlURL) {
 		this.controlURL = controlURL;
 	}
 
@@ -396,7 +401,7 @@ public class GatewayDevice {
 		return controlURLCIF;
 	}
 
-	public void setControlURLCIF(String controlURLCIF) {
+	public void setControlURLCIF(final String controlURLCIF) {
 		this.controlURLCIF = controlURLCIF;
 	}
 
@@ -404,7 +409,7 @@ public class GatewayDevice {
 		return eventSubURL;
 	}
 
-	public void setEventSubURL(String eventSubURL) {
+	public void setEventSubURL(final String eventSubURL) {
 		this.eventSubURL = eventSubURL;
 	}
 
@@ -412,7 +417,7 @@ public class GatewayDevice {
 		return eventSubURLCIF;
 	}
 
-	public void setEventSubURLCIF(String eventSubURLCIF) {
+	public void setEventSubURLCIF(final String eventSubURLCIF) {
 		this.eventSubURLCIF = eventSubURLCIF;
 	}
 
@@ -420,7 +425,7 @@ public class GatewayDevice {
 		return sCPDURL;
 	}
 
-	public void setSCPDURL(String sCPDURL) {
+	public void setSCPDURL(final String sCPDURL) {
 		this.sCPDURL = sCPDURL;
 	}
 
@@ -428,7 +433,7 @@ public class GatewayDevice {
 		return sCPDURLCIF;
 	}
 
-	public void setSCPDURLCIF(String sCPDURLCIF) {
+	public void setSCPDURLCIF(final String sCPDURLCIF) {
 		this.sCPDURLCIF = sCPDURLCIF;
 	}
 
@@ -436,7 +441,7 @@ public class GatewayDevice {
 		return deviceType;
 	}
 
-	public void setDeviceType(String deviceType) {
+	public void setDeviceType(final String deviceType) {
 		this.deviceType = deviceType;
 	}
 
@@ -444,7 +449,7 @@ public class GatewayDevice {
 		return deviceTypeCIF;
 	}
 
-	public void setDeviceTypeCIF(String deviceTypeCIF) {
+	public void setDeviceTypeCIF(final String deviceTypeCIF) {
 		this.deviceTypeCIF = deviceTypeCIF;
 	}
 
@@ -452,7 +457,7 @@ public class GatewayDevice {
 		return uRLBase;
 	}
 
-	public void setURLBase(String uRLBase) {
+	public void setURLBase(final String uRLBase) {
 		this.uRLBase = uRLBase;
 	}
 
@@ -460,7 +465,7 @@ public class GatewayDevice {
 		return friendlyName;
 	}
 
-	public void setFriendlyName(String friendlyName) {
+	public void setFriendlyName(final String friendlyName) {
 		this.friendlyName = friendlyName;
 	}
 
@@ -468,7 +473,7 @@ public class GatewayDevice {
 		return manufacturer;
 	}
 
-	public void setManufacturer(String manufacturer) {
+	public void setManufacturer(final String manufacturer) {
 		this.manufacturer = manufacturer;
 	}
 
@@ -476,7 +481,7 @@ public class GatewayDevice {
 		return modelDescription;
 	}
 
-	public void setModelDescription(String modelDescription) {
+	public void setModelDescription(final String modelDescription) {
 		this.modelDescription = modelDescription;
 	}
 
@@ -484,7 +489,7 @@ public class GatewayDevice {
 		return presentationURL;
 	}
 
-	public void setPresentationURL(String presentationURL) {
+	public void setPresentationURL(final String presentationURL) {
 		this.presentationURL = presentationURL;
 	}
 
