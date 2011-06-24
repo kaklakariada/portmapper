@@ -45,7 +45,7 @@ public class SBBIRouter extends AbstractRouter {
 	 * The maximum number of port mappings that we will try to retrieve from the
 	 * router.
 	 */
-	private final static int MAX_NUM_PORTMAPPINGS = 100;
+	private final static int MAX_NUM_PORTMAPPINGS = 500;
 
 	SBBIRouter(final InternetGatewayDevice router) {
 		super(router.getIGDRootDevice().getModelName());
@@ -135,7 +135,14 @@ public class SBBIRouter extends AbstractRouter {
 
 					// Create a port mapping for the response.
 					if (response != null) {
-						mappings.add(PortMapping.create(response));
+						final PortMapping newMapping = PortMapping
+								.create(response);
+						if (logger.isTraceEnabled()) {
+							logger.trace("Got port mapping #"
+									+ currentMappingNumber + ": "
+									+ newMapping.getCompleteDescription());
+						}
+						mappings.add(newMapping);
 					} else {
 						logger.warn("Got a null port mapping for number "
 								+ currentMappingNumber
@@ -143,22 +150,16 @@ public class SBBIRouter extends AbstractRouter {
 					}
 				} catch (final UPNPResponseException e) {
 
-					// The error codes 713 and 714 mean, that no port mappings
-					// where found for the current entry. See bug reports
-					// https://sourceforge.net/tracker/index.php?func=detail&aid=
-					// 1939749&group_id=213879&atid=1027466
-					// and http://www.sbbi.net/forum/viewtopic.php?p=394
-					if (e.getDetailErrorCode() == 713
-							|| e.getDetailErrorCode() == 714) {
+					if (isNoMoreMappingsException(e)) {
 
 						moreEntries = false;
 						logger.debug("Got no port mapping for entry number "
-								+ currentMappingNumber
-								+ ". Stop getting more entries.");
+								+ currentMappingNumber + " (error code: "
+								+ e.getDetailErrorCode()
+								+ ", error description: "
+								+ e.getDetailErrorDescription()
+								+ "). Stop getting more entries.");
 					} else {
-						// Also ignore all other exceptions to workaround
-						// possible router bugs.
-						// https://sourceforge.net/tracker2/?func=detail&aid=2540478&group_id=213879&atid=1027466
 						moreEntries = false;
 						logger.error(
 								"Got exception when fetching port mapping for entry number "
@@ -175,7 +176,7 @@ public class SBBIRouter extends AbstractRouter {
 			if (currentMappingNumber == MAX_NUM_PORTMAPPINGS) {
 				logger.warn("Reached max number of port mappings to get ("
 						+ MAX_NUM_PORTMAPPINGS
-						+ "). Perhaps not all port mappings where retrieved. Try to increase Router.MAX_NUM_PORTMAPPINGS.");
+						+ "). Perhaps not all port mappings where retrieved. Try to increase SBBIRouter.MAX_NUM_PORTMAPPINGS.");
 			}
 
 		} catch (final IOException e) {
@@ -183,6 +184,59 @@ public class SBBIRouter extends AbstractRouter {
 		}
 
 		return mappings;
+	}
+
+	/**
+	 * This method checks, if the error code of the given exception means, that
+	 * no more mappings are available.
+	 * <p>
+	 * The following error codes are recognized:
+	 * <ul>
+	 * <li>SpecifiedArrayIndexInvalid: 713</li>
+	 * <li>NoSuchEntryInArray: 714</li>
+	 * <li>Invalid Args: 402 (e.g. for DD-WRT, TP-LINK TL-R460 firmware 4.7.6
+	 * Build 100714 Rel.63134n)</li>
+	 * <li>Other errors, e.g.
+	 * "The reference to entity "T" must end with the ';' delimiter" or
+	 * "Content is not allowed in prolog": 899 (e.g. ActionTec MI424-WR, Thomson
+	 * TWG850-4U)</li>
+	 * </ul>
+	 * See bug reports
+	 * <ul>
+	 * <li><a href=
+	 * "https://sourceforge.net/tracker/index.php?func=detail&aid=1939749&group_id=213879&atid=1027466"
+	 * >https://sourceforge.net/tracker/index.php?func=detail&aid=
+	 * 1939749&group_id=213879&atid=1027466</a></li>
+	 * <li><a
+	 * href="http://www.sbbi.net/forum/viewtopic.php?p=394">http://www.sbbi
+	 * .net/forum/viewtopic.php?p=394</a></li>
+	 * <li><a href=
+	 * "http://sourceforge.net/tracker/?func=detail&atid=1027466&aid=3325388&group_id=213879"
+	 * >http://sourceforge.net/tracker/?func=detail&atid=1027466&aid=3325388&
+	 * group_id=213879</a></li>
+	 * <a href=
+	 * "https://sourceforge.net/tracker2/?func=detail&aid=2540478&group_id=213879&atid=1027466"
+	 * >https://sourceforge.net/tracker2/?func=detail&aid=2540478&group_id=
+	 * 213879&atid=1027466</a></li>
+	 * </ul>
+	 * 
+	 * @param e
+	 *            the exception to check
+	 * @return <code>true</code>, if the given exception means, that no more
+	 *         port mappings are available, else <code>false</code>.
+	 */
+	private boolean isNoMoreMappingsException(final UPNPResponseException e) {
+		final int errorCode = e.getDetailErrorCode();
+		switch (errorCode) {
+		case 713:
+		case 714:
+		case 402:
+		case 899:
+			return true;
+
+		default:
+			return false;
+		}
 	}
 
 	/*
@@ -245,9 +299,11 @@ public class SBBIRouter extends AbstractRouter {
 					protocolString);
 			return success;
 		} catch (final IOException e) {
-			throw new RouterException("Could not add port mapping", e);
+			throw new RouterException("Could not add port mapping: "
+					+ e.getMessage(), e);
 		} catch (final UPNPResponseException e) {
-			throw new RouterException("Could not add port mapping", e);
+			throw new RouterException("Could not add port mapping: "
+					+ e.getMessage(), e);
 		}
 	}
 
@@ -270,7 +326,6 @@ public class SBBIRouter extends AbstractRouter {
 	public void removeMapping(final PortMapping mapping) throws RouterException {
 		removePortMapping(mapping.getProtocol(), mapping.getRemoteHost(),
 				mapping.getExternalPort());
-
 	}
 
 	public void removePortMapping(final Protocol protocol,
