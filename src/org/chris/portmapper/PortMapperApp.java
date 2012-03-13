@@ -22,7 +22,7 @@ import org.chris.portmapper.logging.LogMessageListener;
 import org.chris.portmapper.logging.LogMessageWriter;
 import org.chris.portmapper.model.PortMappingPreset;
 import org.chris.portmapper.router.IRouter;
-import org.chris.portmapper.router.IRouterFactory;
+import org.chris.portmapper.router.AbstractRouterFactory;
 import org.chris.portmapper.router.RouterException;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
@@ -191,7 +191,7 @@ public class PortMapperApp extends SingleFrameApplication {
 			return;
 		}
 
-		IRouterFactory routerFactory;
+		AbstractRouterFactory routerFactory;
 		try {
 			routerFactory = createRouterFactory();
 		} catch (RouterException e) {
@@ -236,12 +236,12 @@ public class PortMapperApp extends SingleFrameApplication {
 	}
 
 	@SuppressWarnings("unchecked")
-	private IRouterFactory createRouterFactory() throws RouterException {
-		Class<IRouterFactory> routerFactoryClass;
+	private AbstractRouterFactory createRouterFactory() throws RouterException {
+		Class<AbstractRouterFactory> routerFactoryClass;
 		logger.info("Creating router factory for class "
 				+ settings.getRouterFactoryClassName());
 		try {
-			routerFactoryClass = (Class<IRouterFactory>) Class.forName(settings
+			routerFactoryClass = (Class<AbstractRouterFactory>) Class.forName(settings
 					.getRouterFactoryClassName());
 		} catch (ClassNotFoundException e1) {
 			throw new RouterException(
@@ -249,7 +249,7 @@ public class PortMapperApp extends SingleFrameApplication {
 							+ settings.getRouterFactoryClassName(), e1);
 		}
 
-		IRouterFactory routerFactory;
+		AbstractRouterFactory routerFactory;
 		logger.debug("Creating a new instance of the router factory class "
 				+ routerFactoryClass);
 		try {

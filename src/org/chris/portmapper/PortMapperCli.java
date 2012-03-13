@@ -21,7 +21,7 @@ import org.apache.log4j.WriterAppender;
 import org.chris.portmapper.model.PortMapping;
 import org.chris.portmapper.model.Protocol;
 import org.chris.portmapper.router.IRouter;
-import org.chris.portmapper.router.IRouterFactory;
+import org.chris.portmapper.router.AbstractRouterFactory;
 import org.chris.portmapper.router.RouterException;
 import org.chris.portmapper.router.dummy.DummyRouterFactory;
 import org.chris.portmapper.router.sbbi.SBBIRouterFactory;
@@ -371,12 +371,12 @@ public class PortMapperCli {
 	}
 
 	@SuppressWarnings("unchecked")
-	private IRouterFactory createRouterFactory() throws RouterException {
-		Class<IRouterFactory> routerFactoryClass;
+	private AbstractRouterFactory createRouterFactory() throws RouterException {
+		Class<AbstractRouterFactory> routerFactoryClass;
 		logger.info("Creating router factory for class "
 				+ routerFactoryClassName);
 		try {
-			routerFactoryClass = (Class<IRouterFactory>) Class
+			routerFactoryClass = (Class<AbstractRouterFactory>) Class
 					.forName(routerFactoryClassName);
 		} catch (ClassNotFoundException e1) {
 			throw new RouterException(
@@ -384,7 +384,7 @@ public class PortMapperCli {
 							+ routerFactoryClassName, e1);
 		}
 
-		IRouterFactory routerFactory;
+		AbstractRouterFactory routerFactory;
 		logger.debug("Creating a new instance of the router factory class "
 				+ routerFactoryClass);
 		try {
@@ -399,7 +399,7 @@ public class PortMapperCli {
 	}
 
 	private IRouter connect() throws RouterException {
-		IRouterFactory routerFactory;
+		AbstractRouterFactory routerFactory;
 		try {
 			routerFactory = createRouterFactory();
 		} catch (RouterException e) {
@@ -410,6 +410,14 @@ public class PortMapperCli {
 
 		List<IRouter> foundRouters = routerFactory.findRouters();
 
+		return selectRouter(foundRouters);
+	}
+
+	/**
+	 * @param foundRouters
+	 * @return
+	 */
+	private IRouter selectRouter(List<IRouter> foundRouters) {
 		// One router found: use it.
 		if (foundRouters.size() == 1) {
 			final IRouter router = foundRouters.iterator().next();

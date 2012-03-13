@@ -20,7 +20,7 @@ import org.chris.portmapper.gui.LogTextArea;
 import org.chris.portmapper.model.PortMapping;
 import org.chris.portmapper.model.Protocol;
 import org.chris.portmapper.router.IRouter;
-import org.chris.portmapper.router.IRouterFactory;
+import org.chris.portmapper.router.AbstractRouterFactory;
 import org.chris.portmapper.router.RouterException;
 import org.chris.portmapper.router.dummy.DummyRouterFactory;
 import org.chris.portmapper.router.sbbi.SBBIRouterFactory;
@@ -83,7 +83,7 @@ public class PortMapperApplet extends JApplet {
 	 */
 	private JPanel createButtonPanel() {
 
-		final IRouterFactory[] availableFactories = new IRouterFactory[] {
+		final AbstractRouterFactory[] availableFactories = new AbstractRouterFactory[] {
 				new SBBIRouterFactory(), new WeUPnPRouterFactory(),
 				new DummyRouterFactory() };
 		final JComboBox factoryComboBox = new JComboBox(availableFactories);
@@ -93,7 +93,7 @@ public class PortMapperApplet extends JApplet {
 		connectButton.setEnabled(permissionsGranted);
 		connectButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
-				IRouterFactory routerFactory = (IRouterFactory) factoryComboBox
+				AbstractRouterFactory routerFactory = (AbstractRouterFactory) factoryComboBox
 						.getSelectedItem();
 				connect(routerFactory);
 			}
@@ -152,7 +152,7 @@ public class PortMapperApplet extends JApplet {
 	 * @param routerFactory
 	 *            the router factory used to connect.
 	 */
-	private void connect(final IRouterFactory routerFactory) {
+	private void connect(final AbstractRouterFactory routerFactory) {
 		logMessage("Using UPnP library " + routerFactory.toString());
 		if (router != null) {
 			logMessage("Disconnecting...");

@@ -11,26 +11,27 @@ import java.util.List;
 import net.sbbi.upnp.impls.InternetGatewayDevice;
 
 import org.chris.portmapper.router.IRouter;
-import org.chris.portmapper.router.IRouterFactory;
+import org.chris.portmapper.router.AbstractRouterFactory;
 import org.chris.portmapper.router.RouterException;
 
 /**
  * @author chris
  * @version $Id$
  */
-public class SBBIRouterFactory implements IRouterFactory {
+public class SBBIRouterFactory extends AbstractRouterFactory {
 
 	/**
 	 * The timeout in milliseconds for finding a router device.
 	 */
 	private final static int DISCOVERY_TIMEOUT = 5000;
 
-	public List<IRouter> findRouters() throws RouterException {
+	@Override
+	protected List<IRouter> findRoutersInternal() throws RouterException {
 
 		final InternetGatewayDevice[] devices;
 		try {
 			devices = InternetGatewayDevice.getDevices(DISCOVERY_TIMEOUT);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new RouterException("Could not find devices", e);
 		}
 
@@ -40,7 +41,7 @@ public class SBBIRouterFactory implements IRouterFactory {
 
 		final List<IRouter> routers = new ArrayList<IRouter>(devices.length);
 
-		for (InternetGatewayDevice device : devices) {
+		for (final InternetGatewayDevice device : devices) {
 			routers.add(new SBBIRouter(device));
 		}
 
@@ -62,7 +63,19 @@ public class SBBIRouterFactory implements IRouterFactory {
 	 * 
 	 * @see org.chris.portmapper.router.IRouterFactory#getName()
 	 */
+	@Override
 	public String getName() {
 		return "SBBI UPnP lib";
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.chris.portmapper.router.IRouterFactory#connect(java.lang.String)
+	 */
+	@Override
+	protected IRouter connect(final String locationUrl) throws RouterException {
+		throw new UnsupportedOperationException(
+				"Direct connection is not implemented for SBBI library.");
 	}
 }
