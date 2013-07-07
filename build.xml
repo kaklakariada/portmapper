@@ -37,14 +37,8 @@
 	</target>
 
 	<target name="compile" depends="clean" description="Compile the Java source files">
-		<javac srcdir="${weupnp.src.dir}" destdir="${classes.dir}" classpathref="classpath" debug="true" target="1.5" source="1.5">
-			<exclude name="**/fokus/*" />
-			<exclude name="**/htmlunit/*" />
-		</javac>
-		<javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" debug="true" target="1.5" source="1.5">
-			<exclude name="**/fokus/*" />
-			<exclude name="**/htmlunit/*" />
-		</javac>
+		<javac srcdir="${weupnp.src.dir}" destdir="${classes.dir}" classpathref="classpath" debug="true" target="1.5" source="1.5"/>
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" debug="true" target="1.5" source="1.5"/>
 		<copy todir="${classes.dir}">
 			<fileset dir="${src.dir}" excludes="**/*.java" />
 		</copy>
