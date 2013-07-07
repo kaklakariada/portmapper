@@ -49,7 +49,7 @@ public abstract class AbstractRouter implements IRouter {
 		// We do not want an address like 127.0.0.1
 		if (localHostIP.getHostAddress().startsWith("127.")) {
 			throw new RouterException(
-					"Only found an address that begins with 127.");
+					"Only found an address that begins with '127.' when retrieving IP of localhost");
 		}
 
 		return localHostIP.getHostAddress();
