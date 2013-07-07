@@ -26,6 +26,7 @@ class PortMappingExtractor {
 	private final Collection<PortMapping> mappings;
 	private boolean moreEntries;
 	private int currentMappingNumber;
+	private int nullPortMappings;
 
 	/**
 	 * The maximum number of port mappings that we will try to retrieve from the
@@ -47,10 +48,10 @@ class PortMappingExtractor {
 		this.mappings = new LinkedList<PortMapping>();
 		this.moreEntries = true;
 		this.currentMappingNumber = 0;
+		this.nullPortMappings = 0;
 	}
 
 	public Collection<PortMapping> getPortMappings() throws RouterException {
-		logger.info("Get all port mappings...");
 
 		try {
 
@@ -87,6 +88,8 @@ class PortMappingExtractor {
 					+ e.getMessage(), e);
 		}
 
+		logger.info("Found " + mappings.size() + " mappings, "
+				+ nullPortMappings + " mappings returned as null.");
 		return mappings;
 	}
 
@@ -116,8 +119,12 @@ class PortMappingExtractor {
 			}
 			mappings.add(newMapping);
 		} else {
-			logger.warn("Got a null port mapping for number "
-					+ currentMappingNumber + ". This may be a bug in UPNPLib.");
+			nullPortMappings++;
+			if (logger.isTraceEnabled()) {
+				logger.trace("Got a null port mapping for number "
+						+ currentMappingNumber + " (" + nullPortMappings
+						+ " so far).");
+			}
 		}
 	}
 

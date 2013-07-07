@@ -44,17 +44,19 @@ public class TestPortMappingExtractor {
 	@Test
 	public void allMappingsNull() throws RouterException, IOException,
 			UPNPResponseException {
-		simulateUPNPException(4, 713);
+		simulateUPNPException(5, 713);
 		assertEquals(0, portMappingExtractor.getPortMappings().size());
-		verify(loggerMock, times(5)).warn(anyString());
+		verify(loggerMock, times(1)).warn(anyString());
 		verify(loggerMock, never()).error(anyString());
+		assertNumMappingsFound(0, 5);
 	}
 
 	@Test
 	public void allMappingsNullMaxNumReached() throws RouterException {
 		assertEquals(0, portMappingExtractor.getPortMappings().size());
-		verify(loggerMock, times(6)).warn(anyString());
+		verify(loggerMock, times(1)).warn(anyString());
 		verify(loggerMock, never()).error(anyString());
+		assertNumMappingsFound(0, 5);
 	}
 
 	@Test
@@ -63,6 +65,7 @@ public class TestPortMappingExtractor {
 		simulateUPNPException(0, 713);
 		assertEquals(0, portMappingExtractor.getPortMappings().size());
 		assertNoWarningOrErrorLogged();
+		assertNumMappingsFound(0, 0);
 	}
 
 	@Test
@@ -74,6 +77,7 @@ public class TestPortMappingExtractor {
 		verify(loggerMock, never()).error(anyString());
 		verify(loggerMock, never()).warn(anyString(), any(Throwable.class));
 		verify(loggerMock).error(anyString(), any(Throwable.class));
+		assertNumMappingsFound(0, 0);
 	}
 
 	@Test
@@ -83,6 +87,13 @@ public class TestPortMappingExtractor {
 		simulateUPNPException(1, 713);
 		assertEquals(1, portMappingExtractor.getPortMappings().size());
 		assertNoWarningOrErrorLogged();
+		assertNumMappingsFound(1, 0);
+	}
+
+	private void assertNumMappingsFound(final int numFound, final int numNull) {
+		verify(loggerMock).info(
+				"Found " + numFound + " mappings, " + numNull
+						+ " mappings returned as null.");
 	}
 
 	private void assertNoWarningOrErrorLogged() {
