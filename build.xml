@@ -12,6 +12,7 @@
 	<property name="main-class" value="org.chris.portmapper.PortMapperStarter" />
 
 	<property name="lib.dir" location="${project.dir}/lib" />
+	<property name="svnversion.binary" location="/Users/chris/Applications/brew/bin/svnversion" />
 
 	<path id="classpath" description="The JARs needed for compiling">
 		<fileset dir="${lib.dir}" includes="**/*.jar" />
@@ -28,7 +29,7 @@
 
 	<target name="get_version_number" description="Prompt the user for the version number">
 		<input message="Enter version number of new build." addproperty="version.number" />
-		<exec executable="svnversion" outputproperty="svn.revision.number" failonerror="true">
+		<exec executable="${svnversion.binary}" outputproperty="svn.revision.number" failonerror="true">
 			<arg line="-n" />
 			<arg path="${project.dir}" />
 		</exec>
@@ -37,8 +38,8 @@
 	</target>
 
 	<target name="compile" depends="clean" description="Compile the Java source files">
-		<javac srcdir="${weupnp.src.dir}" destdir="${classes.dir}" classpathref="classpath" debug="true" target="1.5" source="1.5"/>
-		<javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" debug="true" target="1.5" source="1.5"/>
+		<javac srcdir="${weupnp.src.dir}" destdir="${classes.dir}" classpathref="classpath" debug="true" target="1.5" source="1.5" includeantruntime="false" />
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" debug="true" target="1.5" source="1.5" includeantruntime="false" />
 		<copy todir="${classes.dir}">
 			<fileset dir="${src.dir}" excludes="**/*.java" />
 		</copy>
@@ -98,7 +99,7 @@
 			<zipfileset src="${lib.dir}/swing-worker.jar" excludes="META-INF/*" />
 			<zipfileset src="${lib.dir}/commons-cli-1.2.jar" excludes="META-INF/*" />
 		</jar>
-		<delete dir="${classes.dir}"/>
+		<delete dir="${classes.dir}" />
 	</target>
 
 	<target name="run" depends="jar" description="Run PortMapper">
@@ -116,11 +117,11 @@
 			<zipfileset src="${lib.dir}/sbbi-upnplib-1.0.4.jar" excludes="META-INF/*" />
 		</jar>
 	</target>
-	
+
 	<target name="build_signed_applet" depends="build_applet" description="Sign the applet JAR">
-		<input addproperty="keystore.alias" message="Please enter the alias of the key:"/>
-		<input addproperty="keystore.passphrase" message="Please enter the password of the keystore:"/>
-		<signjar alias="${keystore.alias}" jar="${jar.dir}/PortMapperApplet.jar" storepass="${keystore.passphrase}" verbose="true"/>
+		<input addproperty="keystore.alias" message="Please enter the alias of the key:" />
+		<input addproperty="keystore.passphrase" message="Please enter the password of the keystore:" />
+		<signjar alias="${keystore.alias}" jar="${jar.dir}/PortMapperApplet.jar" storepass="${keystore.passphrase}" verbose="true" />
 	</target>
-	
+
 </project>
