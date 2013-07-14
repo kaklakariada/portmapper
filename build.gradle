@@ -1,5 +1,5 @@
 apply plugin: 'java'
-apply plugin:'application'
+apply plugin: 'application'
 
 mainClassName = 'org.chris.portmapper.PortMapperStarter'
 
@@ -14,6 +14,11 @@ sourceSets {
 	test {
 		java { srcDir 'test' }
 	}
+}
+
+jar {
+	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+	manifest { attributes 'Main-Class': mainClassName }
 }
 
 repositories {
