@@ -172,9 +172,13 @@ public class PortMapperApp extends SingleFrameApplication {
 	private void initTextAreaLogger() {
 		final WriterAppender writerAppender = (WriterAppender) Logger
 				.getLogger("org.chris.portmapper").getAppender("jtextarea");
-		logWriter = new LogMessageWriter();
-		// FIXME: null check
-		writerAppender.setWriter(logWriter);
+		if (writerAppender != null) {
+			logWriter = new LogMessageWriter();
+			writerAppender.setWriter(logWriter);
+		} else {
+			throw new RuntimeException(
+					"Did not find appender jtextarea for logger org.chris.portmapper");
+		}
 	}
 
 	public void setLogMessageListener(final LogMessageListener listener) {
