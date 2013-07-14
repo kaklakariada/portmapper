@@ -376,13 +376,8 @@ public class PortMapperApp extends SingleFrameApplication {
 					final List<InetAddress> addresses = Collections
 							.list(nInterface.getInetAddresses());
 					if (addresses.size() > 0) {
-						final InetAddress address = addresses.get(0);
-						if (addresses.size() > 1) {
-							logger.info("Found more than one address for network interface "
-									+ nInterface.getName()
-									+ ": using "
-									+ address);
-						}
+						final InetAddress address = findIPv4Adress(nInterface,
+								addresses);
 						logger.debug("Found one address for network interface "
 								+ nInterface.getName() + ": using " + address);
 						return address;
@@ -395,6 +390,24 @@ public class PortMapperApp extends SingleFrameApplication {
 			throw new RouterException("Did not get network interfaces.", e);
 		}
 		return null;
+	}
+
+	private InetAddress findIPv4Adress(final NetworkInterface nInterface,
+			final List<InetAddress> addresses) {
+		if (addresses.size() == 1) {
+			return addresses.get(0);
+		}
+
+		for (final InetAddress inetAddress : addresses) {
+			if (inetAddress.getHostAddress().contains(".")) {
+				logger.debug("Found IPv4 address " + inetAddress);
+				return inetAddress;
+			}
+		}
+		final InetAddress address = addresses.get(0);
+		logger.info("Found more than one address for network interface "
+				+ nInterface.getName() + ": using " + address);
+		return address;
 	}
 
 	public void setLogLevel(final String logLevel) {
