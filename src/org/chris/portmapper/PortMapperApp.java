@@ -2,6 +2,7 @@ package org.chris.portmapper;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -26,6 +27,7 @@ import org.chris.portmapper.router.IRouter;
 import org.chris.portmapper.router.RouterException;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
+import org.jdesktop.application.utils.OSXAdapter;
 
 /**
  * @author chris
@@ -74,6 +76,29 @@ public class PortMapperApp extends SingleFrameApplication {
 		});
 
 		show(view);
+
+		registerMacOSXListeners();
+	}
+
+	private void registerMacOSXListeners() {
+		final PortMapperView view = PortMapperApp.getInstance().getView();
+		OSXAdapter.setPreferencesHandler(view,
+				getMethod(PortMapperView.class, "changeSettings"));
+		OSXAdapter.setAboutHandler(view,
+				getMethod(PortMapperView.class, "showAboutDialog"));
+	}
+
+	private static Method getMethod(final Class<?> clazz, final String name,
+			final Class<?>... parameterTypes) {
+		try {
+			return clazz.getMethod(name, parameterTypes);
+		} catch (final SecurityException e) {
+			throw new RuntimeException("Error getting method " + name
+					+ " of class " + clazz.getName(), e);
+		} catch (final NoSuchMethodException e) {
+			throw new RuntimeException("Error getting method " + name
+					+ " of class " + clazz.getName(), e);
+		}
 	}
 
 	/**

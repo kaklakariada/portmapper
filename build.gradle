@@ -33,7 +33,7 @@ dependencies {
 	compile 'log4j:log4j:1.2.17'
 	compile 'commons-logging:commons-logging-api:1.1'
 	compile 'com.miglayout:miglayout:3.7.4'
-	compile 'net.java.dev.appframework:appframework:1.03'
+	compile 'org.jdesktop.bsaf:bsaf:1.9.2'
 	compile ':sbbi-upnplib:1.0.4'
 	runtime 'commons-jxpath:commons-jxpath:1.1' // sbbi
 }
