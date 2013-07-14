@@ -314,6 +314,8 @@ public class PortMapperView extends FrameView {
 
 		try {
 			router.addPortMappings(portMappings);
+			logger.info(portMappings.size()
+					+ " port mapping added successfully");
 		} catch (final RouterException e) {
 			logger.error("Could not add port mapping", e);
 			JOptionPane.showMessageDialog(this.getFrame(),
@@ -321,7 +323,6 @@ public class PortMapperView extends FrameView {
 					"Error adding port mapping", JOptionPane.WARNING_MESSAGE);
 		}
 
-		logger.info("Portmapping was added successfully");
 		this.updatePortMappings();
 	}
 
