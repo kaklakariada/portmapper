@@ -2,6 +2,8 @@ apply plugin: 'java'
 apply plugin: 'application'
 
 mainClassName = 'org.chris.portmapper.PortMapperStarter'
+version = '1.9.6'
+sourceCompatibility = 1.7
 
 sourceSets {
 	main {
@@ -15,6 +17,8 @@ sourceSets {
 		java { srcDir 'test' }
 	}
 }
+
+[compileJava, compileTestJava]*.options*.compilerArgs = ['-Xlint:all']
 
 jar {
 	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }

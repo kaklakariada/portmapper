@@ -366,8 +366,7 @@ public class GatewayDevice {
 		args.put("NewRemoteHost", "");
 		args.put("NewExternalPort", Integer.toString(externalPort));
 		args.put("NewProtocol", protocol);
-		final Map<String, String> nameValue = simpleUPnPcommand(controlURL,
-				serviceType, "DeletePortMapping", args);
+		simpleUPnPcommand(controlURL, serviceType, "DeletePortMapping", args);
 		// TODO: check, if port mapping was deleted
 		// return nameValue.get("errorCode") == null;
 		return true;

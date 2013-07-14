@@ -7,7 +7,9 @@ import java.awt.event.ActionListener;
 import java.net.SocketPermission;
 import java.security.AccessControlException;
 import java.security.AccessController;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Vector;
 
 import javax.swing.JApplet;
 import javax.swing.JButton;
@@ -19,8 +21,8 @@ import javax.swing.JScrollPane;
 import org.chris.portmapper.gui.LogTextArea;
 import org.chris.portmapper.model.PortMapping;
 import org.chris.portmapper.model.Protocol;
-import org.chris.portmapper.router.IRouter;
 import org.chris.portmapper.router.AbstractRouterFactory;
+import org.chris.portmapper.router.IRouter;
 import org.chris.portmapper.router.RouterException;
 import org.chris.portmapper.router.dummy.DummyRouterFactory;
 import org.chris.portmapper.router.sbbi.SBBIRouterFactory;
@@ -58,12 +60,13 @@ public class PortMapperApplet extends JApplet {
 	 * This method is called when the applet is initialized for the first time.
 	 * It checks the permissions and creates the gui widgets.
 	 */
+	@Override
 	public void init() {
 		super.init();
 
 		permissionsGranted = permissionsGranted();
 
-		Container contentPane = getContentPane();
+		final Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
 		contentPane.add(createButtonPanel(), BorderLayout.NORTH);
 		contentPane.add(createLogPanel(), BorderLayout.CENTER);
@@ -86,23 +89,24 @@ public class PortMapperApplet extends JApplet {
 		final AbstractRouterFactory[] availableFactories = new AbstractRouterFactory[] {
 				new SBBIRouterFactory(), new WeUPnPRouterFactory(),
 				new DummyRouterFactory() };
-		final JComboBox factoryComboBox = new JComboBox(availableFactories);
+		final JComboBox<AbstractRouterFactory> factoryComboBox = new JComboBox<>(
+				new Vector<>(Arrays.asList(availableFactories)));
 		factoryComboBox.setSelectedIndex(0);
 
-		JButton connectButton = new JButton("Connect");
+		final JButton connectButton = new JButton("Connect");
 		connectButton.setEnabled(permissionsGranted);
 		connectButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				AbstractRouterFactory routerFactory = (AbstractRouterFactory) factoryComboBox
+			public void actionPerformed(final ActionEvent event) {
+				final AbstractRouterFactory routerFactory = (AbstractRouterFactory) factoryComboBox
 						.getSelectedItem();
 				connect(routerFactory);
 			}
 		});
 
-		JButton addPortMappingButton = new JButton("Add port mapping");
+		final JButton addPortMappingButton = new JButton("Add port mapping");
 		addPortMappingButton.setEnabled(permissionsGranted);
 		addPortMappingButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent e) {
 				addPortMapping();
 			}
 		});
@@ -122,7 +126,7 @@ public class PortMapperApplet extends JApplet {
 	private JComponent createLogPanel() {
 		logTextArea = new LogTextArea();
 
-		JScrollPane scrollPane = new JScrollPane(
+		final JScrollPane scrollPane = new JScrollPane(
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollPane.setViewportView(logTextArea);
@@ -136,12 +140,12 @@ public class PortMapperApplet extends JApplet {
 	 *         <code>false</code> if they are not granted.
 	 */
 	private boolean permissionsGranted() {
-		SocketPermission permission = new SocketPermission("239.255.255.250",
-				"connect,accept,resolve");
+		final SocketPermission permission = new SocketPermission(
+				"239.255.255.250", "connect,accept,resolve");
 		try {
 			AccessController.checkPermission(permission);
 			return true;
-		} catch (AccessControlException e) {
+		} catch (final AccessControlException e) {
 			return false;
 		}
 	}
@@ -165,7 +169,7 @@ public class PortMapperApplet extends JApplet {
 		try {
 			routers = routerFactory.findRouters();
 			logMessage("Found " + routers.size() + " router.");
-		} catch (RouterException e) {
+		} catch (final RouterException e) {
 			logMessage("Failed to connect", e);
 			return;
 		}
@@ -191,16 +195,16 @@ public class PortMapperApplet extends JApplet {
 		String internalClient;
 		try {
 			internalClient = router.getLocalHostAddress();
-		} catch (RouterException e) {
+		} catch (final RouterException e) {
 			logMessage("Could not determine the address of your localhost", e);
 			return;
 		}
-		PortMapping mapping = new PortMapping(Protocol.TCP, null, 12345,
+		final PortMapping mapping = new PortMapping(Protocol.TCP, null, 12345,
 				internalClient, 12345, "Your new port mapping");
 		logMessage("Adding port mapping " + mapping);
 		try {
 			router.addPortMapping(mapping);
-		} catch (RouterException e) {
+		} catch (final RouterException e) {
 			logMessage("Could not add port mapping.", e);
 			return;
 		}
@@ -213,7 +217,7 @@ public class PortMapperApplet extends JApplet {
 	 * @param message
 	 *            the message to append.
 	 */
-	private void logMessage(String message) {
+	private void logMessage(final String message) {
 		if (logTextArea != null) {
 			logTextArea.addLogMessage(message + "\n");
 		} else {
@@ -232,7 +236,7 @@ public class PortMapperApplet extends JApplet {
 	 * @param throwable
 	 *            the exception.
 	 */
-	private void logMessage(String message, Throwable throwable) {
+	private void logMessage(final String message, final Throwable throwable) {
 		logMessage(message + " [" + throwable + "]");
 	}
 

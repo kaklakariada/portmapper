@@ -23,7 +23,7 @@ public abstract class AbstractRouter implements IRouter {
 
 	private final String name;
 
-	public AbstractRouter(String name) {
+	public AbstractRouter(final String name) {
 		this.name = name;
 	}
 
@@ -71,7 +71,7 @@ public abstract class AbstractRouter implements IRouter {
 			// In order to use the socket method to get the address, we have to
 			// be connected to the router.
 
-			int routerInternalPort = getInternalPort();
+			final int routerInternalPort = getInternalPort();
 			logger.debug("Got internal router port " + routerInternalPort);
 
 			// Check, if we got a correct port number
@@ -79,16 +79,14 @@ public abstract class AbstractRouter implements IRouter {
 				logger.debug("Creating socket to router: "
 						+ getInternalHostName() + ":" + routerInternalPort
 						+ "...");
-				Socket socket;
-				try {
-					socket = new Socket(getInternalHostName(),
-							routerInternalPort);
-				} catch (UnknownHostException e) {
+				try (Socket socket = new Socket(getInternalHostName(),
+						routerInternalPort)) {
+					localHostIP = socket.getLocalAddress();
+				} catch (final UnknownHostException e) {
 					throw new RouterException("Could not create socked to "
 							+ getInternalHostName() + ":" + routerInternalPort,
 							e);
 				}
-				localHostIP = socket.getLocalAddress();
 
 				logger.debug("Got address " + localHostIP + " from socket.");
 			} else {
@@ -109,7 +107,7 @@ public abstract class AbstractRouter implements IRouter {
 						+ " via InetAddress.getLocalHost().");
 			}
 
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new RouterException("Could not get IP of localhost.", e);
 		}
 		return localHostIP;

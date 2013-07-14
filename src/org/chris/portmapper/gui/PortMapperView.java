@@ -77,19 +77,13 @@ public class PortMapperView extends FrameView {
 	private JTable mappingsTable;
 	private JLabel externalIPLabel, internalIPLabel;
 	private JButton connectDisconnectButton;
-	private JList portMappingPresets;
+	private JList<PortMappingPreset> portMappingPresets;
 
-	/**
-	 * @param application
-	 */
 	public PortMapperView() {
 		super(PortMapperApp.getInstance());
 		initView();
 	}
 
-	/**
-	 * 
-	 */
 	private void initView() {
 		// Create and set up the window.
 		final JPanel panel = new JPanel();
@@ -199,7 +193,7 @@ public class PortMapperView extends FrameView {
 				.getResourceMap().getString(
 						"mainFrame.port_mapping_presets.title")));
 
-		portMappingPresets = new JList(new PresetListModel(PortMapperApp
+		portMappingPresets = new JList<>(new PresetListModel(PortMapperApp
 				.getInstance().getSettings()));
 		portMappingPresets
 				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -392,7 +386,7 @@ public class PortMapperView extends FrameView {
 
 	@Action(name = ACTION_USE_PRESET_MAPPING, enabledProperty = PROPERTY_PRESET_MAPPING_SELECTED)
 	public void addPresetMapping() {
-		final PortMappingPreset selectedItem = (PortMappingPreset) this.portMappingPresets
+		final PortMappingPreset selectedItem = this.portMappingPresets
 				.getSelectedValue();
 		if (selectedItem != null) {
 			final String localHostAddress = PortMapperApp.getInstance()
@@ -421,7 +415,7 @@ public class PortMapperView extends FrameView {
 
 	@Action(name = ACTION_EDIT_PRESET_MAPPING, enabledProperty = PROPERTY_PRESET_MAPPING_SELECTED)
 	public void editPresetMapping() {
-		final PortMappingPreset selectedPreset = (PortMappingPreset) this.portMappingPresets
+		final PortMappingPreset selectedPreset = this.portMappingPresets
 				.getSelectedValue();
 		PortMapperApp.getInstance().show(new EditPresetDialog(selectedPreset));
 	}
@@ -434,7 +428,7 @@ public class PortMapperView extends FrameView {
 
 	@Action(name = ACTION_REMOVE_PRESET_MAPPING, enabledProperty = PROPERTY_PRESET_MAPPING_SELECTED)
 	public void removePresetMapping() {
-		final PortMappingPreset selectedPreset = (PortMappingPreset) this.portMappingPresets
+		final PortMappingPreset selectedPreset = this.portMappingPresets
 				.getSelectedValue();
 		PortMapperApp.getInstance().getSettings().removePresets(selectedPreset);
 	}

@@ -11,19 +11,20 @@ import javax.swing.AbstractListModel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.chris.portmapper.Settings;
+import org.chris.portmapper.model.PortMappingPreset;
 
 /**
  * @author chris
  * @version $Id$
  */
-public class PresetListModel extends AbstractListModel implements
-		PropertyChangeListener {
+public class PresetListModel extends AbstractListModel<PortMappingPreset>
+		implements PropertyChangeListener {
 
 	private static final long serialVersionUID = 1L;
 	private final Log logger = LogFactory.getLog(this.getClass());
 	private final Settings settings;
 
-	public PresetListModel(Settings settings) {
+	public PresetListModel(final Settings settings) {
 		super();
 		this.settings = settings;
 		settings.addPropertyChangeListener(
@@ -33,7 +34,7 @@ public class PresetListModel extends AbstractListModel implements
 	/**
 	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
 	 */
-	public void propertyChange(PropertyChangeEvent arg0) {
+	public void propertyChange(final PropertyChangeEvent arg0) {
 		logger.debug("Presets have changed: update list");
 		this.fireContentsChanged(this, 0, settings.getPresets().size() - 1);
 	}
@@ -41,7 +42,7 @@ public class PresetListModel extends AbstractListModel implements
 	/**
 	 * @see javax.swing.ListModel#getElementAt(int)
 	 */
-	public Object getElementAt(int index) {
+	public PortMappingPreset getElementAt(final int index) {
 		return settings.getPresets().get(index);
 	}
 

@@ -54,8 +54,8 @@ public class EditPresetDialog extends JDialog {
 
 	private JTextField remoteHostTextField, internalClientTextField,
 			presetNameTextField;
-	private List<SinglePortMapping> ports;
-	private PropertyChangeSupport propertyChangeSupport;
+	private final List<SinglePortMapping> ports;
+	private final PropertyChangeSupport propertyChangeSupport;
 
 	private JCheckBox useLocalhostCheckBox;
 	private JTable portsTable;
@@ -71,8 +71,8 @@ public class EditPresetDialog extends JDialog {
 			+ ".remove_port";
 	private static final String PROPERTY_PORT_SELECTED = "portSelected";
 
-	private Log logger = LogFactory.getLog(this.getClass());
-	private PortMappingPreset editedPreset;
+	private final Log logger = LogFactory.getLog(this.getClass());
+	private final PortMappingPreset editedPreset;
 
 	private PortsTableModel tableModel;
 
@@ -80,7 +80,7 @@ public class EditPresetDialog extends JDialog {
 	 * 
 	 * @param portMappingPreset
 	 */
-	public EditPresetDialog(PortMappingPreset portMappingPreset) {
+	public EditPresetDialog(final PortMappingPreset portMappingPreset) {
 		super(PortMapperApp.getInstance().getMainFrame(), true);
 		this.editedPreset = portMappingPreset;
 		this.ports = new LinkedList<SinglePortMapping>();
@@ -93,9 +93,9 @@ public class EditPresetDialog extends JDialog {
 
 		// Register an action listener that closes the window when the ESC
 		// button is pressed
-		KeyStroke escKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0,
-				true);
-		ActionListener windowCloseActionListener = new ActionListener() {
+		final KeyStroke escKeyStroke = KeyStroke.getKeyStroke(
+				KeyEvent.VK_ESCAPE, 0, true);
+		final ActionListener windowCloseActionListener = new ActionListener() {
 			public final void actionPerformed(final ActionEvent e) {
 				cancel();
 			}
@@ -108,13 +108,13 @@ public class EditPresetDialog extends JDialog {
 		remoteHostTextField.setText(editedPreset.getRemoteHost());
 		presetNameTextField.setText(editedPreset.getDescription());
 
-		for (SinglePortMapping port : editedPreset.getPorts()) {
+		for (final SinglePortMapping port : editedPreset.getPorts()) {
 			this.ports.add((SinglePortMapping) port.clone());
 		}
 
-		boolean useLocalhost = (editedPreset.getInternalClient() == null);
+		final boolean useLocalhost = (editedPreset.getInternalClient() == null);
 
-		String localhostAddress = PortMapperApp.getInstance()
+		final String localhostAddress = PortMapperApp.getInstance()
 				.getLocalHostAddress();
 
 		if (useLocalhost && localhostAddress == null) {
@@ -130,17 +130,17 @@ public class EditPresetDialog extends JDialog {
 		}
 	}
 
-	private static JLabel createLabel(String name) {
-		JLabel newLabel = new JLabel(name);
+	private static JLabel createLabel(final String name) {
+		final JLabel newLabel = new JLabel(name);
 		newLabel.setName(name);
 		return newLabel;
 	}
 
 	private void initComponents() {
-		ActionMap actionMap = PortMapperApp.getInstance().getContext()
+		final ActionMap actionMap = PortMapperApp.getInstance().getContext()
 				.getActionMap(this.getClass(), this);
 
-		JPanel dialogPane = new JPanel(new MigLayout("", // Layout
+		final JPanel dialogPane = new JPanel(new MigLayout("", // Layout
 				// Constraints
 				"[right]rel[left,grow 100]", // Column Constraints
 				"")); // Row Constraints
@@ -164,7 +164,7 @@ public class EditPresetDialog extends JDialog {
 		useLocalhostCheckBox
 				.setName("preset_dialog.internal_client_use_local_host");
 		useLocalhostCheckBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(final ActionEvent arg0) {
 				internalClientTextField.setEnabled(!useLocalhostCheckBox
 						.isSelected());
 				if (useLocalhostCheckBox.isSelected()) {
@@ -178,7 +178,7 @@ public class EditPresetDialog extends JDialog {
 
 		// Check if the local host address can be retrieved
 
-		String localHostAddress = PortMapperApp.getInstance()
+		final String localHostAddress = PortMapperApp.getInstance()
 				.getLocalHostAddress();
 
 		if (localHostAddress != null) {
@@ -204,7 +204,7 @@ public class EditPresetDialog extends JDialog {
 
 		dialogPane.add(new JButton(actionMap.get(ACTION_CANCEL)),
 				"tag cancel, span 2");
-		JButton okButton = new JButton(actionMap.get(ACTION_SAVE));
+		final JButton okButton = new JButton(actionMap.get(ACTION_SAVE));
 		dialogPane.add(okButton, "tag ok, wrap");
 
 		setContentPane(dialogPane);
@@ -231,12 +231,12 @@ public class EditPresetDialog extends JDialog {
 				.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		portsTable.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
-					public void valueChanged(ListSelectionEvent e) {
+					public void valueChanged(final ListSelectionEvent e) {
 						firePropertyChange(PROPERTY_PORT_SELECTED, false,
 								isPortSelected());
 					}
 				});
-		JComboBox protocolComboBox = new JComboBox();
+		final JComboBox<Protocol> protocolComboBox = new JComboBox<>();
 		protocolComboBox.addItem(Protocol.TCP);
 		protocolComboBox.addItem(Protocol.UDP);
 		portsTable.getColumnModel().getColumn(0)
@@ -262,7 +262,7 @@ public class EditPresetDialog extends JDialog {
 		return portsPanel;
 	}
 
-	protected void presetSelected(PortMapping item) {
+	protected void presetSelected(final PortMapping item) {
 		this.presetNameTextField.setText(item.getDescription());
 		this.remoteHostTextField.setText(item.getRemoteHost());
 		// this.externalPortSpinner.setValue(item.getExternalPort());
@@ -338,7 +338,7 @@ public class EditPresetDialog extends JDialog {
 
 		// Check, if a preset with the same name already exists.
 		final Settings settings = PortMapperApp.getInstance().getSettings();
-		for (PortMappingPreset preset : settings.getPresets()) {
+		for (final PortMappingPreset preset : settings.getPresets()) {
 			if (preset != editedPreset && preset.getDescription() != null
 					&& preset.getDescription().equals(name)) {
 				showErrorMessage("preset_dialog.error.title",
@@ -376,7 +376,7 @@ public class EditPresetDialog extends JDialog {
 		this.dispose();
 	}
 
-	private void showErrorMessage(String titleKey, String messageKey) {
+	private void showErrorMessage(final String titleKey, final String messageKey) {
 		final ResourceMap resourceMap = PortMapperApp.getResourceMap();
 		JOptionPane.showMessageDialog(this, resourceMap.getString(messageKey),
 				resourceMap.getString(titleKey), JOptionPane.ERROR_MESSAGE);
