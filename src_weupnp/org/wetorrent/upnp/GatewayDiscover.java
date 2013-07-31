@@ -43,7 +43,7 @@ public class GatewayDiscover {
 	private static final int PORT = 1900;
 	private final String IP = "239.255.255.250";
 
-	private final Map<InetAddress, GatewayDevice> devices = new HashMap<InetAddress, GatewayDevice>();
+	private final Map<InetAddress, GatewayDevice> devices = new HashMap<>();
 
 	public GatewayDiscover() {
 	}
@@ -54,9 +54,9 @@ public class GatewayDiscover {
 		try {
 			// try binding using the default port
 			ssdp = new DatagramSocket(PORT);
-		} catch (BindException be) {
+		} catch (final BindException be) {
 			// could not bind to the default port
-		} catch (SocketException e) {
+		} catch (final SocketException e) {
 			throw new WeUPnPException("Error discovering gateway devices", e);
 		}
 		try {
@@ -64,23 +64,23 @@ public class GatewayDiscover {
 				// let the JVM choose an available port
 				ssdp = new DatagramSocket();
 			}
-		} catch (SocketException e) {
+		} catch (final SocketException e) {
 			throw new WeUPnPException("Error discovering gateway devices", e);
 		}
 
-		int port = ssdp.getLocalPort();
+		final int port = ssdp.getLocalPort();
 
 		final String searchMessage = "M-SEARCH * HTTP/1.1\r\n" + "HOST: " + IP
 				+ ":" + port + "\r\n" + "ST: "
 				+ "urn:schemas-upnp-org:device:InternetGatewayDevice:1"
 				+ "\r\n" + "MAN: \"ssdp:discover\"\r\n" + "MX: 2\r\n" + "\r\n";
 		try {
-			byte[] searchMessageBytes = searchMessage.getBytes();
-			DatagramPacket ssdpDiscoverPacket = new DatagramPacket(
+			final byte[] searchMessageBytes = searchMessage.getBytes();
+			final DatagramPacket ssdpDiscoverPacket = new DatagramPacket(
 					searchMessageBytes, searchMessageBytes.length);
 			try {
 				ssdpDiscoverPacket.setAddress(InetAddress.getByName(IP));
-			} catch (UnknownHostException e1) {
+			} catch (final UnknownHostException e1) {
 				throw new WeUPnPException("Error resolving host with name "
 						+ IP, e1);
 			}
@@ -92,31 +92,33 @@ public class GatewayDiscover {
 			boolean waitingPacket = true;
 
 			while (waitingPacket) {
-				DatagramPacket receivePacket = new DatagramPacket(
+				final DatagramPacket receivePacket = new DatagramPacket(
 						new byte[1536], 1536);
 				try {
 					ssdp.receive(receivePacket);
-					InetAddress localAddress = receivePacket.getAddress();
-					byte[] receivedData = new byte[receivePacket.getLength()];
+					final InetAddress localAddress = receivePacket.getAddress();
+					final byte[] receivedData = new byte[receivePacket
+							.getLength()];
 					System.arraycopy(receivePacket.getData(), 0, receivedData,
 							0, receivePacket.getLength());
 
-					GatewayDevice d = parseMSearchReplay(receivedData);
+					final GatewayDevice d = parseMSearchReplay(receivedData);
 
 					d.setLocalAddress(localAddress);
 					devices.put(localAddress, d);
-				} catch (SocketTimeoutException ste) {
+				} catch (final SocketTimeoutException ste) {
 					waitingPacket = false;
 				}
 			}
 
-			for (GatewayDevice device : devices.values()) {
+			for (final GatewayDevice device : devices.values()) {
 				try {
 					device.loadDescription();
-				} catch (Exception e) {
+				} catch (final Exception e) {
+					// ignore
 				}
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new WeUPnPException("Error discovering gateway devices", e);
 		} finally {
 			ssdp.close();
@@ -124,17 +126,17 @@ public class GatewayDiscover {
 		return devices;
 	}
 
-	private GatewayDevice parseMSearchReplay(byte[] reply)
+	private GatewayDevice parseMSearchReplay(final byte[] reply)
 			throws WeUPnPException {
 
-		GatewayDevice device = new GatewayDevice();
+		final GatewayDevice device = new GatewayDevice();
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(
+		final BufferedReader br = new BufferedReader(new InputStreamReader(
 				new ByteArrayInputStream(reply)));
 		String line = null;
 		try {
 			line = br.readLine().trim();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new WeUPnPException("Error reading search replay", e);
 		}
 
@@ -156,7 +158,8 @@ public class GatewayDiscover {
 			}
 			try {
 				line = br.readLine().trim();
-			} catch (IOException ex) {
+			} catch (final IOException ex) {
+				// ignore
 			}
 		}
 
@@ -168,7 +171,7 @@ public class GatewayDiscover {
 		if (devices.isEmpty()) {
 			throw new WeUPnPException("Did not find any gateways");
 		}
-		for (GatewayDevice device : devices.values()) {
+		for (final GatewayDevice device : devices.values()) {
 			if (device.isConnected())
 				return device;
 		}

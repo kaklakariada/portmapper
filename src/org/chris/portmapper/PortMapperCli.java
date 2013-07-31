@@ -1,6 +1,5 @@
 package org.chris.portmapper;
 
-import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
 import java.util.Iterator;
@@ -104,12 +103,12 @@ public class PortMapperCli {
 		upnpLib.setArgName("class name");
 		upnpLib.setType(String.class);
 
-		final Option routerIndex = new Option(ROUTER_INDEX_OPTION,
+		final Option routerIndexOption = new Option(ROUTER_INDEX_OPTION,
 				useLongOpts ? "index" : null, true,
 				"Router index (if more than one is found)");
-		routerIndex.setArgs(1);
-		routerIndex.setArgName("index");
-		routerIndex.setType(Integer.class);
+		routerIndexOption.setArgs(1);
+		routerIndexOption.setArgName("index");
+		routerIndexOption.setType(Integer.class);
 
 		final OptionGroup optionGroup = new OptionGroup();
 		optionGroup.setRequired(false);
@@ -121,13 +120,12 @@ public class PortMapperCli {
 		optionGroup.addOption(list);
 		optionGroup.addOption(status);
 
-		// create Options object
-		final Options options = new Options();
-		options.addOption(upnpLib);
-		options.addOption(routerIndex);
-		options.addOptionGroup(optionGroup);
+		final Options allOptions = new Options();
+		allOptions.addOption(upnpLib);
+		allOptions.addOption(routerIndexOption);
+		allOptions.addOptionGroup(optionGroup);
 
-		return options;
+		return allOptions;
 	}
 
 	/**
@@ -310,7 +308,6 @@ public class PortMapperCli {
 
 		final String description = "PortMapper " + protocol + "/"
 				+ internalClient + ":" + internalPort;
-		;
 		final PortMapping mapping = new PortMapping(protocol, remoteHost,
 				externalPort, internalClient, internalPort, description);
 		logger.info("Adding mapping " + mapping);
@@ -352,6 +349,7 @@ public class PortMapperCli {
 					.hasOption(DELETE_OPTION));
 	}
 
+	@SuppressWarnings("resource")
 	private void initDummyLogAppender() {
 		final WriterAppender writerAppender = (WriterAppender) Logger
 				.getLogger("org.chris.portmapper").getAppender("jtextarea");
@@ -371,16 +369,18 @@ public class PortMapperCli {
 
 	private static class DummyWriter extends Writer {
 		@Override
-		public void close() throws IOException {
+		public void close() {
+			// ignore
 		}
 
 		@Override
-		public void flush() throws IOException {
+		public void flush() {
+			// ignore
 		}
 
 		@Override
-		public void write(final char[] cbuf, final int off, final int len)
-				throws IOException {
+		public void write(final char[] cbuf, final int off, final int len) {
+			// ignore
 		}
 	}
 

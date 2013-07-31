@@ -31,24 +31,18 @@ public class PresetListModel extends AbstractListModel<PortMappingPreset>
 				Settings.PROPERTY_PORT_MAPPING_PRESETS, this);
 	}
 
-	/**
-	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
-	 */
+	@Override
 	public void propertyChange(final PropertyChangeEvent arg0) {
 		logger.debug("Presets have changed: update list");
 		this.fireContentsChanged(this, 0, settings.getPresets().size() - 1);
 	}
 
-	/**
-	 * @see javax.swing.ListModel#getElementAt(int)
-	 */
+	@Override
 	public PortMappingPreset getElementAt(final int index) {
 		return settings.getPresets().get(index);
 	}
 
-	/**
-	 * @see javax.swing.ListModel#getSize()
-	 */
+	@Override
 	public int getSize() {
 		if (settings == null || settings.getPresets() == null) {
 			return 0;

@@ -50,6 +50,7 @@ public class SBBIRouter extends AbstractRouter {
 		this.router = router;
 	}
 
+	@Override
 	public String getExternalIPAddress() throws RouterException {
 		logger.debug("Get external IP address...");
 		String ipAddress;
@@ -64,6 +65,7 @@ public class SBBIRouter extends AbstractRouter {
 		return ipAddress;
 	}
 
+	@Override
 	public String getInternalHostName() {
 		logger.debug("Get internal IP address...");
 		final URL presentationURL = router.getIGDRootDevice()
@@ -77,6 +79,7 @@ public class SBBIRouter extends AbstractRouter {
 		return ipAddress;
 	}
 
+	@Override
 	public int getInternalPort() {
 		logger.debug("Get internal port of router...");
 		final URL presentationURL = router.getIGDRootDevice()
@@ -106,6 +109,7 @@ public class SBBIRouter extends AbstractRouter {
 		return urlBasePort;
 	}
 
+	@Override
 	public Collection<PortMapping> getPortMappings() throws RouterException {
 		return new PortMappingExtractor(router, MAX_NUM_PORTMAPPINGS)
 				.getPortMappings();
@@ -116,8 +120,9 @@ public class SBBIRouter extends AbstractRouter {
 	 * 
 	 * @see org.chris.portmapper.router.IRouter#logRouterInfo()
 	 */
+	@Override
 	public void logRouterInfo() throws RouterException {
-		final Map<String, String> info = new HashMap<String, String>();
+		final Map<String, String> info = new HashMap<>();
 		final UPNPRootDevice rootDevice = router.getIGDRootDevice();
 		info.put("friendlyName", rootDevice.getFriendlyName());
 		info.put("manufacturer", rootDevice.getManufacturer());
@@ -135,7 +140,7 @@ public class SBBIRouter extends AbstractRouter {
 						.getPresentationURL().toExternalForm() : null);
 		info.put("urlBase", rootDevice.getURLBase().toExternalForm());
 
-		final SortedSet<String> sortedKeys = new TreeSet<String>(info.keySet());
+		final SortedSet<String> sortedKeys = new TreeSet<>(info.keySet());
 
 		for (final String key : sortedKeys) {
 			final String value = info.get(key);
@@ -179,6 +184,7 @@ public class SBBIRouter extends AbstractRouter {
 		}
 	}
 
+	@Override
 	public void addPortMappings(final Collection<PortMapping> mappings)
 			throws RouterException {
 		for (final PortMapping portMapping : mappings) {
@@ -187,6 +193,7 @@ public class SBBIRouter extends AbstractRouter {
 		}
 	}
 
+	@Override
 	public void addPortMapping(final PortMapping mapping)
 			throws RouterException {
 		logger.info("Adding port mapping " + mapping.getCompleteDescription());
@@ -195,11 +202,13 @@ public class SBBIRouter extends AbstractRouter {
 				mapping.getInternalClient(), mapping.getInternalPort(), 0);
 	}
 
+	@Override
 	public void removeMapping(final PortMapping mapping) throws RouterException {
 		removePortMapping(mapping.getProtocol(), mapping.getRemoteHost(),
 				mapping.getExternalPort());
 	}
 
+	@Override
 	public void removePortMapping(final Protocol protocol,
 			final String remoteHost, final int externalPort)
 			throws RouterException {
@@ -214,11 +223,12 @@ public class SBBIRouter extends AbstractRouter {
 		}
 	}
 
+	@Override
 	public void disconnect() {
 		// Nothing to do right now.
 	}
 
-	public long getUpTime() throws RouterException {
+	public long getUpTime() {
 		// The SBBI library does not provide a method for getting the uptime.
 		return 0;
 	}

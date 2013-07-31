@@ -36,13 +36,8 @@ public class LogTextArea extends JTextArea implements LogMessageListener {
 		setLineWrap(false);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seede.ursusminor.tasklist.web.standalone.logging.LogMessageListener#
-	 * addLogMessage(java.lang.String)
-	 */
-	public void addLogMessage(String message) {
+	@Override
+	public void addLogMessage(final String message) {
 		this.append(message);
 		this.setCaretPosition(this.getDocument().getLength());
 	}

@@ -42,20 +42,22 @@ public class LogMessageWriter extends Writer {
 	 * registered, so that all added text is stored in a buffer.
 	 */
 	public LogMessageWriter() {
-		unprocessedMessagesBuffer = new LinkedList<String>();
+		unprocessedMessagesBuffer = new LinkedList<>();
 	}
 
 	@Override
 	public void close() {
+		// ignore
 	}
 
 	@Override
 	public void flush() {
+		// ignore
 	}
 
 	@Override
-	public void write(char[] cbuf, int off, int len) {
-		String line = new String(cbuf, off, len);
+	public void write(final char[] cbuf, final int off, final int len) {
+		final String line = new String(cbuf, off, len);
 		addMessage(line);
 	}
 
@@ -68,7 +70,7 @@ public class LogMessageWriter extends Writer {
 	 * @param message
 	 *            the message to append.
 	 */
-	public void addMessage(String message) {
+	public void addMessage(final String message) {
 		if (this.logListener != null) {
 			this.logListener.addLogMessage(message);
 		} else {
@@ -84,11 +86,11 @@ public class LogMessageWriter extends Writer {
 	 * @param textArea
 	 *            the text area to wich to append the strings.
 	 */
-	public void registerListener(LogMessageListener textArea) {
+	public void registerListener(final LogMessageListener textArea) {
 		this.logListener = textArea;
 
 		// append the buffered text to the text area.
-		for (String line : unprocessedMessagesBuffer) {
+		for (final String line : unprocessedMessagesBuffer) {
 			this.logListener.addLogMessage(line);
 		}
 		// we do not need the buffer any more, all text will be appended

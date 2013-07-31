@@ -83,7 +83,7 @@ public class EditPresetDialog extends JDialog {
 	public EditPresetDialog(final PortMappingPreset portMappingPreset) {
 		super(PortMapperApp.getInstance().getMainFrame(), true);
 		this.editedPreset = portMappingPreset;
-		this.ports = new LinkedList<SinglePortMapping>();
+		this.ports = new LinkedList<>();
 		this.setName(DIALOG_NAME);
 		initComponents();
 		copyValuesFromPreset();
@@ -96,6 +96,7 @@ public class EditPresetDialog extends JDialog {
 		final KeyStroke escKeyStroke = KeyStroke.getKeyStroke(
 				KeyEvent.VK_ESCAPE, 0, true);
 		final ActionListener windowCloseActionListener = new ActionListener() {
+			@Override
 			public final void actionPerformed(final ActionEvent e) {
 				cancel();
 			}
@@ -164,6 +165,7 @@ public class EditPresetDialog extends JDialog {
 		useLocalhostCheckBox
 				.setName("preset_dialog.internal_client_use_local_host");
 		useLocalhostCheckBox.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(final ActionEvent arg0) {
 				internalClientTextField.setEnabled(!useLocalhostCheckBox
 						.isSelected());
@@ -231,6 +233,7 @@ public class EditPresetDialog extends JDialog {
 				.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		portsTable.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
+					@Override
 					public void valueChanged(final ListSelectionEvent e) {
 						firePropertyChange(PROPERTY_PORT_SELECTED, false,
 								isPortSelected());
@@ -241,16 +244,6 @@ public class EditPresetDialog extends JDialog {
 		protocolComboBox.addItem(Protocol.UDP);
 		portsTable.getColumnModel().getColumn(0)
 				.setCellEditor(new DefaultCellEditor(protocolComboBox));
-
-		// portsTable.getColumnModel().getColumn(1).setCellEditor(
-		// new SpinnerCellEditor(1, 1, 65535, 1));
-		// portsTable.getColumnModel().getColumn(2).setCellEditor(
-		// new SpinnerCellEditor(1, 1, 65535, 1));
-
-		// portsTable.getColumnModel().getColumn(1).setCellEditor(
-		// new TextNumberCellEditor(1, 5));
-		// portsTable.getColumnModel().getColumn(2).setCellEditor(
-		// new TextNumberCellEditor(1, 5));
 
 		portsPanel.add(new JScrollPane(portsTable), "spany 3");
 

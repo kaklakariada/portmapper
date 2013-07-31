@@ -238,7 +238,7 @@ public class GatewayDevice {
 			final int internalPort, final String internalClient,
 			final String protocol, final String description)
 			throws WeUPnPException {
-		final Map<String, String> args = new HashMap<String, String>();
+		final Map<String, String> args = new HashMap<>();
 		args.put("NewRemoteHost", "");
 		args.put("NewExternalPort", Integer.toString(externalPort));
 		args.put("NewProtocol", protocol);
@@ -260,7 +260,7 @@ public class GatewayDevice {
 		portMappingEntry.setExternalPort(externalPort);
 		portMappingEntry.setProtocol(protocol);
 
-		final Map<String, String> args = new HashMap<String, String>();
+		final Map<String, String> args = new HashMap<>();
 		args.put("NewRemoteHost", "");
 		args.put("NewExternalPort", Integer.toString(externalPort));
 		args.put("NewProtocol", protocol);
@@ -292,7 +292,7 @@ public class GatewayDevice {
 
 	public PortMappingEntry getGenericPortMappingEntry(final int index)
 			throws WeUPnPException {
-		final Map<String, String> args = new HashMap<String, String>();
+		final Map<String, String> args = new HashMap<>();
 		args.put("NewPortMappingIndex", Integer.toString(index));
 
 		final Map<String, String> nameValue = simpleUPnPcommand(controlURL,
@@ -362,7 +362,7 @@ public class GatewayDevice {
 
 	public boolean deletePortMapping(final int externalPort,
 			final String protocol) throws WeUPnPException {
-		final Map<String, String> args = new HashMap<String, String>();
+		final Map<String, String> args = new HashMap<>();
 		args.put("NewRemoteHost", "");
 		args.put("NewExternalPort", Integer.toString(externalPort));
 		args.put("NewProtocol", protocol);

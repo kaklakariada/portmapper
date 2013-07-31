@@ -66,10 +66,12 @@ public class PortMapperApp extends SingleFrameApplication {
 
 		final PortMapperView view = new PortMapperView();
 		addExitListener(new ExitListener() {
+			@Override
 			public boolean canExit(final EventObject arg0) {
 				return true;
 			}
 
+			@Override
 			public void willExit(final EventObject arg0) {
 				disconnectRouter();
 			}
@@ -203,7 +205,7 @@ public class PortMapperApp extends SingleFrameApplication {
 		}
 	}
 
-	public static PortMapperApp getInstance() {
+	public static synchronized PortMapperApp getInstance() {
 		return SingleFrameApplication.getInstance(PortMapperApp.class);
 	}
 

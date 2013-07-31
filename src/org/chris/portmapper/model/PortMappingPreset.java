@@ -48,11 +48,10 @@ public class PortMappingPreset implements Cloneable, Serializable {
 	 */
 	public PortMappingPreset(final String remoteHost,
 			final String internalClient, final String description) {
-		super();
 		this.remoteHost = remoteHost;
 		this.internalClient = internalClient;
 		this.description = description;
-		this.ports = new LinkedList<SinglePortMapping>();
+		this.ports = new LinkedList<>();
 
 		this.isNew = false;
 	}
@@ -61,7 +60,7 @@ public class PortMappingPreset implements Cloneable, Serializable {
 	 * Creates a new empty preset.
 	 */
 	public PortMappingPreset() {
-		ports = new LinkedList<SinglePortMapping>();
+		this.ports = new LinkedList<>();
 		this.isNew = true;
 	}
 
@@ -77,7 +76,7 @@ public class PortMappingPreset implements Cloneable, Serializable {
 					"Got invalid localhost and internal host is not given.");
 		}
 
-		final List<PortMapping> allPortMappings = new ArrayList<PortMapping>(
+		final List<PortMapping> allPortMappings = new ArrayList<>(
 				this.ports.size());
 		for (final SinglePortMapping port : this.ports) {
 			final String internalClientName = this

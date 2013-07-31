@@ -43,6 +43,7 @@ public class WeUPnPRouter extends AbstractRouter {
 		this.device = device;
 	}
 
+	@Override
 	public void addPortMapping(final PortMapping mapping)
 			throws RouterException {
 		try {
@@ -54,6 +55,7 @@ public class WeUPnPRouter extends AbstractRouter {
 		}
 	}
 
+	@Override
 	public void addPortMappings(final Collection<PortMapping> mappings)
 			throws RouterException {
 		for (final PortMapping mapping : mappings) {
@@ -61,10 +63,12 @@ public class WeUPnPRouter extends AbstractRouter {
 		}
 	}
 
+	@Override
 	public void disconnect() {
 		// noting to do right now
 	}
 
+	@Override
 	public String getExternalIPAddress() throws RouterException {
 		try {
 			return device.getExternalIPAddress();
@@ -73,6 +77,7 @@ public class WeUPnPRouter extends AbstractRouter {
 		}
 	}
 
+	@Override
 	public String getInternalHostName() {
 		final String url = device.getPresentationURL();
 		if (url == null || url.trim().length() == 0) {
@@ -87,6 +92,7 @@ public class WeUPnPRouter extends AbstractRouter {
 		}
 	}
 
+	@Override
 	public int getInternalPort() throws RouterException {
 		String url = device.getPresentationURL();
 		if (url == null) {
@@ -105,8 +111,9 @@ public class WeUPnPRouter extends AbstractRouter {
 		}
 	}
 
+	@Override
 	public Collection<PortMapping> getPortMappings() throws RouterException {
-		final Collection<PortMapping> mappings = new LinkedList<PortMapping>();
+		final Collection<PortMapping> mappings = new LinkedList<>();
 		boolean morePortMappings = true;
 		int index = 0;
 		while (morePortMappings) {
@@ -138,13 +145,14 @@ public class WeUPnPRouter extends AbstractRouter {
 		return mappings;
 	}
 
+	@Override
 	public void logRouterInfo() throws RouterException {
-		final Map<String, String> info = new HashMap<String, String>();
+		final Map<String, String> info = new HashMap<>();
 		info.put("friendlyName", device.getFriendlyName());
 		info.put("manufacturer", device.getManufacturer());
 		info.put("modelDescription", device.getModelDescription());
 
-		final SortedSet<String> sortedKeys = new TreeSet<String>(info.keySet());
+		final SortedSet<String> sortedKeys = new TreeSet<>(info.keySet());
 
 		for (final String key : sortedKeys) {
 			final String value = info.get(key);
@@ -155,11 +163,13 @@ public class WeUPnPRouter extends AbstractRouter {
 		logger.info("device type " + device.getDeviceType());
 	}
 
+	@Override
 	public void removeMapping(final PortMapping mapping) throws RouterException {
 		this.removePortMapping(mapping.getProtocol(), mapping.getRemoteHost(),
 				mapping.getExternalPort());
 	}
 
+	@Override
 	public void removePortMapping(final Protocol protocol,
 			final String remoteHost, final int externalPort)
 			throws RouterException {

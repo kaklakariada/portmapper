@@ -73,6 +73,7 @@ public class SettingsDialog extends JDialog {
 		final KeyStroke escKeyStroke = KeyStroke.getKeyStroke(
 				KeyEvent.VK_ESCAPE, 0, true);
 		final ActionListener windowCloseActionListener = new ActionListener() {
+			@Override
 			public final void actionPerformed(final ActionEvent e) {
 				cancel();
 			}

@@ -96,6 +96,7 @@ public class PortMapperApplet extends JApplet {
 		final JButton connectButton = new JButton("Connect");
 		connectButton.setEnabled(permissionsGranted);
 		connectButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(final ActionEvent event) {
 				final AbstractRouterFactory routerFactory = (AbstractRouterFactory) factoryComboBox
 						.getSelectedItem();
@@ -106,6 +107,7 @@ public class PortMapperApplet extends JApplet {
 		final JButton addPortMappingButton = new JButton("Add port mapping");
 		addPortMappingButton.setEnabled(permissionsGranted);
 		addPortMappingButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(final ActionEvent e) {
 				addPortMapping();
 			}
@@ -168,20 +170,19 @@ public class PortMapperApplet extends JApplet {
 		final Collection<IRouter> routers;
 		try {
 			routers = routerFactory.findRouters();
-			logMessage("Found " + routers.size() + " router.");
 		} catch (final RouterException e) {
 			logMessage("Failed to connect", e);
 			return;
 		}
+		logMessage("Found " + routers.size() + " router.");
 
-		if (routers == null || routers.size() == 0) {
+		if (routers.size() == 0) {
 			logMessage("Found no routers");
 			return;
 		}
 
 		router = routers.iterator().next();
 		logMessage("Connected to " + router.getName());
-
 	}
 
 	/**

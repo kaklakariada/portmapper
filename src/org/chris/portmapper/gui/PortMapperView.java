@@ -138,13 +138,11 @@ public class PortMapperView extends FrameView {
 
 		this.addPropertyChangeListener(new PropertyChangeListener() {
 
+			@Override
 			public void propertyChange(final PropertyChangeEvent evt) {
 				if (evt.getPropertyName().equals(PROPERTY_ROUTER_CONNECTED)) {
 					logger.debug("Connection state changed to "
 							+ evt.getNewValue());
-					final ActionMap actionMap = getContext().getActionMap(
-							PortMapperApp.getInstance().getView().getClass(),
-							PortMapperApp.getInstance().getView());
 
 					if (evt.getNewValue().equals(Boolean.TRUE)) {
 						connectDisconnectButton.setAction(actionMap
@@ -201,6 +199,7 @@ public class PortMapperView extends FrameView {
 
 		portMappingPresets
 				.addListSelectionListener(new ListSelectionListener() {
+					@Override
 					public void valueChanged(final ListSelectionEvent e) {
 						logger.trace("Selection of preset list has changed: "
 								+ isPresetMappingSelected());
@@ -239,6 +238,7 @@ public class PortMapperView extends FrameView {
 		mappingsTable.setSize(new Dimension(400, 100));
 		mappingsTable.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
+					@Override
 					public void valueChanged(final ListSelectionEvent e) {
 						firePropertyChange(PROPERTY_MAPPING_SELECTED, false,
 								isMappingSelected());
@@ -461,7 +461,7 @@ public class PortMapperView extends FrameView {
 		if (selectedRows == null || selectedRows.length == 0) {
 			return Collections.emptyList();
 		}
-		final Collection<PortMapping> selectedMappings = new ArrayList<PortMapping>(
+		final Collection<PortMapping> selectedMappings = new ArrayList<>(
 				selectedRows.length);
 		for (final int rowIndex : selectedRows) {
 			if (rowIndex >= 0) {
@@ -484,7 +484,8 @@ public class PortMapperView extends FrameView {
 				.getSystemClipboard();
 		logger.trace("Copy text '" + text + "' to clipbord");
 		clipboard.setContents(new StringSelection(text), new ClipboardOwner() {
-			public void lostOwnership(final Clipboard clipboard,
+			@Override
+			public void lostOwnership(final Clipboard clip,
 					final Transferable contents) {
 				logger.trace("Lost clipboard ownership");
 			}

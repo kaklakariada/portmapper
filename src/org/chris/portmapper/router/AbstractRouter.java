@@ -27,9 +27,7 @@ public abstract class AbstractRouter implements IRouter {
 		this.name = name;
 	}
 
-	/**
-	 * @return the name
-	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -37,14 +35,11 @@ public abstract class AbstractRouter implements IRouter {
 	/**
 	 * Get the the ip of the local host.
 	 */
+	@Override
 	public String getLocalHostAddress() throws RouterException {
 		logger.debug("Get IP of localhost");
 
-		InetAddress localHostIP = null;
-
-		if (localHostIP == null) {
-			localHostIP = getLocalHostAddressFromSocket();
-		}
+		final InetAddress localHostIP = getLocalHostAddressFromSocket();
 
 		// We do not want an address like 127.0.0.1
 		if (localHostIP.getHostAddress().startsWith("127.")) {

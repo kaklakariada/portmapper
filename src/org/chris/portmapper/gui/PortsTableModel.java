@@ -23,30 +23,24 @@ public class PortsTableModel extends AbstractTableModel implements
 	private static final long serialVersionUID = 1L;
 	private final List<SinglePortMapping> ports;
 
-	public PortsTableModel(List<SinglePortMapping> ports) {
+	public PortsTableModel(final List<SinglePortMapping> ports) {
 		super();
 		this.ports = ports;
 	}
 
-	/**
-	 * @see javax.swing.table.TableModel#getColumnCount()
-	 */
+	@Override
 	public int getColumnCount() {
 		return 3;
 	}
 
-	/**
-	 * @see javax.swing.table.TableModel#getRowCount()
-	 */
+	@Override
 	public int getRowCount() {
 		return ports.size();
 	}
 
-	/**
-	 * @see javax.swing.table.TableModel#getValueAt(int, int)
-	 */
-	public Object getValueAt(int rowIndex, int columnIndex) {
-		SinglePortMapping port = ports.get(rowIndex);
+	@Override
+	public Object getValueAt(final int rowIndex, final int columnIndex) {
+		final SinglePortMapping port = ports.get(rowIndex);
 		switch (columnIndex) {
 		case 0:
 			return port.getProtocol();
@@ -61,7 +55,7 @@ public class PortsTableModel extends AbstractTableModel implements
 	}
 
 	@Override
-	public Class<?> getColumnClass(int columnIndex) {
+	public Class<?> getColumnClass(final int columnIndex) {
 		switch (columnIndex) {
 		case 0:
 			return Protocol.class;
@@ -76,7 +70,7 @@ public class PortsTableModel extends AbstractTableModel implements
 	}
 
 	@Override
-	public String getColumnName(int column) {
+	public String getColumnName(final int column) {
 		switch (column) {
 		case 0:
 			return PortMapperApp.getResourceMap().getString(
@@ -94,13 +88,14 @@ public class PortsTableModel extends AbstractTableModel implements
 	}
 
 	@Override
-	public boolean isCellEditable(int rowIndex, int columnIndex) {
+	public boolean isCellEditable(final int rowIndex, final int columnIndex) {
 		return true;
 	}
 
 	@Override
-	public void setValueAt(Object value, int rowIndex, int columnIndex) {
-		SinglePortMapping port = ports.get(rowIndex);
+	public void setValueAt(final Object value, final int rowIndex,
+			final int columnIndex) {
+		final SinglePortMapping port = ports.get(rowIndex);
 		switch (columnIndex) {
 		case 0:
 			port.setProtocol((Protocol) value);
@@ -117,10 +112,8 @@ public class PortsTableModel extends AbstractTableModel implements
 		}
 	}
 
-	/**
-	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
-	 */
-	public void propertyChange(PropertyChangeEvent evt) {
+	@Override
+	public void propertyChange(final PropertyChangeEvent evt) {
 		this.fireTableDataChanged();
 	}
 }
