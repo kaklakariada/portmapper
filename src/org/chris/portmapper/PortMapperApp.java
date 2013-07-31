@@ -52,9 +52,6 @@ public class PortMapperApp extends SingleFrameApplication {
 	private Settings settings;
 	private LogMessageWriter logWriter;
 
-	/**
-	 * @see org.jdesktop.application.Application#startup()
-	 */
 	@Override
 	protected void startup() {
 
@@ -64,7 +61,7 @@ public class PortMapperApp extends SingleFrameApplication {
 
 		loadSettings();
 
-		final PortMapperView view = new PortMapperView();
+		final PortMapperView view = new PortMapperView(this);
 		addExitListener(new ExitListener() {
 			@Override
 			public boolean canExit(final EventObject arg0) {
@@ -205,6 +202,7 @@ public class PortMapperApp extends SingleFrameApplication {
 		}
 	}
 
+	@Deprecated
 	public static synchronized PortMapperApp getInstance() {
 		return SingleFrameApplication.getInstance(PortMapperApp.class);
 	}

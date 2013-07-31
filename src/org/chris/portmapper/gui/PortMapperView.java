@@ -78,9 +78,11 @@ public class PortMapperView extends FrameView {
 	private JLabel externalIPLabel, internalIPLabel;
 	private JButton connectDisconnectButton;
 	private JList<PortMappingPreset> portMappingPresets;
+	private final PortMapperApp app;
 
-	public PortMapperView() {
-		super(PortMapperApp.getInstance());
+	public PortMapperView(final PortMapperApp app) {
+		super(app);
+		this.app = app;
 		initView();
 	}
 
@@ -167,7 +169,7 @@ public class PortMapperView extends FrameView {
 		logTextArea.setWrapStyleWord(true);
 		logTextArea.setLineWrap(true);
 
-		PortMapperApp.getInstance().setLogMessageListener(logTextArea);
+		app.setLogMessageListener(logTextArea);
 
 		final JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setViewportView(logTextArea);
@@ -191,8 +193,7 @@ public class PortMapperView extends FrameView {
 				.getResourceMap().getString(
 						"mainFrame.port_mapping_presets.title")));
 
-		portMappingPresets = new JList<>(new PresetListModel(PortMapperApp
-				.getInstance().getSettings()));
+		portMappingPresets = new JList<>(new PresetListModel(app.getSettings()));
 		portMappingPresets
 				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		portMappingPresets.setLayoutOrientation(JList.VERTICAL);
@@ -267,7 +268,7 @@ public class PortMapperView extends FrameView {
 
 	@Action(name = ACTION_UPDATE_ADDRESSES, enabledProperty = PROPERTY_ROUTER_CONNECTED)
 	public void updateAddresses() {
-		final IRouter router = PortMapperApp.getInstance().getRouter();
+		final IRouter router = app.getRouter();
 		if (router == null) {
 			externalIPLabel.setText(PortMapperApp.getResourceMap().getString(
 					"mainFrame.router.not_connected"));
@@ -290,18 +291,18 @@ public class PortMapperView extends FrameView {
 
 	@Action(name = ACTION_CONNECT_ROUTER)
 	public Task<Void, Void> connectRouter() {
-		return new ConnectTask();
+		return new ConnectTask(app);
 	}
 
 	@Action(name = ACTION_DISCONNECT_ROUTER)
 	public void disconnectRouter() {
-		PortMapperApp.getInstance().disconnectRouter();
+		app.disconnectRouter();
 		updateAddresses();
 		updatePortMappings();
 	}
 
 	private void addMapping(final Collection<PortMapping> portMappings) {
-		final IRouter router = PortMapperApp.getInstance().getRouter();
+		final IRouter router = app.getRouter();
 		if (router == null) {
 			return;
 		}
@@ -327,7 +328,7 @@ public class PortMapperView extends FrameView {
 		for (final PortMapping mapping : selectedMappings) {
 			logger.info("Removing mapping " + mapping);
 			try {
-				PortMapperApp.getInstance().getRouter().removeMapping(mapping);
+				app.getRouter().removeMapping(mapping);
 			} catch (final RouterException e) {
 				logger.error("Could not remove port mapping " + mapping, e);
 				break;
@@ -341,7 +342,7 @@ public class PortMapperView extends FrameView {
 
 	@Action(name = ACTION_DISPLAY_ROUTER_INFO, enabledProperty = PROPERTY_ROUTER_CONNECTED)
 	public void displayRouterInfo() {
-		final IRouter router = PortMapperApp.getInstance().getRouter();
+		final IRouter router = app.getRouter();
 		if (router == null) {
 			logger.warn("Not connected to router, could not get router info");
 			return;
@@ -355,7 +356,7 @@ public class PortMapperView extends FrameView {
 
 	@Action(name = ACTION_SHOW_ABOUT_DIALOG)
 	public void showAboutDialog() {
-		PortMapperApp.getInstance().show(new AboutDialog());
+		app.show(new AboutDialog(app));
 	}
 
 	@Action(name = ACTION_COPY_INTERNAL_ADDRESS, enabledProperty = PROPERTY_ROUTER_CONNECTED)
@@ -370,7 +371,7 @@ public class PortMapperView extends FrameView {
 
 	@Action(name = ACTION_UPDATE_PORT_MAPPINGS, enabledProperty = PROPERTY_ROUTER_CONNECTED)
 	public void updatePortMappings() {
-		final IRouter router = PortMapperApp.getInstance().getRouter();
+		final IRouter router = app.getRouter();
 		if (router == null) {
 			this.tableModel.setMappings(Collections.<PortMapping> emptyList());
 			return;
@@ -389,8 +390,7 @@ public class PortMapperView extends FrameView {
 		final PortMappingPreset selectedItem = this.portMappingPresets
 				.getSelectedValue();
 		if (selectedItem != null) {
-			final String localHostAddress = PortMapperApp.getInstance()
-					.getLocalHostAddress();
+			final String localHostAddress = app.getLocalHostAddress();
 			if (selectedItem.useLocalhostAsInternalClient()
 					&& localHostAddress == null) {
 				JOptionPane.showMessageDialog(
@@ -409,28 +409,27 @@ public class PortMapperView extends FrameView {
 
 	@Action(name = ACTION_CREATE_PRESET_MAPPING)
 	public void createPresetMapping() {
-		PortMapperApp.getInstance().show(
-				new EditPresetDialog(new PortMappingPreset()));
+		app.show(new EditPresetDialog(app, new PortMappingPreset()));
 	}
 
 	@Action(name = ACTION_EDIT_PRESET_MAPPING, enabledProperty = PROPERTY_PRESET_MAPPING_SELECTED)
 	public void editPresetMapping() {
 		final PortMappingPreset selectedPreset = this.portMappingPresets
 				.getSelectedValue();
-		PortMapperApp.getInstance().show(new EditPresetDialog(selectedPreset));
+		app.show(new EditPresetDialog(app, selectedPreset));
 	}
 
 	@Action(name = ACTION_PORTMAPPER_SETTINGS)
 	public void changeSettings() {
 		logger.debug("Open Settings dialog");
-		PortMapperApp.getInstance().show(new SettingsDialog());
+		app.show(new SettingsDialog(app));
 	}
 
 	@Action(name = ACTION_REMOVE_PRESET_MAPPING, enabledProperty = PROPERTY_PRESET_MAPPING_SELECTED)
 	public void removePresetMapping() {
 		final PortMappingPreset selectedPreset = this.portMappingPresets
 				.getSelectedValue();
-		PortMapperApp.getInstance().getSettings().removePresets(selectedPreset);
+		app.getSettings().removePresets(selectedPreset);
 	}
 
 	public void fireConnectionStateChange() {
@@ -439,7 +438,7 @@ public class PortMapperView extends FrameView {
 	}
 
 	public boolean isConnectedToRouter() {
-		return PortMapperApp.getInstance().isConnected();
+		return app.isConnected();
 	}
 
 	public boolean isMappingSelected() {
@@ -494,17 +493,17 @@ public class PortMapperView extends FrameView {
 
 	private class ConnectTask extends Task<Void, Void> {
 
-		/**
-		 * @param application
-		 */
-		public ConnectTask() {
-			super(PortMapperApp.getInstance());
+		private final PortMapperApp app;
+
+		public ConnectTask(final PortMapperApp app) {
+			super(app);
+			this.app = app;
 		}
 
 		@Override
 		protected Void doInBackground() throws Exception {
 			logger.trace("Connecting to router...");
-			PortMapperApp.getInstance().connectRouter();
+			app.connectRouter();
 			message("updateAddresses");
 			logger.trace("Updating addresses...");
 			updateAddresses();

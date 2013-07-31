@@ -115,11 +115,6 @@ public class SBBIRouter extends AbstractRouter {
 				.getPortMappings();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.chris.portmapper.router.IRouter#logRouterInfo()
-	 */
 	@Override
 	public void logRouterInfo() throws RouterException {
 		final Map<String, String> info = new HashMap<>();
@@ -157,23 +152,20 @@ public class SBBIRouter extends AbstractRouter {
 		logger.info("udn " + rootDevice.getUDN());
 	}
 
-	private boolean addPortMapping(String description, final Protocol protocol,
-			final String remoteHost, final int externalPort,
-			final String internalClient, final int internalPort,
-			final int leaseDuration) throws RouterException {
+	private boolean addPortMapping(final String description,
+			final Protocol protocol, final String remoteHost,
+			final int externalPort, final String internalClient,
+			final int internalPort, final int leaseDuration)
+			throws RouterException {
 
-		final String protocolString = (protocol.equals(Protocol.TCP) ? "TCP"
-				: "UDP");
+		final String protocolString = protocol == Protocol.TCP ? "TCP" : "UDP";
 
-		final Settings settings = PortMapperApp.getInstance().getSettings();
-		if (settings == null || settings.isUseEntityEncoding()) {
-			description = EncodingUtilities.htmlEntityEncode(description);
-		}
+		final String encodedDescription = encodeIfNecessary(description);
 
 		try {
-			final boolean success = router.addPortMapping(description, null,
-					internalPort, externalPort, internalClient, leaseDuration,
-					protocolString);
+			final boolean success = router.addPortMapping(encodedDescription,
+					null, internalPort, externalPort, internalClient,
+					leaseDuration, protocolString);
 			return success;
 		} catch (final IOException e) {
 			throw new RouterException("Could not add port mapping: "
@@ -182,6 +174,14 @@ public class SBBIRouter extends AbstractRouter {
 			throw new RouterException("Could not add port mapping: "
 					+ e.getMessage(), e);
 		}
+	}
+
+	private String encodeIfNecessary(final String description) {
+		final Settings settings = PortMapperApp.getInstance().getSettings();
+		if (settings == null || settings.isUseEntityEncoding()) {
+			return EncodingUtilities.htmlEntityEncode(description);
+		}
+		return description;
 	}
 
 	@Override

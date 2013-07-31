@@ -52,12 +52,11 @@ public class SettingsDialog extends JDialog {
 
 	private JButton okButton;
 
-	/**
-	 * 
-	 * @param portMappingPreset
-	 */
-	public SettingsDialog() {
-		super(PortMapperApp.getInstance().getMainFrame(), true);
+	private final PortMapperApp app;
+
+	public SettingsDialog(final PortMapperApp app) {
+		super(app.getMainFrame(), true);
+		this.app = app;
 
 		logger.debug("Create settings dialog");
 		this.setContentPane(this.getDialogPane());
@@ -89,9 +88,9 @@ public class SettingsDialog extends JDialog {
 	}
 
 	private JPanel getDialogPane() {
-		final ActionMap actionMap = PortMapperApp.getInstance().getContext()
-				.getActionMap(this.getClass(), this);
-		final Settings settings = PortMapperApp.getInstance().getSettings();
+		final ActionMap actionMap = app.getContext().getActionMap(
+				this.getClass(), this);
+		final Settings settings = app.getSettings();
 
 		final JPanel dialogPane = new JPanel(new MigLayout("", // Layout
 				// Constraints
@@ -139,14 +138,14 @@ public class SettingsDialog extends JDialog {
 	 */
 	@Action(name = ACTION_SAVE)
 	public void save() {
-		final Settings settings = PortMapperApp.getInstance().getSettings();
+		final Settings settings = app.getSettings();
 		settings.setUseEntityEncoding(useEntityEncoding.isSelected());
 		settings.setLogLevel(((Level) logLevelComboBox.getSelectedItem())
 				.toString());
 		settings.setRouterFactoryClassName(routerFactoryClassComboBox
 				.getSelectedItem().toString());
 
-		PortMapperApp.getInstance().setLogLevel(settings.getLogLevel());
+		app.setLogLevel(settings.getLogLevel());
 
 		logger.debug("Saved settings " + settings);
 		this.dispose();

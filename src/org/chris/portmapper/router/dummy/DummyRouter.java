@@ -67,6 +67,11 @@ public class DummyRouter extends AbstractRouter {
 
 	@Override
 	public Collection<PortMapping> getPortMappings() {
+		try {
+			Thread.sleep(3000);
+		} catch (final InterruptedException e) {
+			// ignore
+		}
 		return mappings;
 	}
 

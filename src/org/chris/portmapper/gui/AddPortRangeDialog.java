@@ -58,8 +58,12 @@ public class AddPortRangeDialog extends JDialog {
 
 	private JComboBox<Protocol> protocolComboBox;
 
-	public AddPortRangeDialog(final EditPresetDialog editPresetDialog) {
-		super(PortMapperApp.getInstance().getMainFrame(), true);
+	private final PortMapperApp app;
+
+	public AddPortRangeDialog(final PortMapperApp app,
+			final EditPresetDialog editPresetDialog) {
+		super(app.getMainFrame(), true);
+		this.app = app;
 
 		this.editPresetDialog = editPresetDialog;
 
@@ -94,8 +98,6 @@ public class AddPortRangeDialog extends JDialog {
 	}
 
 	private JPanel getDialogPane() {
-		final ActionMap actionMap = PortMapperApp.getInstance().getContext()
-				.getActionMap(this.getClass(), this);
 
 		final JPanel dialogPane = new JPanel(new MigLayout("", // Layout
 				// Constraints
@@ -189,6 +191,8 @@ public class AddPortRangeDialog extends JDialog {
 		dialogPane.add(createLabel("internal_ports_to"));
 		dialogPane.add(internalPortTo, "wrap");
 
+		final ActionMap actionMap = app.getContext().getActionMap(
+				this.getClass(), this);
 		dialogPane.add(new JButton(actionMap.get(ACTION_CANCEL)),
 				"tag cancel, span 2");
 		okButton = new JButton(actionMap.get(ACTION_ADD));

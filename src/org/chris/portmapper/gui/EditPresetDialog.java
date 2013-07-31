@@ -76,12 +76,12 @@ public class EditPresetDialog extends JDialog {
 
 	private PortsTableModel tableModel;
 
-	/**
-	 * 
-	 * @param portMappingPreset
-	 */
-	public EditPresetDialog(final PortMappingPreset portMappingPreset) {
-		super(PortMapperApp.getInstance().getMainFrame(), true);
+	private final PortMapperApp app;
+
+	public EditPresetDialog(final PortMapperApp app,
+			final PortMappingPreset portMappingPreset) {
+		super(app.getMainFrame(), true);
+		this.app = app;
 		this.editedPreset = portMappingPreset;
 		this.ports = new LinkedList<>();
 		this.setName(DIALOG_NAME);
@@ -115,8 +115,7 @@ public class EditPresetDialog extends JDialog {
 
 		final boolean useLocalhost = (editedPreset.getInternalClient() == null);
 
-		final String localhostAddress = PortMapperApp.getInstance()
-				.getLocalHostAddress();
+		final String localhostAddress = app.getLocalHostAddress();
 
 		if (useLocalhost && localhostAddress == null) {
 			useLocalhostCheckBox.setSelected(false);
@@ -138,8 +137,8 @@ public class EditPresetDialog extends JDialog {
 	}
 
 	private void initComponents() {
-		final ActionMap actionMap = PortMapperApp.getInstance().getContext()
-				.getActionMap(this.getClass(), this);
+		final ActionMap actionMap = app.getContext().getActionMap(
+				this.getClass(), this);
 
 		final JPanel dialogPane = new JPanel(new MigLayout("", // Layout
 				// Constraints
@@ -170,8 +169,7 @@ public class EditPresetDialog extends JDialog {
 				internalClientTextField.setEnabled(!useLocalhostCheckBox
 						.isSelected());
 				if (useLocalhostCheckBox.isSelected()) {
-					internalClientTextField.setText(PortMapperApp.getInstance()
-							.getLocalHostAddress());
+					internalClientTextField.setText(app.getLocalHostAddress());
 				} else {
 					// internalClientTextField.setText("");
 				}
@@ -180,8 +178,7 @@ public class EditPresetDialog extends JDialog {
 
 		// Check if the local host address can be retrieved
 
-		final String localHostAddress = PortMapperApp.getInstance()
-				.getLocalHostAddress();
+		final String localHostAddress = app.getLocalHostAddress();
 
 		if (localHostAddress != null) {
 			logger.debug("Found localhost address " + localHostAddress
@@ -220,8 +217,8 @@ public class EditPresetDialog extends JDialog {
 	 * @return
 	 */
 	private Component getPortsPanel() {
-		final ActionMap actionMap = PortMapperApp.getInstance().getContext()
-				.getActionMap(this.getClass(), this);
+		final ActionMap actionMap = app.getContext().getActionMap(
+				this.getClass(), this);
 
 		final JPanel portsPanel = new JPanel(new MigLayout("", "", ""));
 		portsPanel.setBorder(BorderFactory.createTitledBorder(PortMapperApp
@@ -283,7 +280,7 @@ public class EditPresetDialog extends JDialog {
 	@Action(name = ACTION_ADD_PORT_RANGE)
 	public void addPortRange() {
 		logger.debug("Open port range dialog");
-		PortMapperApp.getInstance().show(new AddPortRangeDialog(this));
+		app.show(new AddPortRangeDialog(app, this));
 	}
 
 	@Action(name = ACTION_REMOVE_PORT, enabledProperty = PROPERTY_PORT_SELECTED)
@@ -330,7 +327,7 @@ public class EditPresetDialog extends JDialog {
 		}
 
 		// Check, if a preset with the same name already exists.
-		final Settings settings = PortMapperApp.getInstance().getSettings();
+		final Settings settings = app.getSettings();
 		for (final PortMappingPreset preset : settings.getPresets()) {
 			if (preset != editedPreset && preset.getDescription() != null
 					&& preset.getDescription().equals(name)) {

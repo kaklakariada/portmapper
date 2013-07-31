@@ -26,19 +26,16 @@ import org.jdesktop.application.Action;
  */
 public class AboutDialog extends JDialog {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private final static String DIALOG_NAME = "about_dialog";
 	private final static String ACTION_CLOSE = "about_dialog.close";
 
-	public AboutDialog() throws HeadlessException {
-		super(PortMapperApp.getInstance().getMainFrame(), true);
+	public AboutDialog(final PortMapperApp app) throws HeadlessException {
+		super(app.getMainFrame(), true);
 
 		this.setName(DIALOG_NAME);
-		final ActionMap actionMap = PortMapperApp.getInstance().getContext()
-				.getActionMap(this.getClass(), this);
+		final ActionMap actionMap = app.getContext().getActionMap(
+				this.getClass(), this);
 
 		final JPanel pane = new JPanel(new MigLayout("", "[center,grow]", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		this.add(pane);
