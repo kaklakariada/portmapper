@@ -19,28 +19,31 @@ public class PortMappingsTableModel extends AbstractTableModel {
 
 	public PortMappingsTableModel() {
 		super();
-		this.mappings = new ArrayList<PortMapping>();
+		this.mappings = new ArrayList<>();
 	}
 
-	public void setMappings(Collection<PortMapping> mappings) {
+	public void setMappings(final Collection<PortMapping> mappings) {
 		this.mappings.clear();
 		this.mappings.addAll(mappings);
 		super.fireTableDataChanged();
 	}
 
+	@Override
 	public int getColumnCount() {
 		return 6;
 	}
 
+	@Override
 	public int getRowCount() {
 		return mappings.size();
 	}
 
-	public PortMapping getPortMapping(int index) {
+	public PortMapping getPortMapping(final int index) {
 		return mappings.get(index);
 	}
 
-	public Object getValueAt(int row, int col) {
+	@Override
+	public Object getValueAt(final int row, final int col) {
 		final PortMapping mapping = mappings.get(row);
 		switch (col) {
 		case 0:
@@ -63,7 +66,7 @@ public class PortMappingsTableModel extends AbstractTableModel {
 	}
 
 	@Override
-	public String getColumnName(int col) {
+	public String getColumnName(final int col) {
 		switch (col) {
 		case 0:
 			return PortMapperApp.getResourceMap().getString(

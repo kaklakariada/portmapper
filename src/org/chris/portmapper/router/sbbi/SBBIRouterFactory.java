@@ -10,8 +10,8 @@ import java.util.List;
 
 import net.sbbi.upnp.impls.InternetGatewayDevice;
 
-import org.chris.portmapper.router.IRouter;
 import org.chris.portmapper.router.AbstractRouterFactory;
+import org.chris.portmapper.router.IRouter;
 import org.chris.portmapper.router.RouterException;
 
 /**
@@ -39,7 +39,7 @@ public class SBBIRouterFactory extends AbstractRouterFactory {
 			return Collections.emptyList();
 		}
 
-		final List<IRouter> routers = new ArrayList<IRouter>(devices.length);
+		final List<IRouter> routers = new ArrayList<>(devices.length);
 
 		for (final InternetGatewayDevice device : devices) {
 			routers.add(new SBBIRouter(device));
@@ -48,31 +48,16 @@ public class SBBIRouterFactory extends AbstractRouterFactory {
 		return routers;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return getName();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.chris.portmapper.router.IRouterFactory#getName()
-	 */
 	@Override
 	public String getName() {
 		return "SBBI UPnP lib";
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.chris.portmapper.router.IRouterFactory#connect(java.lang.String)
-	 */
 	@Override
 	protected IRouter connect(final String locationUrl) throws RouterException {
 		throw new UnsupportedOperationException(

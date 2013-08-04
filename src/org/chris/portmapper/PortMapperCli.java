@@ -1,6 +1,5 @@
 package org.chris.portmapper;
 
-import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
 import java.util.Iterator;
@@ -20,13 +19,15 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.WriterAppender;
 import org.chris.portmapper.model.PortMapping;
 import org.chris.portmapper.model.Protocol;
-import org.chris.portmapper.router.IRouter;
 import org.chris.portmapper.router.AbstractRouterFactory;
+import org.chris.portmapper.router.IRouter;
 import org.chris.portmapper.router.RouterException;
 import org.chris.portmapper.router.dummy.DummyRouterFactory;
 import org.chris.portmapper.router.sbbi.SBBIRouterFactory;
 import org.chris.portmapper.router.weupnp.WeUPnPRouterFactory;
 import org.jdesktop.application.Application;
+import org.jdesktop.application.utils.AppHelper;
+import org.jdesktop.application.utils.PlatformType;
 
 /**
  * @author chris
@@ -61,7 +62,7 @@ public class PortMapperCli {
 	 */
 	private Options createOptions() {
 
-		boolean useLongOpts = false;
+		final boolean useLongOpts = false;
 
 		final Option help = new Option(HELP_OPTION,
 				useLongOpts ? "help" : null, false, "print this message");
@@ -102,12 +103,12 @@ public class PortMapperCli {
 		upnpLib.setArgName("class name");
 		upnpLib.setType(String.class);
 
-		final Option routerIndex = new Option(ROUTER_INDEX_OPTION,
+		final Option routerIndexOption = new Option(ROUTER_INDEX_OPTION,
 				useLongOpts ? "index" : null, true,
 				"Router index (if more than one is found)");
-		routerIndex.setArgs(1);
-		routerIndex.setArgName("index");
-		routerIndex.setType(Integer.class);
+		routerIndexOption.setArgs(1);
+		routerIndexOption.setArgName("index");
+		routerIndexOption.setType(Integer.class);
 
 		final OptionGroup optionGroup = new OptionGroup();
 		optionGroup.setRequired(false);
@@ -119,22 +120,21 @@ public class PortMapperCli {
 		optionGroup.addOption(list);
 		optionGroup.addOption(status);
 
-		// create Options object
-		final Options options = new Options();
-		options.addOption(upnpLib);
-		options.addOption(routerIndex);
-		options.addOptionGroup(optionGroup);
+		final Options allOptions = new Options();
+		allOptions.addOption(upnpLib);
+		allOptions.addOption(routerIndexOption);
+		allOptions.addOptionGroup(optionGroup);
 
-		return options;
+		return allOptions;
 	}
 
 	/**
 	 * @param args
 	 */
-	public void start(String[] args) {
+	public void start(final String[] args) {
 		final CommandLine commandLine = parseCommandLine(args);
 		if (isStartGuiRequired(commandLine)) {
-			Application.launch(PortMapperApp.class, args);
+			startGui(args);
 			return;
 		}
 
@@ -151,7 +151,7 @@ public class PortMapperCli {
 			try {
 				this.routerIndex = Integer.parseInt(commandLine
 						.getOptionValue(ROUTER_INDEX_OPTION));
-			} catch (NumberFormatException e) {
+			} catch (final NumberFormatException e) {
 				printHelp();
 				System.exit(1);
 			}
@@ -190,7 +190,7 @@ public class PortMapperCli {
 				return;
 			}
 			router.disconnect();
-		} catch (RouterException e) {
+		} catch (final RouterException e) {
 			logger.error("An error occured", e);
 			System.exit(1);
 			return;
@@ -199,11 +199,21 @@ public class PortMapperCli {
 	}
 
 	/**
+	 * @param args
+	 */
+	private void startGui(final String[] args) {
+		if (AppHelper.getPlatform() == PlatformType.OS_X) {
+			MacSetup.setupMac();
+		}
+		Application.launch(PortMapperApp.class, args);
+	}
+
+	/**
 	 * @param optionValues
 	 * @throws RouterException
 	 */
-	private void addLocalhostPortForwardings(IRouter router,
-			String[] optionValues) throws RouterException {
+	private void addLocalhostPortForwardings(final IRouter router,
+			final String[] optionValues) throws RouterException {
 
 		if (optionValues.length == 0 || optionValues.length % 2 != 0) {
 			logger.error("Invalid number of arguments for option "
@@ -229,17 +239,18 @@ public class PortMapperCli {
 	 * @throws RouterException
 	 * 
 	 */
-	private void printPortForwardings(IRouter router) throws RouterException {
+	private void printPortForwardings(final IRouter router)
+			throws RouterException {
 
-		Collection<PortMapping> mappings = router.getPortMappings();
+		final Collection<PortMapping> mappings = router.getPortMappings();
 		if (mappings.size() == 0) {
 			logger.info("No port mappings found");
 			return;
 		}
-		StringBuilder b = new StringBuilder();
-		for (Iterator<PortMapping> iterator = mappings.iterator(); iterator
+		final StringBuilder b = new StringBuilder();
+		for (final Iterator<PortMapping> iterator = mappings.iterator(); iterator
 				.hasNext();) {
-			PortMapping mapping = (PortMapping) iterator.next();
+			final PortMapping mapping = iterator.next();
 			b.append(mapping.getCompleteDescription());
 			if (iterator.hasNext()) {
 				b.append("\n");
@@ -254,8 +265,8 @@ public class PortMapperCli {
 	 * @param optionValues
 	 * @throws RouterException
 	 */
-	private void deletePortForwardings(IRouter router, String[] optionValues)
-			throws RouterException {
+	private void deletePortForwardings(final IRouter router,
+			final String[] optionValues) throws RouterException {
 
 		if (optionValues.length == 0 || optionValues.length % 2 != 0) {
 			logger.error("Invalid number of arguments for option "
@@ -278,7 +289,7 @@ public class PortMapperCli {
 	 * @throws RouterException
 	 * 
 	 */
-	private void printStatus(IRouter router) throws RouterException {
+	private void printStatus(final IRouter router) throws RouterException {
 		router.logRouterInfo();
 	}
 
@@ -286,8 +297,8 @@ public class PortMapperCli {
 	 * @param optionValues
 	 * @throws RouterException
 	 */
-	private void addPortForwarding(IRouter router, String[] optionValues)
-			throws RouterException {
+	private void addPortForwarding(final IRouter router,
+			final String[] optionValues) throws RouterException {
 
 		final String remoteHost = null;
 		final String internalClient = optionValues[0];
@@ -297,7 +308,6 @@ public class PortMapperCli {
 
 		final String description = "PortMapper " + protocol + "/"
 				+ internalClient + ":" + internalPort;
-		;
 		final PortMapping mapping = new PortMapping(protocol, remoteHost,
 				externalPort, internalClient, internalPort, description);
 		logger.info("Adding mapping " + mapping);
@@ -306,13 +316,13 @@ public class PortMapperCli {
 	}
 
 	private void printHelp() {
-		HelpFormatter formatter = new HelpFormatter();
+		final HelpFormatter formatter = new HelpFormatter();
 		formatter.setWidth(80);
 		// formatter.setDescPadding(0);
 		// formatter.setLeftPadding(0);
-		String header = "";
-		String cmdLineSyntax = "java -jar PortMapper.jar";
-		StringBuilder footer = new StringBuilder();
+		final String header = "";
+		final String cmdLineSyntax = "java -jar PortMapper.jar";
+		final StringBuilder footer = new StringBuilder();
 		footer.append("Protocol is UDP or TCP\n");
 		footer.append("UPnP library class names:\n");
 		footer.append("- ");
@@ -327,7 +337,7 @@ public class PortMapperCli {
 				options, footer.toString(), true);
 	}
 
-	private boolean isStartGuiRequired(CommandLine commandLine) {
+	private boolean isStartGuiRequired(final CommandLine commandLine) {
 		if (commandLine.hasOption(START_GUI_OPTION)) {
 			return true;
 		}
@@ -336,19 +346,20 @@ public class PortMapperCli {
 				|| commandLine.hasOption(ADD_OPTION)
 				|| commandLine.hasOption(STATUS_OPTION)
 				|| commandLine.hasOption(LIST_OPTION) || commandLine
-				.hasOption(DELETE_OPTION));
+					.hasOption(DELETE_OPTION));
 	}
 
+	@SuppressWarnings("resource")
 	private void initDummyLogAppender() {
-		WriterAppender writerAppender = (WriterAppender) Logger.getLogger(
-				"org.chris.portmapper").getAppender("jtextarea");
+		final WriterAppender writerAppender = (WriterAppender) Logger
+				.getLogger("org.chris.portmapper").getAppender("jtextarea");
 		writerAppender.setWriter(new DummyWriter());
 	}
 
-	private CommandLine parseCommandLine(String[] args) {
+	private CommandLine parseCommandLine(final String[] args) {
 		try {
 			return parser.parse(options, args);
-		} catch (ParseException e) {
+		} catch (final ParseException e) {
 			initDummyLogAppender();
 			logger.error("Could not parse command line: " + e.getMessage());
 			System.exit(1);
@@ -358,15 +369,18 @@ public class PortMapperCli {
 
 	private static class DummyWriter extends Writer {
 		@Override
-		public void close() throws IOException {
+		public void close() {
+			// ignore
 		}
 
 		@Override
-		public void flush() throws IOException {
+		public void flush() {
+			// ignore
 		}
 
 		@Override
-		public void write(char[] cbuf, int off, int len) throws IOException {
+		public void write(final char[] cbuf, final int off, final int len) {
+			// ignore
 		}
 	}
 
@@ -378,7 +392,7 @@ public class PortMapperCli {
 		try {
 			routerFactoryClass = (Class<AbstractRouterFactory>) Class
 					.forName(routerFactoryClassName);
-		} catch (ClassNotFoundException e1) {
+		} catch (final ClassNotFoundException e1) {
 			throw new RouterException(
 					"Did not find router factory class for name "
 							+ routerFactoryClassName, e1);
@@ -389,7 +403,7 @@ public class PortMapperCli {
 				+ routerFactoryClass);
 		try {
 			routerFactory = routerFactoryClass.newInstance();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new RouterException(
 					"Could not create a router factory for name "
 							+ routerFactoryClassName, e);
@@ -402,13 +416,13 @@ public class PortMapperCli {
 		AbstractRouterFactory routerFactory;
 		try {
 			routerFactory = createRouterFactory();
-		} catch (RouterException e) {
+		} catch (final RouterException e) {
 			logger.error("Could not create router factory", e);
 			return null;
 		}
 		logger.info("Searching for routers...");
 
-		List<IRouter> foundRouters = routerFactory.findRouters();
+		final List<IRouter> foundRouters = routerFactory.findRouters();
 
 		return selectRouter(foundRouters);
 	}
@@ -417,7 +431,7 @@ public class PortMapperCli {
 	 * @param foundRouters
 	 * @return
 	 */
-	private IRouter selectRouter(List<IRouter> foundRouters) {
+	private IRouter selectRouter(final List<IRouter> foundRouters) {
 		// One router found: use it.
 		if (foundRouters.size() == 1) {
 			final IRouter router = foundRouters.iterator().next();
@@ -431,7 +445,7 @@ public class PortMapperCli {
 			logger.error("Found more than one router. Use option -i <index>");
 
 			int index = 0;
-			for (IRouter iRouter : foundRouters) {
+			for (final IRouter iRouter : foundRouters) {
 				logger.error("- index " + index + ": " + iRouter.getName());
 				index++;
 			}

@@ -15,7 +15,7 @@ public class EncodingUtilities {
 	private static Map<Character, String> knownEncodings;
 
 	static {
-		knownEncodings = new HashMap<Character, String>();
+		knownEncodings = new HashMap<>();
 		knownEncodings.put('<', "&lt;");
 		knownEncodings.put('>', "&gt;");
 		knownEncodings.put('&', "&amp;");
@@ -32,12 +32,11 @@ public class EncodingUtilities {
 	 *            the string in which to replace the special characters.
 	 * @return the result of the replacement.
 	 */
-	public static String htmlEntityEncode(String s) {
-		StringBuffer buf = new StringBuffer();
-		int len = (s == null ? -1 : s.length());
+	public static String htmlEntityEncode(final String s) {
+		final StringBuffer buf = new StringBuffer();
 
-		for (int i = 0; i < len; i++) {
-			char c = s.charAt(i);
+		for (int i = 0; i < s.length(); i++) {
+			final char c = s.charAt(i);
 			if (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0'
 					&& c <= '9') {
 				buf.append(c);

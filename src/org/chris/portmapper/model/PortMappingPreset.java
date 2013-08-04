@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.chris.portmapper.Settings;
 
 /**
@@ -18,13 +16,7 @@ import org.chris.portmapper.Settings;
  */
 public class PortMappingPreset implements Cloneable, Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3749136884938395765L;
-
-	private final static Log logger = LogFactory
-			.getLog(PortMappingPreset.class);
 
 	/**
 	 * The description of this preset.
@@ -54,13 +46,12 @@ public class PortMappingPreset implements Cloneable, Serializable {
 	/**
 	 * Creates a new preset with the given default values.
 	 */
-	public PortMappingPreset(String remoteHost, String internalClient,
-			String description) {
-		super();
+	public PortMappingPreset(final String remoteHost,
+			final String internalClient, final String description) {
 		this.remoteHost = remoteHost;
 		this.internalClient = internalClient;
 		this.description = description;
-		this.ports = new LinkedList<SinglePortMapping>();
+		this.ports = new LinkedList<>();
 
 		this.isNew = false;
 	}
@@ -69,7 +60,7 @@ public class PortMappingPreset implements Cloneable, Serializable {
 	 * Creates a new empty preset.
 	 */
 	public PortMappingPreset() {
-		ports = new LinkedList<SinglePortMapping>();
+		this.ports = new LinkedList<>();
 		this.isNew = true;
 	}
 
@@ -78,22 +69,21 @@ public class PortMappingPreset implements Cloneable, Serializable {
 		return description;
 	}
 
-	public List<PortMapping> getPortMappings(String localhost) {
+	public List<PortMapping> getPortMappings(final String localhost) {
 		if (this.useLocalhostAsInternalClient()
 				&& (localhost == null || localhost.length() == 0)) {
 			throw new IllegalArgumentException(
 					"Got invalid localhost and internal host is not given.");
 		}
 
-		List<PortMapping> allPortMappings = new ArrayList<PortMapping>(
+		final List<PortMapping> allPortMappings = new ArrayList<>(
 				this.ports.size());
-		int i = 0;
-		for (SinglePortMapping port : this.ports) {
-			i++;
-			String internalClientName = this.useLocalhostAsInternalClient() ? localhost
+		for (final SinglePortMapping port : this.ports) {
+			final String internalClientName = this
+					.useLocalhostAsInternalClient() ? localhost
 					: this.internalClient;
 
-			PortMapping newMapping = new PortMapping(port.getProtocol(),
+			final PortMapping newMapping = new PortMapping(port.getProtocol(),
 					remoteHost, port.getExternalPort(), internalClientName,
 					port.getInternalPort(), description);
 
@@ -104,7 +94,7 @@ public class PortMappingPreset implements Cloneable, Serializable {
 	}
 
 	public String getCompleteDescription() {
-		StringBuffer b = new StringBuffer();
+		final StringBuffer b = new StringBuffer();
 
 		b.append(" ");
 		b.append(remoteHost);
@@ -125,11 +115,11 @@ public class PortMappingPreset implements Cloneable, Serializable {
 		return ports;
 	}
 
-	public void setPorts(List<SinglePortMapping> ports) {
+	public void setPorts(final List<SinglePortMapping> ports) {
 		this.ports = ports;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.description = description;
 	}
 
@@ -137,7 +127,7 @@ public class PortMappingPreset implements Cloneable, Serializable {
 		return description;
 	}
 
-	public void setRemoteHost(String remoteHost) {
+	public void setRemoteHost(final String remoteHost) {
 		this.remoteHost = remoteHost;
 	}
 
@@ -145,7 +135,7 @@ public class PortMappingPreset implements Cloneable, Serializable {
 		return remoteHost;
 	}
 
-	public void setInternalClient(String internalClient) {
+	public void setInternalClient(final String internalClient) {
 		this.internalClient = internalClient;
 	}
 
@@ -164,7 +154,7 @@ public class PortMappingPreset implements Cloneable, Serializable {
 	 * @param isNew
 	 *            the isNew to set
 	 */
-	public void setNew(boolean isNew) {
+	public void setNew(final boolean isNew) {
 		this.isNew = isNew;
 	}
 
@@ -177,7 +167,7 @@ public class PortMappingPreset implements Cloneable, Serializable {
 	 * @param settings
 	 * 
 	 */
-	public void save(Settings settings) {
+	public void save(final Settings settings) {
 		if (this.isNew) {
 			settings.addPreset(this);
 		} else {

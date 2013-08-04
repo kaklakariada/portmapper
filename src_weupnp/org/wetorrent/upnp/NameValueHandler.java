@@ -35,17 +35,19 @@ public class NameValueHandler extends DefaultHandler {
 	private final Map<String, String> nameValue;
 
 	public NameValueHandler() {
-		this.nameValue = new HashMap<String, String>();
+		this.nameValue = new HashMap<>();
 	}
 
 	private String currentElement;
 
-	public void startElement(String uri, String localName, String qName,
-			Attributes attributes) {
+	@Override
+	public void startElement(final String uri, final String localName,
+			final String qName, final Attributes attributes) {
 		currentElement = localName;
 	}
 
-	public void characters(char[] ch, int start, int length) {
+	@Override
+	public void characters(final char[] ch, final int start, final int length) {
 		nameValue.put(currentElement, new String(ch, start, length).trim());
 	}
 

@@ -19,71 +19,48 @@ import javax.swing.table.TableCellEditor;
 public class TextNumberCellEditor extends AbstractCellEditor implements
 		TableCellEditor, KeyListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private Integer currentPortNumber;
 	private final JTextField textField;
 
-	/**
-	 * 
-	 */
-	public TextNumberCellEditor(int value, int numColumns) {
+	public TextNumberCellEditor(final int value, final int numColumns) {
 		this.currentPortNumber = value;
 		this.textField = new JTextField(this.currentPortNumber.toString(),
 				numColumns);
 		this.textField.addKeyListener(this);
 	}
 
-	/**
-	 * 
-	 * @see javax.swing.CellEditor#getCellEditorValue()
-	 */
+	@Override
 	public Object getCellEditorValue() {
 		return this.currentPortNumber;
 	}
 
-	/**
-	 * 
-	 * @see javax.swing.table.TableCellEditor#getTableCellEditorComponent(javax.swing
-	 *      .JTable, java.lang.Object, boolean, int, int)
-	 */
-	public Component getTableCellEditorComponent(JTable table, Object value,
-			boolean isSelected, int row, int column) {
+	@Override
+	public Component getTableCellEditorComponent(final JTable table,
+			final Object value, final boolean isSelected, final int row,
+			final int column) {
 		this.currentPortNumber = (Integer) value;
 		this.textField.setText(this.currentPortNumber.toString());
 		return this.textField;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
-	 */
-	public void keyPressed(KeyEvent arg0) {
+	@Override
+	public void keyPressed(final KeyEvent arg0) {
+		// ignore
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
-	 */
-	public void keyReleased(KeyEvent arg0) {
+	@Override
+	public void keyReleased(final KeyEvent arg0) {
+		// ignore
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
-	 */
-	public void keyTyped(KeyEvent arg0) {
+	@Override
+	public void keyTyped(final KeyEvent arg0) {
 		// The user has clicked the cell
 		try {
 			this.currentPortNumber = new Integer(textField.getText());
-		} catch (NumberFormatException e) {
+		} catch (final NumberFormatException e) {
 			// Do nothing
 		}
 	}
-
 }

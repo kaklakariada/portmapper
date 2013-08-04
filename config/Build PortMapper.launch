@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.springsource.ide.eclipse.gradle.launch">
+<listAttribute key="org.eclipse.debug.ui.favoriteGroups">
+<listEntry value="org.eclipse.ui.externaltools.launchGroup"/>
+</listAttribute>
+<stringAttribute key="org.springsource.ide.eclipse.gradle.launch.PROJECT" value="PortMapper"/>
+<listAttribute key="org.springsource.ide.eclipse.gradle.launch.TASKLIST">
+<listEntry value=":clean"/>
+<listEntry value=":test"/>
+<listEntry value=":jar"/>
+</listAttribute>
+</launchConfiguration>

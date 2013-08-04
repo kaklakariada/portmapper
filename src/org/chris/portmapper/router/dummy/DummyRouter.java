@@ -21,10 +21,10 @@ public class DummyRouter extends AbstractRouter {
 
 	private final Collection<PortMapping> mappings;
 
-	public DummyRouter(String name) {
+	public DummyRouter(final String name) {
 		super(name);
 		logger.debug("Created new DummyRouter");
-		mappings = new LinkedList<PortMapping>();
+		mappings = new LinkedList<>();
 		mappings.add(new PortMapping(Protocol.TCP, "remoteHost1", 1,
 				"internalClient1", 1, getName() + ": dummy port mapping 1"));
 		mappings.add(new PortMapping(Protocol.UDP, null, 2, "internalClient2",
@@ -33,48 +33,65 @@ public class DummyRouter extends AbstractRouter {
 				3, getName() + ": dummy port mapping 3"));
 	}
 
-	public void addPortMapping(PortMapping mapping) {
+	@Override
+	public void addPortMapping(final PortMapping mapping) {
 		logger.debug("Adding mapping " + mapping);
 		mappings.add(mapping);
 	}
 
-	public void addPortMappings(Collection<PortMapping> mappings) {
-		logger.debug("Adding mappings " + mappings);
-		this.mappings.addAll(mappings);
+	@Override
+	public void addPortMappings(final Collection<PortMapping> mappingsToAdd) {
+		logger.debug("Adding mappings " + mappingsToAdd);
+		this.mappings.addAll(mappingsToAdd);
 	}
 
+	@Override
 	public void disconnect() {
 		logger.debug("Disconnect");
 	}
 
+	@Override
 	public String getExternalIPAddress() {
 		return "DummyExternalIP";
 	}
 
+	@Override
 	public String getInternalHostName() {
 		return "DummyInternalHostName";
 	}
 
+	@Override
 	public int getInternalPort() {
 		return 42;
 	}
 
+	@Override
 	public Collection<PortMapping> getPortMappings() {
+		try {
+			Thread.sleep(3000);
+		} catch (final InterruptedException e) {
+			// ignore
+		}
 		return mappings;
 	}
 
+	@Override
 	public void logRouterInfo() {
 		logger.info("DummyRouter " + getName());
 	}
 
-	public void removeMapping(PortMapping mapping) {
+	@Override
+	public void removeMapping(final PortMapping mapping) {
 		mappings.remove(mapping);
 	}
 
-	public void removePortMapping(Protocol protocol, String remoteHost,
-			int externalPort) {
+	@Override
+	public void removePortMapping(final Protocol protocol,
+			final String remoteHost, final int externalPort) {
+		// ignore
 	}
 
+	@Override
 	public String getLocalHostAddress() throws RouterException {
 		return "DummyLocalhostAddress";
 	}

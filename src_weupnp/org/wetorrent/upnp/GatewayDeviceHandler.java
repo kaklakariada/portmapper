@@ -60,7 +60,6 @@ public class GatewayDeviceHandler extends DefaultHandler {
 
 	private final GatewayDevice device;
 	private String currentElement;
-	private int level = 0;
 	private short state = STATE_INITIALIZED;
 
 	/** Creates a new instance of GatewayDeviceHandler */
@@ -73,7 +72,6 @@ public class GatewayDeviceHandler extends DefaultHandler {
 			final String qName, final Attributes attributes)
 			throws SAXException {
 		currentElement = localName;
-		level++;
 		if (state == STATE_INITIALIZED && "serviceList".equals(currentElement)) {
 			state = STATE_SERVICE_LIST;
 		}
@@ -83,7 +81,6 @@ public class GatewayDeviceHandler extends DefaultHandler {
 	public void endElement(final String uri, final String localName,
 			final String qName) {
 		currentElement = "";
-		level--;
 		if (localName.equals("service")) {
 			if (device.getServiceTypeCIF() != null
 					&& device

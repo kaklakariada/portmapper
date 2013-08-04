@@ -35,9 +35,6 @@ import org.jdesktop.application.ResourceMap;
  */
 public class AddPortRangeDialog extends JDialog {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private final Log logger = LogFactory.getLog(this.getClass());
@@ -59,14 +56,14 @@ public class AddPortRangeDialog extends JDialog {
 
 	private JButton okButton;
 
-	private JComboBox protocolComboBox;
+	private JComboBox<Protocol> protocolComboBox;
 
-	/**
-	 * 
-	 * @param portMappingPreset
-	 */
-	public AddPortRangeDialog(EditPresetDialog editPresetDialog) {
-		super(PortMapperApp.getInstance().getMainFrame(), true);
+	private final PortMapperApp app;
+
+	public AddPortRangeDialog(final PortMapperApp app,
+			final EditPresetDialog editPresetDialog) {
+		super(app.getMainFrame(), true);
+		this.app = app;
 
 		this.editPresetDialog = editPresetDialog;
 
@@ -81,9 +78,10 @@ public class AddPortRangeDialog extends JDialog {
 
 		// Register an action listener that closes the window when the ESC
 		// button is pressed
-		KeyStroke escKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0,
-				true);
-		ActionListener windowCloseActionListener = new ActionListener() {
+		final KeyStroke escKeyStroke = KeyStroke.getKeyStroke(
+				KeyEvent.VK_ESCAPE, 0, true);
+		final ActionListener windowCloseActionListener = new ActionListener() {
+			@Override
 			public final void actionPerformed(final ActionEvent e) {
 				cancel();
 			}
@@ -92,18 +90,16 @@ public class AddPortRangeDialog extends JDialog {
 				escKeyStroke, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 	}
 
-	private static JLabel createLabel(String postfix) {
-		String completeName = DIALOG_NAME + "." + postfix;
-		JLabel newLabel = new JLabel(completeName);
+	private static JLabel createLabel(final String postfix) {
+		final String completeName = DIALOG_NAME + "." + postfix;
+		final JLabel newLabel = new JLabel(completeName);
 		newLabel.setName(completeName);
 		return newLabel;
 	}
 
 	private JPanel getDialogPane() {
-		final ActionMap actionMap = PortMapperApp.getInstance().getContext()
-				.getActionMap(this.getClass(), this);
 
-		JPanel dialogPane = new JPanel(new MigLayout("", // Layout
+		final JPanel dialogPane = new JPanel(new MigLayout("", // Layout
 				// Constraints
 				"[right]rel[left]", // Column Constraints
 				"")); // Row Constraints
@@ -114,38 +110,44 @@ public class AddPortRangeDialog extends JDialog {
 		externalPortTo = new JTextField(5);
 
 		externalPortFrom.addKeyListener(new KeyListener() {
-			public void keyReleased(KeyEvent e) {
+			@Override
+			public void keyReleased(final KeyEvent e) {
 				if (internalEqualsExternalPorts.isSelected()) {
 					internalPortFrom.setText(externalPortFrom.getText());
 				}
 			}
 
-			public void keyTyped(KeyEvent e) {
+			@Override
+			public void keyTyped(final KeyEvent e) {
 				// ignored
 			}
 
-			public void keyPressed(KeyEvent e) {
+			@Override
+			public void keyPressed(final KeyEvent e) {
 				// ignored
 			}
 		});
 
 		externalPortTo.addKeyListener(new KeyListener() {
-			public void keyReleased(KeyEvent e) {
+			@Override
+			public void keyReleased(final KeyEvent e) {
 				if (internalEqualsExternalPorts.isSelected()) {
 					internalPortTo.setText(externalPortTo.getText());
 				}
 			}
 
-			public void keyTyped(KeyEvent e) {
+			@Override
+			public void keyTyped(final KeyEvent e) {
 				// ignored
 			}
 
-			public void keyPressed(KeyEvent e) {
+			@Override
+			public void keyPressed(final KeyEvent e) {
 				// ignored
 			}
 		});
 
-		protocolComboBox = new JComboBox();
+		protocolComboBox = new JComboBox<>();
 		protocolComboBox.addItem(Protocol.TCP);
 		protocolComboBox.addItem(Protocol.UDP);
 		protocolComboBox.setSelectedIndex(0);
@@ -156,7 +158,8 @@ public class AddPortRangeDialog extends JDialog {
 				.setName("add_port_range_dialog.external_equal_internal");
 		internalEqualsExternalPorts.setSelected(true);
 		internalEqualsExternalPorts.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			@Override
+			public void actionPerformed(final ActionEvent e) {
 				logger.debug("Checkbox value changed");
 				internalPortFrom.setEnabled(!internalEqualsExternalPorts
 						.isSelected());
@@ -188,6 +191,8 @@ public class AddPortRangeDialog extends JDialog {
 		dialogPane.add(createLabel("internal_ports_to"));
 		dialogPane.add(internalPortTo, "wrap");
 
+		final ActionMap actionMap = app.getContext().getActionMap(
+				this.getClass(), this);
 		dialogPane.add(new JButton(actionMap.get(ACTION_CANCEL)),
 				"tag cancel, span 2");
 		okButton = new JButton(actionMap.get(ACTION_ADD));
@@ -202,50 +207,50 @@ public class AddPortRangeDialog extends JDialog {
 	 */
 	@Action(name = ACTION_ADD)
 	public void addPortRange() {
-		final int internalPortFrom;
-		final int internalPortTo;
-		final int externalPortFrom;
-		final int externalPortTo;
+		final int newInternalPortFrom;
+		final int newInternalPortTo;
+		final int newExternalPortFrom;
+		final int newExternalPortTo;
 
 		try {
-			internalPortFrom = Integer
-					.parseInt(this.internalPortFrom.getText());
-			internalPortTo = Integer.parseInt(this.internalPortTo.getText());
-			externalPortFrom = Integer
-					.parseInt(this.externalPortFrom.getText());
-			externalPortTo = Integer.parseInt(this.externalPortTo.getText());
-		} catch (NumberFormatException e) {
+			newInternalPortFrom = Integer.parseInt(this.internalPortFrom
+					.getText());
+			newInternalPortTo = Integer.parseInt(this.internalPortTo.getText());
+			newExternalPortFrom = Integer.parseInt(this.externalPortFrom
+					.getText());
+			newExternalPortTo = Integer.parseInt(this.externalPortTo.getText());
+		} catch (final NumberFormatException e) {
 			showErrorMessage("add_port_range_dialog.invalid_number.title",
 					"add_port_range_dialog.invalid_number.message");
 			return;
 		}
 
-		if (internalPortFrom >= internalPortTo) {
+		if (newInternalPortFrom >= newInternalPortTo) {
 			showErrorMessage(
 					"add_port_range_dialog.invalid_internal_range.title",
 					"add_port_range_dialog.invalid_internal_range.message");
 			return;
 		}
 
-		if (externalPortFrom >= externalPortTo) {
+		if (newExternalPortFrom >= newExternalPortTo) {
 			showErrorMessage(
 					"add_port_range_dialog.invalid_external_range.title",
 					"add_port_range_dialog.invalid_external_range.message");
 			return;
 		}
 
-		if (internalPortTo - internalPortFrom != externalPortTo
-				- externalPortFrom) {
+		if (newInternalPortTo - newInternalPortFrom != newExternalPortTo
+				- newExternalPortFrom) {
 			showErrorMessage(
 					"add_port_range_dialog.invalid_range_length.title",
 					"add_port_range_dialog.invalid_range_length.message");
 			return;
 		}
 
-		for (int i = internalPortFrom; i <= internalPortTo; i++) {
+		for (int i = newInternalPortFrom; i <= newInternalPortTo; i++) {
 			final int internalPort = i;
-			final int externalPort = (internalPort - internalPortFrom)
-					+ externalPortFrom;
+			final int externalPort = (internalPort - newInternalPortFrom)
+					+ newExternalPortFrom;
 			final Protocol selectedProtocol = (Protocol) protocolComboBox
 					.getSelectedItem();
 			editPresetDialog.addPort(selectedProtocol, internalPort,
@@ -255,7 +260,7 @@ public class AddPortRangeDialog extends JDialog {
 		this.dispose();
 	}
 
-	private void showErrorMessage(String titleKey, String messageKey) {
+	private void showErrorMessage(final String titleKey, final String messageKey) {
 		final ResourceMap resourceMap = PortMapperApp.getResourceMap();
 		JOptionPane.showMessageDialog(this, resourceMap.getString(messageKey),
 				resourceMap.getString(titleKey), JOptionPane.ERROR_MESSAGE);

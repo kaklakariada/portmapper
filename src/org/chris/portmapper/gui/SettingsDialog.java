@@ -3,6 +3,8 @@ package org.chris.portmapper.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
+import java.util.Vector;
 
 import javax.swing.ActionMap;
 import javax.swing.JButton;
@@ -45,17 +47,16 @@ public class SettingsDialog extends JDialog {
 
 	private JCheckBox useEntityEncoding;
 
-	private JComboBox logLevelComboBox;
-	private JComboBox routerFactoryClassComboBox;
+	private JComboBox<Level> logLevelComboBox;
+	private JComboBox<String> routerFactoryClassComboBox;
 
 	private JButton okButton;
 
-	/**
-	 * 
-	 * @param portMappingPreset
-	 */
-	public SettingsDialog() {
-		super(PortMapperApp.getInstance().getMainFrame(), true);
+	private final PortMapperApp app;
+
+	public SettingsDialog(final PortMapperApp app) {
+		super(app.getMainFrame(), true);
+		this.app = app;
 
 		logger.debug("Create settings dialog");
 		this.setContentPane(this.getDialogPane());
@@ -68,9 +69,10 @@ public class SettingsDialog extends JDialog {
 
 		// Register an action listener that closes the window when the ESC
 		// button is pressed
-		KeyStroke escKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0,
-				true);
-		ActionListener windowCloseActionListener = new ActionListener() {
+		final KeyStroke escKeyStroke = KeyStroke.getKeyStroke(
+				KeyEvent.VK_ESCAPE, 0, true);
+		final ActionListener windowCloseActionListener = new ActionListener() {
+			@Override
 			public final void actionPerformed(final ActionEvent e) {
 				cancel();
 			}
@@ -79,47 +81,45 @@ public class SettingsDialog extends JDialog {
 				escKeyStroke, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 	}
 
-	private static JLabel createLabel(String name) {
-		JLabel newLabel = new JLabel(name);
+	private static JLabel createLabel(final String name) {
+		final JLabel newLabel = new JLabel(name);
 		newLabel.setName(name);
 		return newLabel;
 	}
 
 	private JPanel getDialogPane() {
-		ActionMap actionMap = PortMapperApp.getInstance().getContext()
-				.getActionMap(this.getClass(), this);
-		Settings settings = PortMapperApp.getInstance().getSettings();
+		final ActionMap actionMap = app.getContext().getActionMap(
+				this.getClass(), this);
+		final Settings settings = app.getSettings();
 
-		JPanel dialogPane = new JPanel(new MigLayout("", // Layout
+		final JPanel dialogPane = new JPanel(new MigLayout("", // Layout
 				// Constraints
 				"[right]rel[left,grow 100]", // Column Constraints
 				"")); // Row Constraints
 
-		logger
-				.debug("Use entity encoding is "
-						+ settings.isUseEntityEncoding());
+		logger.debug("Use entity encoding is " + settings.isUseEntityEncoding());
 		useEntityEncoding = new JCheckBox(
-				"settings_dialog.use_entity_encoding", settings
-						.isUseEntityEncoding());
+				"settings_dialog.use_entity_encoding",
+				settings.isUseEntityEncoding());
 		useEntityEncoding.setName("settings_dialog.use_entity_encoding");
 
 		dialogPane.add(useEntityEncoding, "span 2, wrap");
 
 		dialogPane.add(createLabel("settings_dialog.log_level"));
 
-		logLevelComboBox = new JComboBox(new Object[] { Level.ALL, Level.TRACE,
-				Level.DEBUG, Level.INFO, Level.WARN, Level.ERROR, Level.FATAL,
-				Level.OFF });
+		logLevelComboBox = new JComboBox<>(new Vector<>(Arrays.asList(
+				Level.ALL, Level.TRACE, Level.DEBUG, Level.INFO, Level.WARN,
+				Level.ERROR, Level.FATAL, Level.OFF)));
 		logLevelComboBox.setSelectedItem(Level.toLevel(settings.getLogLevel()));
 
 		dialogPane.add(logLevelComboBox, "wrap");
 
 		dialogPane.add(createLabel("settings_dialog.upnp_lib"));
 
-		routerFactoryClassComboBox = new JComboBox(new Object[] {
-				SBBIRouterFactory.class.getName(),
-				WeUPnPRouterFactory.class.getName(),
-				DummyRouterFactory.class.getName() });
+		routerFactoryClassComboBox = new JComboBox<>(new Vector<>(
+				Arrays.asList(SBBIRouterFactory.class.getName(),
+						WeUPnPRouterFactory.class.getName(),
+						DummyRouterFactory.class.getName())));
 		routerFactoryClassComboBox.setSelectedItem(settings
 				.getRouterFactoryClassName());
 		dialogPane.add(routerFactoryClassComboBox, "span 2, wrap");
@@ -138,14 +138,14 @@ public class SettingsDialog extends JDialog {
 	 */
 	@Action(name = ACTION_SAVE)
 	public void save() {
-		Settings settings = PortMapperApp.getInstance().getSettings();
+		final Settings settings = app.getSettings();
 		settings.setUseEntityEncoding(useEntityEncoding.isSelected());
 		settings.setLogLevel(((Level) logLevelComboBox.getSelectedItem())
 				.toString());
 		settings.setRouterFactoryClassName(routerFactoryClassComboBox
 				.getSelectedItem().toString());
 
-		PortMapperApp.getInstance().setLogLevel(settings.getLogLevel());
+		app.setLogLevel(settings.getLogLevel());
 
 		logger.debug("Saved settings " + settings);
 		this.dispose();

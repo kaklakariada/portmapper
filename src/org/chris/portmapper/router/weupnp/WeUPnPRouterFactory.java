@@ -12,8 +12,8 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.chris.portmapper.router.IRouter;
 import org.chris.portmapper.router.AbstractRouterFactory;
+import org.chris.portmapper.router.IRouter;
 import org.chris.portmapper.router.RouterException;
 import org.wetorrent.upnp.GatewayDevice;
 import org.wetorrent.upnp.GatewayDiscover;
@@ -44,7 +44,7 @@ public class WeUPnPRouterFactory extends AbstractRouterFactory {
 			return Collections.emptyList();
 		}
 
-		final List<IRouter> routers = new ArrayList<IRouter>(devices.size());
+		final List<IRouter> routers = new ArrayList<>(devices.size());
 		for (final GatewayDevice device : devices.values()) {
 			routers.add(new WeUPnPRouter(device));
 		}

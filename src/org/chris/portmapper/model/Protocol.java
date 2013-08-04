@@ -3,8 +3,6 @@
  */
 package org.chris.portmapper.model;
 
-import java.io.Serializable;
-
 /**
  * This {@link Enum} represents the protocol of a {@link SinglePortMapping},
  * possible values are {@link #TCP} and {@link #UDP}.
@@ -13,17 +11,17 @@ import java.io.Serializable;
  * 
  * @version $Id$
  */
-public enum Protocol implements Serializable {
+public enum Protocol {
 
 	TCP("TCP"), UDP("UDP");
 
 	private final String name;
 
-	private Protocol(String name) {
+	private Protocol(final String name) {
 		this.name = name;
 	}
 
-	public static Protocol getProtocol(String name) {
+	public static Protocol getProtocol(final String name) {
 		if (name != null && name.equalsIgnoreCase("TCP")) {
 			return TCP;
 		}
@@ -40,4 +38,4 @@ public enum Protocol implements Serializable {
 	public String getName() {
 		return name;
 	}
-};
+}

@@ -4,17 +4,17 @@
 package org.chris.portmapper.gui.util;
 
 import java.awt.Cursor;
+import java.awt.Desktop;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.swing.JLabel;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import edu.stanford.ejalbert.BrowserLauncher;
-import edu.stanford.ejalbert.exception.BrowserLaunchingInitializingException;
-import edu.stanford.ejalbert.exception.UnsupportedOperatingSystemException;
 
 /**
  * This class implements a label that looks and behaves like a link, i.e. you
@@ -32,73 +32,64 @@ public class URLLabel extends JLabel {
 
 	private final static Log logger = LogFactory.getLog(URLLabel.class);
 
-	private String url, text;
+	private String text;
 
-	private static BrowserLauncher launcher;
-	static {
-		try {
-			launcher = new BrowserLauncher();
-		} catch (BrowserLaunchingInitializingException e) {
-			logger.warn(
-					"Could not initialize browser launcher: links will not work",
-					e);
-		} catch (UnsupportedOperatingSystemException e) {
-			logger.warn(
-					"Could not initialize browser launcher: links will not work",
-					e);
-		}
-	}
+	private final Desktop desktop;
 
-	public URLLabel(String name) {
-		super();
-		this.url = name;
+	private URI uri;
+
+	public URLLabel(final String name) {
 		this.text = name;
 		this.setLabelText();
 		this.setName(name);
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-		this.addMouseListener(new MouseListener() {
+		this.desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop()
+				: null;
 
-			public void mouseClicked(MouseEvent arg0) {
-				logger.debug("User clicked on URLLabel: open URL '" + url
-						+ "' in browser");
-				if (launcher != null) {
-					launcher.openURLinBrowser(url);
-				} else {
-					logger.warn("Browser launcher was not initialized, please open url manually: "
-							+ url);
-				}
-			}
-
-			public void mouseEntered(MouseEvent arg0) {
-
-			}
-
-			public void mouseExited(MouseEvent arg0) {
-
-			}
-
-			public void mousePressed(MouseEvent arg0) {
-
-			}
-
-			public void mouseReleased(MouseEvent arg0) {
-
+		this.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(final MouseEvent arg0) {
+				openUrl();
 			}
 		});
 	}
 
+	private void openUrl() {
+		logger.debug("User clicked on URLLabel: open URL '" + uri
+				+ "' in browser");
+		if (desktop == null || !desktop.isSupported(Desktop.Action.BROWSE)) {
+			logger.warn("Opening URLs is not supported on this machine, please open url manually: "
+					+ uri);
+			return;
+		}
+		try {
+			desktop.browse(uri);
+		} catch (final IOException e) {
+			throw new RuntimeException("Error opening uri " + uri, e);
+		}
+	}
+
+	private static URI createUri(final String url) {
+		try {
+			return new URI(url);
+		} catch (final URISyntaxException e) {
+			throw new RuntimeException("Error creating URI for url " + url);
+		}
+	}
+
 	private void setLabelText() {
+		final String url = uri != null ? uri.toString() : "";
 		super.setText("<html><a href=\\\\\\\\\\\"" + url + "\\\\\\\\\\\">"
 				+ text + "</a></html>");
 	}
 
 	public String getUrl() {
-		return url;
+		return uri.toString();
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setUrl(final String url) {
+		this.uri = createUri(url);
 		setLabelText();
 	}
 
@@ -106,7 +97,7 @@ public class URLLabel extends JLabel {
 		return text;
 	}
 
-	public void setLabel(String text) {
+	public void setLabel(final String text) {
 		this.text = text;
 		setLabelText();
 	}

@@ -54,7 +54,7 @@ public class PortMapping implements Cloneable {
 	}
 
 	private PortMapping(final ActionResponse response) {
-		final Map<String, String> values = new HashMap<String, String>();
+		final Map<String, String> values = new HashMap<>();
 
 		for (final Object argObj : response.getOutActionArgumentNames()) {
 			final String argName = (String) argObj;

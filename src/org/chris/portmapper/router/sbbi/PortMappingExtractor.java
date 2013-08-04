@@ -45,7 +45,7 @@ class PortMappingExtractor {
 		this.router = router;
 		this.maxNumPortMappings = maxNumPortMappings;
 		this.logger = logger;
-		this.mappings = new LinkedList<PortMapping>();
+		this.mappings = new LinkedList<>();
 		this.moreEntries = true;
 		this.currentMappingNumber = 0;
 		this.nullPortMappings = 0;

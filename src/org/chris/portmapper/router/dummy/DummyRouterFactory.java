@@ -6,8 +6,8 @@ package org.chris.portmapper.router.dummy;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.chris.portmapper.router.IRouter;
 import org.chris.portmapper.router.AbstractRouterFactory;
+import org.chris.portmapper.router.IRouter;
 import org.chris.portmapper.router.RouterException;
 
 /**
@@ -18,7 +18,7 @@ public class DummyRouterFactory extends AbstractRouterFactory {
 
 	@Override
 	protected List<IRouter> findRoutersInternal() throws RouterException {
-		final List<IRouter> routers = new LinkedList<IRouter>();
+		final List<IRouter> routers = new LinkedList<>();
 		routers.add(new DummyRouter("DummyRouter1"));
 		routers.add(new DummyRouter("DummyRouter2"));
 		return routers;

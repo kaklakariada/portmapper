@@ -26,21 +26,18 @@ import org.jdesktop.application.Action;
  */
 public class AboutDialog extends JDialog {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private final static String DIALOG_NAME = "about_dialog";
 	private final static String ACTION_CLOSE = "about_dialog.close";
 
-	public AboutDialog() throws HeadlessException {
-		super(PortMapperApp.getInstance().getMainFrame(), true);
+	public AboutDialog(final PortMapperApp app) throws HeadlessException {
+		super(app.getMainFrame(), true);
 
 		this.setName(DIALOG_NAME);
-		ActionMap actionMap = PortMapperApp.getInstance().getContext()
-				.getActionMap(this.getClass(), this);
+		final ActionMap actionMap = app.getContext().getActionMap(
+				this.getClass(), this);
 
-		JPanel pane = new JPanel(new MigLayout("", "[center,grow]", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		final JPanel pane = new JPanel(new MigLayout("", "[center,grow]", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		this.add(pane);
 
 		pane.add(createLabel("about_dialog.label1"), "wrap");
@@ -50,10 +47,8 @@ public class AboutDialog extends JDialog {
 		pane.add(new URLLabel("about_dialog.upnplib_label"), "split 3");
 		pane.add(new URLLabel("about_dialog.weupnp_label"), "");
 		pane.add(new URLLabel("about_dialog.app_framework_label"), "wrap");
-		pane.add(new URLLabel("about_dialog.log4j_label"), "split 3");
-		pane.add(new URLLabel("about_dialog.miglayout_label"), "");
-		pane.add(new URLLabel("about_dialog.browserlauncher_label"),
-				"wrap unrelated");
+		pane.add(new URLLabel("about_dialog.log4j_label"), "split 2");
+		pane.add(new URLLabel("about_dialog.miglayout_label"), "wrap unrelated");
 
 		pane.add(createLabel("about_dialog.label5"), "wrap related");
 		pane.add(new URLLabel("about_dialog.homepage_label"), //$NON-NLS-1$
@@ -62,9 +57,10 @@ public class AboutDialog extends JDialog {
 
 		// Register an action listener that closes the window when the ESC
 		// button is pressed
-		KeyStroke escKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0,
-				true);
-		ActionListener windowCloseActionListener = new ActionListener() {
+		final KeyStroke escKeyStroke = KeyStroke.getKeyStroke(
+				KeyEvent.VK_ESCAPE, 0, true);
+		final ActionListener windowCloseActionListener = new ActionListener() {
+			@Override
 			public final void actionPerformed(final ActionEvent e) {
 				close();
 			}
@@ -81,8 +77,8 @@ public class AboutDialog extends JDialog {
 		this.dispose();
 	}
 
-	private JLabel createLabel(String name) {
-		JLabel newLabel = new JLabel(name);
+	private JLabel createLabel(final String name) {
+		final JLabel newLabel = new JLabel(name);
 		newLabel.setName(name);
 		return newLabel;
 	}

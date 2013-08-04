@@ -9,11 +9,8 @@ public class PortMapperStarter {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
-		if (System.getProperty("os.name").startsWith("Mac")) {
-			MacSetup.setupMac();
-		}
-		PortMapperCli cli = new PortMapperCli();
+	public static void main(final String[] args) {
+		final PortMapperCli cli = new PortMapperCli();
 		cli.start(args);
 	}
 }
