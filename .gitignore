@@ -5,3 +5,5 @@
 *.war
 *.ear
 .gradle
+/target
+/build
