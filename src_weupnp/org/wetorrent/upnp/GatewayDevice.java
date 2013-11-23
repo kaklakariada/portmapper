@@ -325,7 +325,6 @@ public class GatewayDevice {
 		portMappingEntry.setEnabled(nameValue.get("NewEnabled"));
 		portMappingEntry.setPortMappingDescription(nameValue
 				.get("NewPortMappingDescription"));
-		// portMappingEntry.set(nameValue.get("NewLeaseDuration"));
 
 		if (nameValue.get("errorCode") != null) {
 			throw new WeUPnPException("Got error code '"
