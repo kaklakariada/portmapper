@@ -12,8 +12,8 @@ import net.sbbi.upnp.devices.UPNPRootDevice;
 import net.sbbi.upnp.impls.InternetGatewayDevice;
 import net.sbbi.upnp.messages.UPNPResponseException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.Settings;
 import org.chris.portmapper.model.PortMapping;
@@ -32,7 +32,7 @@ import org.chris.portmapper.util.EncodingUtilities;
  */
 public class SBBIRouter extends AbstractRouter {
 
-	private final Log logger = LogFactory.getLog(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	/**
 	 * The wrapped router device.

@@ -10,8 +10,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.router.AbstractRouterFactory;
 import org.chris.portmapper.router.IRouter;
@@ -25,7 +25,7 @@ import org.wetorrent.upnp.WeUPnPException;
  */
 public class WeUPnPRouterFactory extends AbstractRouterFactory {
 
-	private final Log logger = LogFactory.getLog(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private final GatewayDiscover discover = new GatewayDiscover();
 

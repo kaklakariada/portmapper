@@ -3,8 +3,8 @@ package org.chris.portmapper.router.dummy;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.chris.portmapper.model.PortMapping;
 import org.chris.portmapper.model.Protocol;
 import org.chris.portmapper.router.AbstractRouter;
@@ -17,7 +17,7 @@ import org.chris.portmapper.router.RouterException;
  */
 public class DummyRouter extends AbstractRouter {
 
-	private final Log logger = LogFactory.getLog(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private final Collection<PortMapping> mappings;
 

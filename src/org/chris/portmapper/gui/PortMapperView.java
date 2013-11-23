@@ -32,8 +32,8 @@ import javax.swing.event.ListSelectionListener;
 
 import net.miginfocom.swing.MigLayout;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.model.PortMapping;
 import org.chris.portmapper.model.PortMappingPreset;
@@ -66,7 +66,7 @@ public class PortMapperView extends FrameView {
 	private static final String ACTION_REMOVE_PRESET_MAPPING = "mainFrame.preset_mappings.remove";
 	private static final String ACTION_USE_PRESET_MAPPING = "mainFrame.preset_mappings.use";
 
-	private final Log logger = LogFactory.getLog(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private static final String PROPERTY_MAPPING_SELECTED = "mappingSelected";
 	private static final String PROPERTY_ROUTER_CONNECTED = "connectedToRouter";

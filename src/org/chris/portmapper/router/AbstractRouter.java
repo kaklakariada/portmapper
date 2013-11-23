@@ -8,8 +8,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is the abstract super class for all routers.
@@ -19,7 +19,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class AbstractRouter implements IRouter {
 
-	private final Log logger = LogFactory.getLog(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private final String name;
 

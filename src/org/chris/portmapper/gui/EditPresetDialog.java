@@ -30,8 +30,8 @@ import javax.swing.event.ListSelectionListener;
 
 import net.miginfocom.swing.MigLayout;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.Settings;
 import org.chris.portmapper.model.PortMapping;
@@ -69,7 +69,7 @@ public class EditPresetDialog extends JDialog {
 			+ ".remove_port";
 	private static final String PROPERTY_PORT_SELECTED = "portSelected";
 
-	private final Log logger = LogFactory.getLog(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final PortMappingPreset editedPreset;
 
 	private PortsTableModel tableModel;

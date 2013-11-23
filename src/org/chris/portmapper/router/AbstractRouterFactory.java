@@ -7,8 +7,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.chris.portmapper.PortMapperApp;
 
 /**
@@ -18,7 +18,7 @@ public abstract class AbstractRouterFactory {
 
 	private static final String LOCATION_URL_SYSTEM_PROPERTY = "portmapper.locationUrl";
 
-	private final Log logger = LogFactory.getLog(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	protected final PortMapperApp app;
 
