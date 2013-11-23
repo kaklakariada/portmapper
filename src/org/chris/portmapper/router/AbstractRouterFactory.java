@@ -12,8 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import org.chris.portmapper.PortMapperApp;
 
 /**
- * @author chris
- * @version $Id$
+ * The base class for all router factories.
  */
 public abstract class AbstractRouterFactory {
 
@@ -21,7 +20,7 @@ public abstract class AbstractRouterFactory {
 
 	private final Log logger = LogFactory.getLog(this.getClass());
 
-	private final PortMapperApp app;
+	protected final PortMapperApp app;
 
 	private final String name;
 

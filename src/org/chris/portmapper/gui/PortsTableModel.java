@@ -14,17 +14,18 @@ import org.chris.portmapper.model.Protocol;
 import org.chris.portmapper.model.SinglePortMapping;
 
 /**
- * @author chris
- * @version $Id$
+ * The table model for the ports table.
  */
 public class PortsTableModel extends AbstractTableModel implements
 		PropertyChangeListener {
 
 	private static final long serialVersionUID = 1L;
 	private final List<SinglePortMapping> ports;
+	private final PortMapperApp app;
 
-	public PortsTableModel(final List<SinglePortMapping> ports) {
-		super();
+	public PortsTableModel(final PortMapperApp app,
+			final List<SinglePortMapping> ports) {
+		this.app = app;
 		this.ports = ports;
 	}
 
@@ -73,13 +74,13 @@ public class PortsTableModel extends AbstractTableModel implements
 	public String getColumnName(final int column) {
 		switch (column) {
 		case 0:
-			return PortMapperApp.getResourceMap().getString(
+			return app.getResourceMap().getString(
 					"preset_dialog.ports.protocol");
 		case 1:
-			return PortMapperApp.getResourceMap().getString(
+			return app.getResourceMap().getString(
 					"preset_dialog.ports.external");
 		case 2:
-			return PortMapperApp.getResourceMap().getString(
+			return app.getResourceMap().getString(
 					"preset_dialog.ports.internal");
 		default:
 			throw new IllegalArgumentException("Column " + column //$NON-NLS-1$

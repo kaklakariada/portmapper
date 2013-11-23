@@ -46,7 +46,7 @@ public class SBBIRouterFactory extends AbstractRouterFactory {
 		final List<IRouter> routers = new ArrayList<>(devices.length);
 
 		for (final InternetGatewayDevice device : devices) {
-			routers.add(new SBBIRouter(device));
+			routers.add(new SBBIRouter(app, device));
 		}
 
 		return routers;

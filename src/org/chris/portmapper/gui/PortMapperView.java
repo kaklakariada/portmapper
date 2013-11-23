@@ -44,8 +44,7 @@ import org.jdesktop.application.FrameView;
 import org.jdesktop.application.Task;
 
 /**
- * @author chris
- * @version $Id$
+ * The main view.
  */
 public class PortMapperView extends FrameView {
 
@@ -105,13 +104,13 @@ public class PortMapperView extends FrameView {
 				this.getClass(), this);
 		final JPanel routerPanel = new JPanel(new MigLayout("",
 				"[fill, grow][]", ""));
-		routerPanel.setBorder(BorderFactory.createTitledBorder(PortMapperApp
+		routerPanel.setBorder(BorderFactory.createTitledBorder(app
 				.getResourceMap().getString("mainFrame.router.title")));
 
 		routerPanel.add(
-				new JLabel(PortMapperApp.getResourceMap().getString(
+				new JLabel(app.getResourceMap().getString(
 						"mainFrame.router.external_address")), "align label"); //$NON-NLS-2$
-		externalIPLabel = new JLabel(PortMapperApp.getResourceMap().getString(
+		externalIPLabel = new JLabel(app.getResourceMap().getString(
 				"mainFrame.router.not_connected"));
 		routerPanel.add(externalIPLabel, "width 130!");
 		routerPanel.add(
@@ -121,9 +120,9 @@ public class PortMapperView extends FrameView {
 				"wrap, spany 2, aligny base, sizegroup router");
 
 		routerPanel.add(
-				new JLabel(PortMapperApp.getResourceMap().getString(
+				new JLabel(app.getResourceMap().getString(
 						"mainFrame.router.internal_address")), "align label");
-		internalIPLabel = new JLabel(PortMapperApp.getResourceMap().getString(
+		internalIPLabel = new JLabel(app.getResourceMap().getString(
 				"mainFrame.router.not_connected"));
 		routerPanel.add(internalIPLabel, "width 130!");
 		routerPanel.add(
@@ -176,7 +175,7 @@ public class PortMapperView extends FrameView {
 
 		final JPanel logPanel = new JPanel(new MigLayout("", "[grow, fill]",
 				"[grow, fill]"));
-		logPanel.setBorder(BorderFactory.createTitledBorder(PortMapperApp
+		logPanel.setBorder(BorderFactory.createTitledBorder(app
 				.getResourceMap().getString("mainFrame.log_messages.title")));
 		logPanel.add(scrollPane, "height 100::");
 
@@ -189,7 +188,7 @@ public class PortMapperView extends FrameView {
 
 		final JPanel presetPanel = new JPanel(new MigLayout("",
 				"[grow, fill][]", ""));
-		presetPanel.setBorder(BorderFactory.createTitledBorder(PortMapperApp
+		presetPanel.setBorder(BorderFactory.createTitledBorder(app
 				.getResourceMap().getString(
 						"mainFrame.port_mapping_presets.title")));
 
@@ -231,7 +230,7 @@ public class PortMapperView extends FrameView {
 		final ActionMap actionMap = this.getContext().getActionMap(
 				this.getClass(), this);
 
-		tableModel = new PortMappingsTableModel();
+		tableModel = new PortMappingsTableModel(app);
 		mappingsTable = new JTable(tableModel);
 		mappingsTable.setAutoCreateRowSorter(true);
 		mappingsTable
@@ -252,9 +251,8 @@ public class PortMapperView extends FrameView {
 		final JPanel mappingsPanel = new JPanel(new MigLayout("",
 				"[fill,grow]", "[grow,fill][]"));
 		mappingsPanel.setName("port_mappings");
-		final Border panelBorder = BorderFactory
-				.createTitledBorder(PortMapperApp.getResourceMap().getString(
-						"mainFrame.port_mappings.title"));
+		final Border panelBorder = BorderFactory.createTitledBorder(app
+				.getResourceMap().getString("mainFrame.port_mappings.title"));
 		mappingsPanel.setBorder(panelBorder);
 		mappingsPanel.add(mappingsTabelPane, "height 100::, span 2, wrap");
 
@@ -270,15 +268,15 @@ public class PortMapperView extends FrameView {
 	public void updateAddresses() {
 		final IRouter router = app.getRouter();
 		if (router == null) {
-			externalIPLabel.setText(PortMapperApp.getResourceMap().getString(
+			externalIPLabel.setText(app.getResourceMap().getString(
 					"mainFrame.router.not_connected"));
-			internalIPLabel.setText(PortMapperApp.getResourceMap().getString(
+			internalIPLabel.setText(app.getResourceMap().getString(
 					"mainFrame.router.not_connected"));
 			return;
 		}
-		externalIPLabel.setText(PortMapperApp.getResourceMap().getString(
+		externalIPLabel.setText(app.getResourceMap().getString(
 				"mainFrame.router.updating"));
-		internalIPLabel.setText(PortMapperApp.getResourceMap().getString(
+		internalIPLabel.setText(app.getResourceMap().getString(
 				"mainFrame.router.updating"));
 		internalIPLabel.setText(router.getInternalHostName());
 		try {
@@ -395,10 +393,10 @@ public class PortMapperView extends FrameView {
 					&& localHostAddress == null) {
 				JOptionPane.showMessageDialog(
 						this.getFrame(),
-						PortMapperApp.getResourceMap().getString(
+						app.getResourceMap().getString(
 								"messages.error_getting_localhost_address"),
-						PortMapperApp.getResourceMap().getString(
-								"messages.error"), JOptionPane.ERROR_MESSAGE);
+						app.getResourceMap().getString("messages.error"),
+						JOptionPane.ERROR_MESSAGE);
 			} else {
 				logger.info("Adding port mappings for preset "
 						+ selectedItem.toString());

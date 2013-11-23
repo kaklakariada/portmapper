@@ -43,12 +43,10 @@ import org.jdesktop.application.ResourceMap;
 
 /**
  * This class represents the edit preset dialog.
- * 
- * @author chris
- * @version $Id$
  */
-@SuppressWarnings("serial")
 public class EditPresetDialog extends JDialog {
+
+	private static final long serialVersionUID = 1L;
 
 	public static final String PROPERTY_PORTS = "ports";
 
@@ -213,18 +211,15 @@ public class EditPresetDialog extends JDialog {
 		pack();
 	}
 
-	/**
-	 * @return
-	 */
 	private Component getPortsPanel() {
 		final ActionMap actionMap = app.getContext().getActionMap(
 				this.getClass(), this);
 
 		final JPanel portsPanel = new JPanel(new MigLayout("", "", ""));
-		portsPanel.setBorder(BorderFactory.createTitledBorder(PortMapperApp
+		portsPanel.setBorder(BorderFactory.createTitledBorder(app
 				.getResourceMap().getString("preset_dialog.ports.title")));
 
-		tableModel = new PortsTableModel(this.ports);
+		tableModel = new PortsTableModel(app, ports);
 		portsTable = new JTable(tableModel);
 		portsTable
 				.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -367,7 +362,7 @@ public class EditPresetDialog extends JDialog {
 	}
 
 	private void showErrorMessage(final String titleKey, final String messageKey) {
-		final ResourceMap resourceMap = PortMapperApp.getResourceMap();
+		final ResourceMap resourceMap = app.getResourceMap();
 		JOptionPane.showMessageDialog(this, resourceMap.getString(messageKey),
 				resourceMap.getString(titleKey), JOptionPane.ERROR_MESSAGE);
 	}

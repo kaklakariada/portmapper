@@ -31,8 +31,7 @@ import org.jdesktop.application.SingleFrameApplication;
 import org.jdesktop.application.utils.OSXAdapter;
 
 /**
- * @author chris
- * @version $Id$
+ * The main application class
  */
 public class PortMapperApp extends SingleFrameApplication {
 
@@ -81,7 +80,7 @@ public class PortMapperApp extends SingleFrameApplication {
 	}
 
 	private void registerMacOSXListeners() {
-		final PortMapperView view = PortMapperApp.getInstance().getView();
+		final PortMapperView view = getView();
 		OSXAdapter.setPreferencesHandler(view,
 				getMethod(PortMapperView.class, "changeSettings"));
 		OSXAdapter.setAboutHandler(view,
@@ -203,17 +202,12 @@ public class PortMapperApp extends SingleFrameApplication {
 		}
 	}
 
-	@Deprecated
-	public static synchronized PortMapperApp getInstance() {
-		return SingleFrameApplication.getInstance(PortMapperApp.class);
-	}
-
-	public static ResourceMap getResourceMap() {
-		return PortMapperApp.getInstance().getContext().getResourceMap();
+	public ResourceMap getResourceMap() {
+		return getContext().getResourceMap();
 	}
 
 	public PortMapperView getView() {
-		return (PortMapperView) PortMapperApp.getInstance().getMainView();
+		return (PortMapperView) getMainView();
 	}
 
 	public void connectRouter() throws RouterException {
@@ -249,7 +243,7 @@ public class PortMapperApp extends SingleFrameApplication {
 		// More than one router found: ask user.
 		logger.info("Found more than one router: ask user.");
 
-		final ResourceMap resourceMap = PortMapperApp.getResourceMap();
+		final ResourceMap resourceMap = getResourceMap();
 		final IRouter selectedRouter = (IRouter) JOptionPane.showInputDialog(
 				this.getView().getFrame(),
 				resourceMap.getString("messages.select_router.message"),

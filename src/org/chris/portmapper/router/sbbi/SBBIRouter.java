@@ -45,8 +45,11 @@ public class SBBIRouter extends AbstractRouter {
 	 */
 	private final static int MAX_NUM_PORTMAPPINGS = 500;
 
-	SBBIRouter(final InternetGatewayDevice router) {
+	private final PortMapperApp app;
+
+	SBBIRouter(final PortMapperApp app, final InternetGatewayDevice router) {
 		super(router.getIGDRootDevice().getModelName());
+		this.app = app;
 		this.router = router;
 	}
 
@@ -177,7 +180,7 @@ public class SBBIRouter extends AbstractRouter {
 	}
 
 	private String encodeIfNecessary(final String description) {
-		final Settings settings = PortMapperApp.getInstance().getSettings();
+		final Settings settings = app.getSettings();
 		if (settings == null || settings.isUseEntityEncoding()) {
 			return EncodingUtilities.htmlEntityEncode(description);
 		}

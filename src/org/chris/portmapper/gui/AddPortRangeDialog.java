@@ -261,7 +261,7 @@ public class AddPortRangeDialog extends JDialog {
 	}
 
 	private void showErrorMessage(final String titleKey, final String messageKey) {
-		final ResourceMap resourceMap = PortMapperApp.getResourceMap();
+		final ResourceMap resourceMap = app.getResourceMap();
 		JOptionPane.showMessageDialog(this, resourceMap.getString(messageKey),
 				resourceMap.getString(titleKey), JOptionPane.ERROR_MESSAGE);
 	}
