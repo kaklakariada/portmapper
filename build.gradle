@@ -28,6 +28,9 @@ jar {
 repositories {
 	flatDir { dirs 'lib' }
 	mavenCentral()
+	maven {
+		url 'http://teleal.org/m2'
+	}
 }
 
 dependencies {
@@ -40,4 +43,6 @@ dependencies {
 	compile 'org.jdesktop.bsaf:bsaf:1.9.2'
 	compile ':sbbi-upnplib:1.0.4'
 	runtime 'commons-jxpath:commons-jxpath:1.1' // sbbi
+	compile 'org.teleal.cling:cling-core:1.0.5'
+	compile 'org.teleal.cling:cling-support:1.0.5'
 }
