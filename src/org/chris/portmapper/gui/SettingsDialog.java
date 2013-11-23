@@ -18,8 +18,8 @@ import javax.swing.KeyStroke;
 
 import net.miginfocom.swing.MigLayout;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.log4j.Level;
 import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.Settings;
@@ -38,7 +38,7 @@ public class SettingsDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 
-	private final Log logger = LogFactory.getLog(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private final static String DIALOG_NAME = "settings_dialog";
 

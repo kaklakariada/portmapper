@@ -8,20 +8,18 @@ import net.sbbi.upnp.impls.InternetGatewayDevice;
 import net.sbbi.upnp.messages.ActionResponse;
 import net.sbbi.upnp.messages.UPNPResponseException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.chris.portmapper.model.PortMapping;
 import org.chris.portmapper.router.RouterException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class fetches all {@link PortMapping} from an
  * {@link InternetGatewayDevice}.
- * 
- * @author chris
  */
 class PortMappingExtractor {
 
-	private final Log logger;
+	private final Logger logger;
 	private final InternetGatewayDevice router;
 	private final Collection<PortMapping> mappings;
 	private boolean moreEntries;
@@ -36,12 +34,12 @@ class PortMappingExtractor {
 
 	PortMappingExtractor(final InternetGatewayDevice router,
 			final int maxNumPortMappings) {
-		this(router, maxNumPortMappings, LogFactory
-				.getLog(PortMappingExtractor.class));
+		this(router, maxNumPortMappings, LoggerFactory
+				.getLogger(PortMappingExtractor.class));
 	}
 
 	PortMappingExtractor(final InternetGatewayDevice router,
-			final int maxNumPortMappings, final Log logger) {
+			final int maxNumPortMappings, final Logger logger) {
 		this.router = router;
 		this.maxNumPortMappings = maxNumPortMappings;
 		this.logger = logger;

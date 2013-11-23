@@ -13,9 +13,6 @@ import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.Logger;
 import org.apache.log4j.WriterAppender;
 import org.chris.portmapper.model.PortMapping;
 import org.chris.portmapper.model.Protocol;
@@ -28,6 +25,8 @@ import org.chris.portmapper.router.weupnp.WeUPnPRouterFactory;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.utils.AppHelper;
 import org.jdesktop.application.utils.PlatformType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author chris
@@ -35,7 +34,7 @@ import org.jdesktop.application.utils.PlatformType;
  */
 public class PortMapperCli {
 
-	private final Log logger = LogFactory.getLog(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private static final String ADD_OPTION = "a";
 	private static final String HELP_OPTION = "h";
@@ -351,8 +350,8 @@ public class PortMapperCli {
 
 	@SuppressWarnings("resource")
 	private void initDummyLogAppender() {
-		final WriterAppender writerAppender = (WriterAppender) Logger
-				.getLogger("org.chris.portmapper").getAppender("jtextarea");
+		final WriterAppender writerAppender = (WriterAppender) org.apache.log4j.Logger
+				.getLogger(PortMapperApp.LOGGER_NAME).getAppender("jtextarea");
 		writerAppender.setWriter(new DummyWriter());
 	}
 

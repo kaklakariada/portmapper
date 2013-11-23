@@ -13,8 +13,8 @@ import java.net.URISyntaxException;
 
 import javax.swing.JLabel;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class implements a label that looks and behaves like a link, i.e. you
@@ -30,7 +30,7 @@ public class URLLabel extends JLabel {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private final static Log logger = LogFactory.getLog(URLLabel.class);
+	private final static Logger logger = LoggerFactory.getLogger(URLLabel.class);
 
 	private String text;
 

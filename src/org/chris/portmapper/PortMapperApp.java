@@ -14,10 +14,7 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.apache.log4j.WriterAppender;
 import org.chris.portmapper.gui.PortMapperView;
 import org.chris.portmapper.logging.LogMessageListener;
@@ -29,11 +26,15 @@ import org.chris.portmapper.router.RouterException;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
 import org.jdesktop.application.utils.OSXAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The main application class
  */
 public class PortMapperApp extends SingleFrameApplication {
+
+	static final String LOGGER_NAME = "org.chris.portmapper";
 
 	/**
 	 * The name of the system property which will be used as the directory where
@@ -46,7 +47,7 @@ public class PortMapperApp extends SingleFrameApplication {
 	 */
 	private static final String SETTINGS_FILENAME = "settings.xml";
 
-	private final Log logger = LogFactory.getLog(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private IRouter router;
 	private Settings settings;
@@ -169,8 +170,8 @@ public class PortMapperApp extends SingleFrameApplication {
 	}
 
 	private void initTextAreaLogger() {
-		final WriterAppender writerAppender = (WriterAppender) Logger
-				.getLogger("org.chris.portmapper").getAppender("jtextarea");
+		final WriterAppender writerAppender = (WriterAppender) org.apache.log4j.Logger
+				.getLogger(LOGGER_NAME).getAppender("jtextarea");
 		if (writerAppender != null) {
 			logWriter = new LogMessageWriter();
 			writerAppender.setWriter(logWriter);
@@ -422,7 +423,7 @@ public class PortMapperApp extends SingleFrameApplication {
 	}
 
 	public void setLogLevel(final String logLevel) {
-		Logger.getLogger("org.chris.portmapper").setLevel(
+		org.apache.log4j.Logger.getLogger(LOGGER_NAME).setLevel(
 				Level.toLevel(logLevel));
 	}
 }

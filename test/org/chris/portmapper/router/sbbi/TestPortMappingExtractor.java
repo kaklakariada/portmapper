@@ -8,13 +8,13 @@ import net.sbbi.upnp.impls.InternetGatewayDevice;
 import net.sbbi.upnp.messages.ActionResponse;
 import net.sbbi.upnp.messages.UPNPResponseException;
 
-import org.apache.commons.logging.Log;
 import org.chris.portmapper.model.PortMapping;
 import org.chris.portmapper.router.RouterException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.slf4j.Logger;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
@@ -23,15 +23,13 @@ import static org.mockito.Mockito.*;
 
 /**
  * Unit tests for {@link PortMappingExtractor}.
- * 
- * @author chris
  */
 public class TestPortMappingExtractor {
 
 	@Mock
 	private InternetGatewayDevice routerMock;
 	@Mock
-	private Log loggerMock;
+	private Logger loggerMock;
 	private PortMappingExtractor portMappingExtractor;
 
 	@Before

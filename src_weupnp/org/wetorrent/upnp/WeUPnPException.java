@@ -1,28 +1,17 @@
-/**
- * 
- */
 package org.wetorrent.upnp;
 
 /**
- * @author chris
- * 
+ * Exception caused by a weupnp action.
  */
-@SuppressWarnings("serial")
 public class WeUPnPException extends Exception {
 
-	/**
-	 * @param message
-	 */
-	public WeUPnPException(String message) {
+	private static final long serialVersionUID = 1L;
+
+	public WeUPnPException(final String message) {
 		super(message);
 	}
 
-	/**
-	 * @param message
-	 * @param cause
-	 */
-	public WeUPnPException(String message, Throwable cause) {
+	public WeUPnPException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
-
 }

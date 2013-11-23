@@ -8,8 +8,8 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.AbstractListModel;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.chris.portmapper.Settings;
 import org.chris.portmapper.model.PortMappingPreset;
 
@@ -21,7 +21,7 @@ public class PresetListModel extends AbstractListModel<PortMappingPreset>
 		implements PropertyChangeListener {
 
 	private static final long serialVersionUID = 1L;
-	private final Log logger = LogFactory.getLog(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final Settings settings;
 
 	public PresetListModel(final Settings settings) {
