@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.chris.portmapper.PortMapperApp;
 
 /**
  * @author chris
@@ -20,12 +21,23 @@ public abstract class AbstractRouterFactory {
 
 	private final Log logger = LogFactory.getLog(this.getClass());
 
+	private final PortMapperApp app;
+
+	private final String name;
+
+	protected AbstractRouterFactory(final PortMapperApp app, final String name) {
+		this.app = app;
+		this.name = name;
+	}
+
 	/**
 	 * Get the name of the router factory that can be displayed to the user.
 	 * 
 	 * @return the name of the router factory that can be displayed to the user.
 	 */
-	public abstract String getName();
+	public String getName() {
+		return name;
+	}
 
 	public List<IRouter> findRouters() throws RouterException {
 		final String locationUrl = System
@@ -62,4 +74,9 @@ public abstract class AbstractRouterFactory {
 	 */
 	protected abstract IRouter connect(final String locationUrl)
 			throws RouterException;
+
+	@Override
+	public String toString() {
+		return name;
+	}
 }

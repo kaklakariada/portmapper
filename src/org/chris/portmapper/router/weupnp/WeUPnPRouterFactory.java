@@ -12,6 +12,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.router.AbstractRouterFactory;
 import org.chris.portmapper.router.IRouter;
 import org.chris.portmapper.router.RouterException;
@@ -20,13 +21,17 @@ import org.wetorrent.upnp.GatewayDiscover;
 import org.wetorrent.upnp.WeUPnPException;
 
 /**
- * @author chris
- * @version $Id$
+ * A router factoring using the weupnp library.
  */
 public class WeUPnPRouterFactory extends AbstractRouterFactory {
+
 	private final Log logger = LogFactory.getLog(this.getClass());
 
 	private final GatewayDiscover discover = new GatewayDiscover();
+
+	public WeUPnPRouterFactory(final PortMapperApp app) {
+		super(app, "weupnp lib");
+	}
 
 	@Override
 	protected List<IRouter> findRoutersInternal() throws RouterException {
@@ -49,26 +54,6 @@ public class WeUPnPRouterFactory extends AbstractRouterFactory {
 			routers.add(new WeUPnPRouter(device));
 		}
 		return routers;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return getName();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.chris.portmapper.router.IRouterFactory#getName()
-	 */
-	@Override
-	public String getName() {
-		return "weupnp lib";
 	}
 
 	/*

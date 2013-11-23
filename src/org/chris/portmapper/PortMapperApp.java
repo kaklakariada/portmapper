@@ -2,6 +2,7 @@ package org.chris.portmapper;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -221,7 +222,7 @@ public class PortMapperApp extends SingleFrameApplication {
 			return;
 		}
 
-		AbstractRouterFactory routerFactory;
+		final AbstractRouterFactory routerFactory;
 		try {
 			routerFactory = createRouterFactory();
 		} catch (final RouterException e) {
@@ -279,11 +280,23 @@ public class PortMapperApp extends SingleFrameApplication {
 							+ settings.getRouterFactoryClassName(), e1);
 		}
 
-		AbstractRouterFactory routerFactory;
+		final Constructor<AbstractRouterFactory> constructor;
+		try {
+			constructor = routerFactoryClass
+					.getConstructor(PortMapperApp.class);
+		} catch (final NoSuchMethodException e1) {
+			throw new RouterException("Could not find constructor of "
+					+ routerFactoryClass.getName(), e1);
+		} catch (final SecurityException e1) {
+			throw new RouterException("Could not find constructor of "
+					+ routerFactoryClass.getName(), e1);
+		}
+
+		final AbstractRouterFactory routerFactory;
 		logger.debug("Creating a new instance of the router factory class "
 				+ routerFactoryClass);
 		try {
-			routerFactory = routerFactoryClass.newInstance();
+			routerFactory = constructor.newInstance(this);
 		} catch (final Exception e) {
 			throw new RouterException(
 					"Could not create a router factory for name "

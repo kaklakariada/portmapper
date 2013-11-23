@@ -10,13 +10,13 @@ import java.util.List;
 
 import net.sbbi.upnp.impls.InternetGatewayDevice;
 
+import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.router.AbstractRouterFactory;
 import org.chris.portmapper.router.IRouter;
 import org.chris.portmapper.router.RouterException;
 
 /**
- * @author chris
- * @version $Id$
+ * Router factory using the SBBI UPnP library.
  */
 public class SBBIRouterFactory extends AbstractRouterFactory {
 
@@ -24,6 +24,10 @@ public class SBBIRouterFactory extends AbstractRouterFactory {
 	 * The timeout in milliseconds for finding a router device.
 	 */
 	private final static int DISCOVERY_TIMEOUT = 5000;
+
+	public SBBIRouterFactory(final PortMapperApp app) {
+		super(app, "SBBI UPnP lib");
+	}
 
 	@Override
 	protected List<IRouter> findRoutersInternal() throws RouterException {
@@ -46,16 +50,6 @@ public class SBBIRouterFactory extends AbstractRouterFactory {
 		}
 
 		return routers;
-	}
-
-	@Override
-	public String toString() {
-		return getName();
-	}
-
-	@Override
-	public String getName() {
-		return "SBBI UPnP lib";
 	}
 
 	@Override
