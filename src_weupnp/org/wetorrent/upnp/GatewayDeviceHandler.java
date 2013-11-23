@@ -38,24 +38,12 @@ public class GatewayDeviceHandler extends DefaultHandler {
 
 	private final Log logger = LogFactory.getLog(this.getClass());
 
-	/**
-	 * 
-	 */
 	private static final int STATE_INITIALIZED = 0;
 
-	/**
-	 * 
-	 */
 	private static final int STATE_SERVICE_LIST = 1;
 
-	/**
-	 * 
-	 */
 	private static final int STATE_WAN_COMMON_INTERFACE_CONFIG = 2;
 
-	/**
-	 * 
-	 */
 	private static final int STATE_WAN_IP_CONNECTION = 3;
 
 	private final GatewayDevice device;
