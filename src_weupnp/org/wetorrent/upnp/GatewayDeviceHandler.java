@@ -24,8 +24,8 @@
 
 package org.wetorrent.upnp;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -36,7 +36,7 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class GatewayDeviceHandler extends DefaultHandler {
 
-	private final Log logger = LogFactory.getLog(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private static final int STATE_INITIALIZED = 0;
 
