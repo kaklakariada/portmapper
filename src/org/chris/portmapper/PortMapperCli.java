@@ -1,6 +1,7 @@
 package org.chris.portmapper;
 
-import java.io.Writer;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -13,7 +14,6 @@ import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
-import org.apache.log4j.WriterAppender;
 import org.chris.portmapper.model.PortMapping;
 import org.chris.portmapper.model.Protocol;
 import org.chris.portmapper.router.AbstractRouterFactory;
@@ -27,6 +27,8 @@ import org.jdesktop.application.utils.AppHelper;
 import org.jdesktop.application.utils.PlatformType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import ch.qos.logback.core.OutputStreamAppender;
 
 /**
  * @author chris
@@ -350,9 +352,24 @@ public class PortMapperCli {
 
 	@SuppressWarnings("resource")
 	private void initDummyLogAppender() {
-		final WriterAppender writerAppender = (WriterAppender) org.apache.log4j.Logger
-				.getLogger(PortMapperApp.LOGGER_NAME).getAppender("jtextarea");
-		writerAppender.setWriter(new DummyWriter());
+		final OutputStreamAppender<?> appender = PortMapperApp
+				.getOutputStreamAppender();
+		if (appender != null) {
+			appender.setOutputStream(new DummyOutputStream());
+		}
+	}
+
+	private static class DummyOutputStream extends OutputStream {
+		@Override
+		public void write(final int b) throws IOException {
+			// ignore
+		}
+
+		@Override
+		public void write(final byte[] b, final int off, final int len)
+				throws IOException {
+			// ignore
+		}
 	}
 
 	private CommandLine parseCommandLine(final String[] args) {
@@ -363,23 +380,6 @@ public class PortMapperCli {
 			logger.error("Could not parse command line: " + e.getMessage());
 			System.exit(1);
 			return null;
-		}
-	}
-
-	private static class DummyWriter extends Writer {
-		@Override
-		public void close() {
-			// ignore
-		}
-
-		@Override
-		public void flush() {
-			// ignore
-		}
-
-		@Override
-		public void write(final char[] cbuf, final int off, final int len) {
-			// ignore
 		}
 	}
 
