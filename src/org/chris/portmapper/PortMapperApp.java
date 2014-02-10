@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
 
 import org.chris.portmapper.gui.PortMapperView;
 import org.chris.portmapper.logging.LogMessageListener;
-import org.chris.portmapper.logging.LogMessageWriter;
+import org.chris.portmapper.logging.LogMessageOutputStream;
 import org.chris.portmapper.model.PortMappingPreset;
 import org.chris.portmapper.router.AbstractRouterFactory;
 import org.chris.portmapper.router.IRouter;
@@ -28,11 +28,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Level;
+import ch.qos.logback.core.OutputStreamAppender;
 
 /**
  * The main application class
  */
 public class PortMapperApp extends SingleFrameApplication {
+
+	private static final String OUTPUT_STREAM_APPENDER_NAME = "OUTPUT_STREAM";
 
 	static final String LOGGER_NAME = "org.chris.portmapper";
 
@@ -51,7 +54,7 @@ public class PortMapperApp extends SingleFrameApplication {
 
 	private IRouter router;
 	private Settings settings;
-	private LogMessageWriter logWriter;
+	private LogMessageOutputStream logMessageOutputStream;
 
 	@Override
 	protected void startup() {
@@ -170,19 +173,26 @@ public class PortMapperApp extends SingleFrameApplication {
 	}
 
 	private void initTextAreaLogger() {
-		final WriterAppender writerAppender = (WriterAppender) org.apache.log4j.Logger
-				.getLogger(LOGGER_NAME).getAppender("jtextarea");
-		if (writerAppender != null) {
-			logWriter = new LogMessageWriter();
-			writerAppender.setWriter(logWriter);
+		final OutputStreamAppender<?> appender = getOutputStreamAppender();
+		if (appender != null) {
+			logMessageOutputStream = new LogMessageOutputStream();
+			appender.setOutputStream(logMessageOutputStream);
+			appender.start();
 		} else {
-			throw new RuntimeException(
-					"Did not find appender jtextarea for logger org.chris.portmapper");
+			throw new RuntimeException("Did not find appender "
+					+ OUTPUT_STREAM_APPENDER_NAME
+					+ " for logger org.chris.portmapper");
 		}
 	}
 
+	static OutputStreamAppender<?> getOutputStreamAppender() {
+		return (OutputStreamAppender<?>) ((ch.qos.logback.classic.Logger) LoggerFactory
+				.getLogger(LOGGER_NAME))
+				.getAppender(OUTPUT_STREAM_APPENDER_NAME);
+	}
+
 	public void setLogMessageListener(final LogMessageListener listener) {
-		this.logWriter.registerListener(listener);
+		this.logMessageOutputStream.registerListener(listener);
 	}
 
 	@Override
