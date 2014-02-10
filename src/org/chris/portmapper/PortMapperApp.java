@@ -14,8 +14,6 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.WriterAppender;
 import org.chris.portmapper.gui.PortMapperView;
 import org.chris.portmapper.logging.LogMessageListener;
 import org.chris.portmapper.logging.LogMessageWriter;
@@ -28,6 +26,8 @@ import org.jdesktop.application.SingleFrameApplication;
 import org.jdesktop.application.utils.OSXAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import ch.qos.logback.classic.Level;
 
 /**
  * The main application class
@@ -423,7 +423,7 @@ public class PortMapperApp extends SingleFrameApplication {
 	}
 
 	public void setLogLevel(final String logLevel) {
-		org.apache.log4j.Logger.getLogger(LOGGER_NAME).setLevel(
-				Level.toLevel(logLevel));
+		((ch.qos.logback.classic.Logger) LoggerFactory.getLogger(LOGGER_NAME))
+				.setLevel(Level.toLevel(logLevel));
 	}
 }

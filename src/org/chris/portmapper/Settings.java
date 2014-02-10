@@ -6,9 +6,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Level;
 import org.chris.portmapper.model.PortMappingPreset;
 import org.chris.portmapper.router.sbbi.SBBIRouterFactory;
+
+import ch.qos.logback.classic.Level;
 
 /**
  * @author chris
