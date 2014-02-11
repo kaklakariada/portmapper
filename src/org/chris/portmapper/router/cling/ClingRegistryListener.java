@@ -43,7 +43,8 @@ public class ClingRegistryListener extends DefaultRegistryListener {
     }
 
     @Override
-    public void deviceAdded(final Registry registry, final Device device) {
+    public void deviceAdded(final Registry registry, @SuppressWarnings("rawtypes") final Device device) {
+        @SuppressWarnings("unchecked")
         final Service<?, ?> connectionService = discoverConnectionService(device);
         if (connectionService == null) {
             return;
@@ -53,12 +54,13 @@ public class ClingRegistryListener extends DefaultRegistryListener {
         foundServices.offer(connectionService);
     }
 
-    protected Service<?, ?> discoverConnectionService(final Device<?, Device, ?> device) {
+    protected Service<?, ?> discoverConnectionService(@SuppressWarnings("rawtypes") final Device<?, Device, ?> device) {
         if (!device.getType().equals(IGD_DEVICE_TYPE)) {
             logger.debug("Found service of wrong type {}, expected {}.", device.getType(), IGD_DEVICE_TYPE);
             return null;
         }
 
+        @SuppressWarnings("rawtypes")
         final Device[] connectionDevices = device.findDevices(CONNECTION_DEVICE_TYPE);
         if (connectionDevices.length == 0) {
             logger.debug("IGD doesn't support '{}': {}", CONNECTION_DEVICE_TYPE, device);
@@ -70,6 +72,7 @@ public class ClingRegistryListener extends DefaultRegistryListener {
         return findConnectionService(connectionDevices);
     }
 
+    @SuppressWarnings("rawtypes")
     private Service<?, ?> findConnectionService(final Device[] connectionDevices) {
         for (final Device connectionDevice : connectionDevices) {
 

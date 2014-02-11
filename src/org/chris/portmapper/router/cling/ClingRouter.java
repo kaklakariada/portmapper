@@ -26,17 +26,17 @@ public class ClingRouter extends AbstractRouter {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final Service service;
+    private final Service<?, ?> service;
 
     private final Registry registry;
 
-    public ClingRouter(final Service service, final Registry registry) {
+    public ClingRouter(final Service<?, ?> service, final Registry registry) {
         super(getName(service));
         this.service = service;
         this.registry = registry;
     }
 
-    private static String getName(final Service service) {
+    private static String getName(final Service<?, ?> service) {
         return service.getDevice().getDisplayString();
     }
 
@@ -125,12 +125,13 @@ public class ClingRouter extends AbstractRouter {
     public void addPortMapping(final PortMapping mapping) throws RouterException {
         new PortMappingAdd(service, registry.getUpnpService().getControlPoint(), convertMapping(mapping)) {
             @Override
-            public void success(final ActionInvocation invocation) {
+            public void success(@SuppressWarnings("rawtypes") final ActionInvocation invocation) {
                 logger.debug("Port mapping added: " + mapping);
             }
 
             @Override
-            public void failure(final ActionInvocation invocation, final UpnpResponse operation, final String defaultMsg) {
+            public void failure(@SuppressWarnings("rawtypes") final ActionInvocation invocation,
+                    final UpnpResponse operation, final String defaultMsg) {
                 throw new RuntimeException("Failed to add port mapping: " + defaultMsg);
             }
         }.run(); // Synchronous!
@@ -153,12 +154,13 @@ public class ClingRouter extends AbstractRouter {
         new PortMappingDelete(service, convertMapping(mapping)) {
 
             @Override
-            public void success(final ActionInvocation invocation) {
+            public void success(@SuppressWarnings("rawtypes") final ActionInvocation invocation) {
                 logger.debug("Port mapping remove: " + mapping);
             }
 
             @Override
-            public void failure(final ActionInvocation invocation, final UpnpResponse operation, final String defaultMsg) {
+            public void failure(@SuppressWarnings("rawtypes") final ActionInvocation invocation,
+                    final UpnpResponse operation, final String defaultMsg) {
                 throw new RuntimeException("Failed to remove port mapping: " + defaultMsg);
             }
         }.run();
