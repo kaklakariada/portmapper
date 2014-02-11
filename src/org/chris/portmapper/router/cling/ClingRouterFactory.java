@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.chris.portmapper.router.cling;
 
 import java.util.Arrays;
@@ -9,13 +6,13 @@ import java.util.EventObject;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.router.AbstractRouterFactory;
 import org.chris.portmapper.router.IRouter;
 import org.chris.portmapper.router.RouterException;
 import org.jdesktop.application.Application.ExitListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.teleal.cling.DefaultUpnpServiceConfiguration;
 import org.teleal.cling.UpnpService;
 import org.teleal.cling.UpnpServiceConfiguration;
@@ -26,7 +23,7 @@ import org.teleal.cling.model.meta.Service;
  * 
  */
 public class ClingRouterFactory extends AbstractRouterFactory {
-	private final Log logger = LogFactory.getLog(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	public ClingRouterFactory(final PortMapperApp app) {
 		super(app, "Cling lib");

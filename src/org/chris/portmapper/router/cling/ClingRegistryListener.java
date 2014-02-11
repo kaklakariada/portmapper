@@ -1,13 +1,10 @@
-/**
- * 
- */
 package org.chris.portmapper.router.cling;
 
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.teleal.cling.model.meta.Device;
 import org.teleal.cling.model.meta.Service;
 import org.teleal.cling.model.types.DeviceType;
@@ -22,7 +19,7 @@ import org.teleal.cling.registry.Registry;
  */
 public class ClingRegistryListener extends DefaultRegistryListener {
 
-	private final Log logger = LogFactory.getLog(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	public static final DeviceType IGD_DEVICE_TYPE = new UDADeviceType(
 			"InternetGatewayDevice", 1);

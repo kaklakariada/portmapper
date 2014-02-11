@@ -1,17 +1,14 @@
-/**
- * 
- */
 package org.chris.portmapper.router.cling;
 
 import java.util.Collection;
 import java.util.Collections;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.chris.portmapper.model.PortMapping;
 import org.chris.portmapper.model.Protocol;
 import org.chris.portmapper.router.AbstractRouter;
 import org.chris.portmapper.router.RouterException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.teleal.cling.model.action.ActionInvocation;
 import org.teleal.cling.model.message.UpnpResponse;
 import org.teleal.cling.model.meta.Service;
@@ -27,7 +24,7 @@ import org.teleal.cling.support.igd.callback.PortMappingDelete;
  */
 public class ClingRouter extends AbstractRouter {
 
-	private final Log logger = LogFactory.getLog(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private final Service service;
 
@@ -54,7 +51,8 @@ public class ClingRouter extends AbstractRouter {
 		new GetExternalIP(service) {
 
 			@Override
-			public void failure(final ActionInvocation invocation, final UpnpResponse operation, final String defaultMsg) {
+			public void failure(final ActionInvocation invocation,
+					final UpnpResponse operation, final String defaultMsg) {
 				// TODO Auto-generated method stub
 
 			}
@@ -120,35 +118,47 @@ public class ClingRouter extends AbstractRouter {
 	 * org.chris.portmapper.router.IRouter#addPortMappings(java.util.Collection)
 	 */
 	@Override
-	public void addPortMappings(final Collection<PortMapping> mappings) throws RouterException {
+	public void addPortMappings(final Collection<PortMapping> mappings)
+			throws RouterException {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void addPortMapping(final PortMapping mapping) throws RouterException {
-		new PortMappingAdd(service, registry.getUpnpService().getControlPoint(), convertMapping(mapping)) {
+	public void addPortMapping(final PortMapping mapping)
+			throws RouterException {
+		new PortMappingAdd(service,
+				registry.getUpnpService().getControlPoint(),
+				convertMapping(mapping)) {
 			@Override
 			public void success(final ActionInvocation invocation) {
 				logger.debug("Port mapping added: " + mapping);
 			}
 
 			@Override
-			public void failure(final ActionInvocation invocation, final UpnpResponse operation, final String defaultMsg) {
-				throw new RuntimeException("Failed to add port mapping: " + defaultMsg);
+			public void failure(final ActionInvocation invocation,
+					final UpnpResponse operation, final String defaultMsg) {
+				throw new RuntimeException("Failed to add port mapping: "
+						+ defaultMsg);
 			}
 		}.run(); // Synchronous!
 	}
 
-	private org.teleal.cling.support.model.PortMapping convertMapping(final PortMapping mapping) {
-		final UnsignedIntegerFourBytes leaseTimeDuration = new UnsignedIntegerFourBytes(0);
-		final UnsignedIntegerTwoBytes externalPort = new UnsignedIntegerTwoBytes(mapping.getExternalPort());
-		final UnsignedIntegerTwoBytes internalPort = new UnsignedIntegerTwoBytes(mapping.getInternalPort());
-		final org.teleal.cling.support.model.PortMapping.Protocol protocol = mapping.getProtocol() == Protocol.TCP ? org.teleal.cling.support.model.PortMapping.Protocol.TCP
+	private org.teleal.cling.support.model.PortMapping convertMapping(
+			final PortMapping mapping) {
+		final UnsignedIntegerFourBytes leaseTimeDuration = new UnsignedIntegerFourBytes(
+				0);
+		final UnsignedIntegerTwoBytes externalPort = new UnsignedIntegerTwoBytes(
+				mapping.getExternalPort());
+		final UnsignedIntegerTwoBytes internalPort = new UnsignedIntegerTwoBytes(
+				mapping.getInternalPort());
+		final org.teleal.cling.support.model.PortMapping.Protocol protocol = mapping
+				.getProtocol() == Protocol.TCP ? org.teleal.cling.support.model.PortMapping.Protocol.TCP
 				: org.teleal.cling.support.model.PortMapping.Protocol.UDP;
-		final org.teleal.cling.support.model.PortMapping pm = new org.teleal.cling.support.model.PortMapping(true,
-				leaseTimeDuration, mapping.getRemoteHost(), externalPort, internalPort, mapping.getInternalClient(),
-				protocol, mapping.getDescription());
+		final org.teleal.cling.support.model.PortMapping pm = new org.teleal.cling.support.model.PortMapping(
+				true, leaseTimeDuration, mapping.getRemoteHost(), externalPort,
+				internalPort, mapping.getInternalClient(), protocol,
+				mapping.getDescription());
 		return pm;
 	}
 
@@ -162,8 +172,10 @@ public class ClingRouter extends AbstractRouter {
 			}
 
 			@Override
-			public void failure(final ActionInvocation invocation, final UpnpResponse operation, final String defaultMsg) {
-				throw new RuntimeException("Failed to remove port mapping: " + defaultMsg);
+			public void failure(final ActionInvocation invocation,
+					final UpnpResponse operation, final String defaultMsg) {
+				throw new RuntimeException("Failed to remove port mapping: "
+						+ defaultMsg);
 			}
 		}.run();
 	}
@@ -176,7 +188,8 @@ public class ClingRouter extends AbstractRouter {
 	 * .model.Protocol, java.lang.String, int)
 	 */
 	@Override
-	public void removePortMapping(final Protocol protocol, final String remoteHost, final int externalPort)
+	public void removePortMapping(final Protocol protocol,
+			final String remoteHost, final int externalPort)
 			throws RouterException {
 		// TODO Auto-generated method stub
 
