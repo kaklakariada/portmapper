@@ -4,6 +4,8 @@ apply plugin: 'application'
 mainClassName = 'org.chris.portmapper.PortMapperStarter'
 version = '1.9.6'
 sourceCompatibility = 1.7
+def clingVersion = '1.0.5'
+
 
 sourceSets {
 	main {
@@ -43,6 +45,6 @@ dependencies {
 	compile 'org.jdesktop.bsaf:bsaf:1.9.2'
 	compile ':sbbi-upnplib:1.0.4'
 	runtime 'commons-jxpath:commons-jxpath:1.1' // sbbi
-	compile 'org.teleal.cling:cling-core:1.0.5'
-	compile 'org.teleal.cling:cling-support:1.0.5'
+	compile "org.teleal.cling:cling-core:$clingVersion"
+	compile "org.teleal.cling:cling-support:$clingVersion"
 }
