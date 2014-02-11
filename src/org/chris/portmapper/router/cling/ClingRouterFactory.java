@@ -17,6 +17,7 @@ import org.jdesktop.application.Application.ExitListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teleal.cling.DefaultUpnpServiceConfiguration;
+import org.teleal.cling.UpnpService;
 import org.teleal.cling.UpnpServiceConfiguration;
 import org.teleal.cling.UpnpServiceImpl;
 import org.teleal.cling.model.meta.Service;
@@ -35,9 +36,6 @@ public class ClingRouterFactory extends AbstractRouterFactory {
         loadJavaUtilLoggingConfiguration();
     }
 
-    /**
-     * 
-     */
     private void loadJavaUtilLoggingConfiguration() {
         try (final InputStream inputStream = getClass().getResourceAsStream(JUL_LOGGING_PROPERTIES)) {
             LogManager.getLogManager().readConfiguration(inputStream);
@@ -50,7 +48,7 @@ public class ClingRouterFactory extends AbstractRouterFactory {
     protected List<IRouter> findRoutersInternal() throws RouterException {
         final UpnpServiceConfiguration config = new DefaultUpnpServiceConfiguration();
         final ClingRegistryListener clingRegistryListener = new ClingRegistryListener();
-        final UpnpServiceImpl upnpService = new UpnpServiceImpl(config, clingRegistryListener);
+        final UpnpService upnpService = new UpnpServiceImpl(config, clingRegistryListener);
         shutdownServiceOnExit(upnpService);
 
         log.debug("Start searching using upnp service");
@@ -64,10 +62,11 @@ public class ClingRouterFactory extends AbstractRouterFactory {
         }
 
         log.debug("Found service {}", service);
-        return Arrays.<IRouter> asList(new ClingRouter(service, upnpService.getRegistry()));
+        return Arrays.<IRouter> asList(new ClingRouter(service, upnpService.getRegistry(), upnpService
+                .getControlPoint()));
     }
 
-    private void shutdownServiceOnExit(final UpnpServiceImpl upnpService) {
+    private void shutdownServiceOnExit(final UpnpService upnpService) {
         app.addExitListener(new ExitListener() {
             @Override
             public void willExit(final EventObject event) {
