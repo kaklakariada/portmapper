@@ -23,48 +23,44 @@ import org.teleal.cling.model.meta.Service;
  * 
  */
 public class ClingRouterFactory extends AbstractRouterFactory {
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	public ClingRouterFactory(final PortMapperApp app) {
-		super(app, "Cling lib");
-	}
+    public ClingRouterFactory(final PortMapperApp app) {
+        super(app, "Cling lib");
+    }
 
-	@Override
-	protected List<IRouter> findRoutersInternal() throws RouterException {
-		final UpnpServiceConfiguration config = new DefaultUpnpServiceConfiguration();
-		final ClingRegistryListener clingRegistryListener = new ClingRegistryListener();
-		final UpnpService upnpService = new UpnpServiceImpl(config,
-				clingRegistryListener);
-		shutdownServiceOnExit(upnpService);
-		upnpService.getControlPoint().search();
-		final Service service = clingRegistryListener.waitForServiceFound(5,
-				TimeUnit.SECONDS);
+    @Override
+    protected List<IRouter> findRoutersInternal() throws RouterException {
+        final UpnpServiceConfiguration config = new DefaultUpnpServiceConfiguration();
+        final ClingRegistryListener clingRegistryListener = new ClingRegistryListener();
+        final UpnpService upnpService = new UpnpServiceImpl(config, clingRegistryListener);
+        shutdownServiceOnExit(upnpService);
+        upnpService.getControlPoint().search();
+        final Service<?, ?> service = clingRegistryListener.waitForServiceFound(5, TimeUnit.SECONDS);
 
-		if (service == null) {
-			return Collections.emptyList();
-		}
+        if (service == null) {
+            return Collections.emptyList();
+        }
 
-		return Arrays.<IRouter> asList(new ClingRouter(upnpService
-				.getRegistry(), service));
-	}
+        return Arrays.<IRouter> asList(new ClingRouter(service, upnpService.getRegistry()));
+    }
 
-	private void shutdownServiceOnExit(final UpnpService upnpService) {
-		app.addExitListener(new ExitListener() {
-			@Override
-			public void willExit(final EventObject event) {
-				upnpService.shutdown();
-			}
+    private void shutdownServiceOnExit(final UpnpService upnpService) {
+        app.addExitListener(new ExitListener() {
+            @Override
+            public void willExit(final EventObject event) {
+                upnpService.shutdown();
+            }
 
-			@Override
-			public boolean canExit(final EventObject event) {
-				return true;
-			}
-		});
-	}
+            @Override
+            public boolean canExit(final EventObject event) {
+                return true;
+            }
+        });
+    }
 
-	@Override
-	protected IRouter connect(final String locationUrl) throws RouterException {
-		throw new UnsupportedOperationException(
-				"Direct connection is not supported for Cling library.");
-	}
+    @Override
+    protected IRouter connect(final String locationUrl) throws RouterException {
+        throw new UnsupportedOperationException("Direct connection is not supported for Cling library.");
+    }
 }
