@@ -29,6 +29,12 @@ test {
 	jvmArgs '-XX:+HeapDumpOnOutOfMemoryError', '-enableassertions'
 }
 
+processResources {
+    filter org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+        "VERSION_NUMBER": project.version
+    ]
+}
+
 jar {
 	from {
 		configurations.compile.collect {
