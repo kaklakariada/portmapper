@@ -16,18 +16,17 @@ import javax.swing.JTextArea;
  * {@link LogMessageListener}. All written strings are buffered, so no string is
  * missed. A {@link LogMessageListener} can be registered using method
  * {@link #registerListener(JTextArea)}.
- * 
+ *
  * @author Christoph
- * @version $Id$
  */
 public interface LogMessageListener {
 
-	/**
-	 * Process the given log message. This could mean e.g. to display the
-	 * message to the user.
-	 * 
-	 * @param message
-	 *            the message to process.
-	 */
-	public void addLogMessage(String message);
+    /**
+     * Process the given log message. This could mean e.g. to display the
+     * message to the user.
+     * 
+     * @param message
+     *            the message to process.
+     */
+    public void addLogMessage(String message);
 }

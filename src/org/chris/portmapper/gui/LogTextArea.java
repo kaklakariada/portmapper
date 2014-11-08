@@ -18,27 +18,26 @@ import org.chris.portmapper.logging.LogMessageListener;
 /**
  * The {@link LogTextArea} appends all log message to the displayed text and
  * scrolls down.
- * 
+ *
  * @author Christoph
- * @version $Id$
  */
 @SuppressWarnings("serial")
 public class LogTextArea extends JTextArea implements LogMessageListener {
 
-	/**
-	 * Create a new instance and set default properties.
-	 */
-	public LogTextArea() {
-		super();
-		setFont(Font.decode("Monospaced"));
-		setEditable(false);
-		setWrapStyleWord(true);
-		setLineWrap(false);
-	}
+    /**
+     * Create a new instance and set default properties.
+     */
+    public LogTextArea() {
+        super();
+        setFont(Font.decode("Monospaced"));
+        setEditable(false);
+        setWrapStyleWord(true);
+        setLineWrap(false);
+    }
 
-	@Override
-	public void addLogMessage(final String message) {
-		this.append(message);
-		this.setCaretPosition(this.getDocument().getLength());
-	}
+    @Override
+    public void addLogMessage(final String message) {
+        this.append(message);
+        this.setCaretPosition(this.getDocument().getLength());
+    }
 }
