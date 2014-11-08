@@ -13,18 +13,15 @@ import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.router.AbstractRouterFactory;
 import org.chris.portmapper.router.IRouter;
 import org.chris.portmapper.router.RouterException;
+import org.fourthline.cling.DefaultUpnpServiceConfiguration;
+import org.fourthline.cling.UpnpService;
+import org.fourthline.cling.UpnpServiceConfiguration;
+import org.fourthline.cling.UpnpServiceImpl;
+import org.fourthline.cling.model.meta.Service;
 import org.jdesktop.application.Application.ExitListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teleal.cling.DefaultUpnpServiceConfiguration;
-import org.teleal.cling.UpnpService;
-import org.teleal.cling.UpnpServiceConfiguration;
-import org.teleal.cling.UpnpServiceImpl;
-import org.teleal.cling.model.meta.Service;
 
-/**
- * 
- */
 public class ClingRouterFactory extends AbstractRouterFactory {
 
     private static final String JUL_LOGGING_PROPERTIES = "/jul-logging.properties";

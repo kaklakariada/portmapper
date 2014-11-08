@@ -8,25 +8,20 @@ import org.chris.portmapper.model.PortMapping;
 import org.chris.portmapper.model.Protocol;
 import org.chris.portmapper.router.AbstractRouter;
 import org.chris.portmapper.router.RouterException;
+import org.fourthline.cling.controlpoint.ControlPoint;
+import org.fourthline.cling.model.action.ActionInvocation;
+import org.fourthline.cling.model.message.UpnpResponse;
+import org.fourthline.cling.model.meta.Service;
+import org.fourthline.cling.model.meta.UDAVersion;
+import org.fourthline.cling.model.types.UnsignedIntegerFourBytes;
+import org.fourthline.cling.model.types.UnsignedIntegerTwoBytes;
+import org.fourthline.cling.registry.Registry;
+import org.fourthline.cling.support.igd.callback.GetExternalIP;
+import org.fourthline.cling.support.igd.callback.PortMappingAdd;
+import org.fourthline.cling.support.igd.callback.PortMappingDelete;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teleal.cling.controlpoint.ControlPoint;
-import org.teleal.cling.model.action.ActionInvocation;
-import org.teleal.cling.model.message.UpnpResponse;
-import org.teleal.cling.model.meta.Service;
-import org.teleal.cling.model.meta.UDAVersion;
-import org.teleal.cling.model.types.UnsignedIntegerFourBytes;
-import org.teleal.cling.model.types.UnsignedIntegerTwoBytes;
-import org.teleal.cling.registry.Registry;
-import org.teleal.cling.support.igd.callback.GetExternalIP;
-import org.teleal.cling.support.igd.callback.PortMappingAdd;
-import org.teleal.cling.support.igd.callback.PortMappingDelete;
 
-import com.esotericsoftware.minlog.Log;
-
-/**
- * 
- */
 public class ClingRouter extends AbstractRouter {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -114,13 +109,13 @@ public class ClingRouter extends AbstractRouter {
         }.run(); // Synchronous!
     }
 
-    private org.teleal.cling.support.model.PortMapping convertMapping(final PortMapping mapping) {
+    private org.fourthline.cling.support.model.PortMapping convertMapping(final PortMapping mapping) {
         final UnsignedIntegerFourBytes leaseTimeDuration = new UnsignedIntegerFourBytes(0);
         final UnsignedIntegerTwoBytes externalPort = new UnsignedIntegerTwoBytes(mapping.getExternalPort());
         final UnsignedIntegerTwoBytes internalPort = new UnsignedIntegerTwoBytes(mapping.getInternalPort());
-        final org.teleal.cling.support.model.PortMapping.Protocol protocol = mapping.getProtocol() == Protocol.TCP ? org.teleal.cling.support.model.PortMapping.Protocol.TCP
-                : org.teleal.cling.support.model.PortMapping.Protocol.UDP;
-        return new org.teleal.cling.support.model.PortMapping(true, leaseTimeDuration, mapping.getRemoteHost(),
+        final org.fourthline.cling.support.model.PortMapping.Protocol protocol = mapping.getProtocol() == Protocol.TCP ? org.fourthline.cling.support.model.PortMapping.Protocol.TCP
+                : org.fourthline.cling.support.model.PortMapping.Protocol.UDP;
+        return new org.fourthline.cling.support.model.PortMapping(true, leaseTimeDuration, mapping.getRemoteHost(),
                 externalPort, internalPort, mapping.getInternalClient(), protocol, mapping.getDescription());
     }
 
@@ -148,7 +143,7 @@ public class ClingRouter extends AbstractRouter {
 
     @Override
     public void disconnect() {
-        Log.debug("Shutdown registry");
+        logger.debug("Shutdown registry");
         registry.shutdown();
     }
 }

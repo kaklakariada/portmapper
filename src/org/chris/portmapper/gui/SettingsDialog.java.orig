@@ -113,8 +113,12 @@ public class SettingsDialog extends JDialog {
         dialogPane.add(createLabel("settings_dialog.upnp_lib"));
 
         routerFactoryClassComboBox = new JComboBox<>(new Vector<>(Arrays.asList(SBBIRouterFactory.class.getName(),
+<<<<<<< HEAD
                 WeUPnPRouterFactory.class.getName(), ClingRouterFactory.class.getName(),
                 DummyRouterFactory.class.getName())));
+=======
+                WeUPnPRouterFactory.class.getName(), DummyRouterFactory.class.getName())));
+>>>>>>> master
         routerFactoryClassComboBox.setSelectedItem(settings.getRouterFactoryClassName());
         dialogPane.add(routerFactoryClassComboBox, "span 2, wrap");
 
@@ -126,7 +130,12 @@ public class SettingsDialog extends JDialog {
     }
 
     /**
+<<<<<<< HEAD
      * This method is executed when the user clicks the save button. The method saves the entered preset
+=======
+     * This method is executed when the user clicks the save button. The method
+     * saves the entered preset
+>>>>>>> master
      */
     @Action(name = ACTION_SAVE)
     public void save() {

@@ -23,10 +23,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+<<<<<<< HEAD
+ * This class represents a router device and provides methods for managing port mappings and getting information about
+ * the router. It useses the SBBI library's {@link InternetGatewayDevice}.
+ * 
+=======
  * This class represents a router device and provides methods for managing port
  * mappings and getting information about the router. It useses the SBBI
  * library's {@link InternetGatewayDevice}.
  *
+>>>>>>> master
  * @author chris
  */
 public class SBBIRouter extends AbstractRouter {
@@ -39,8 +45,12 @@ public class SBBIRouter extends AbstractRouter {
     final private InternetGatewayDevice router;
 
     /**
+<<<<<<< HEAD
+     * The maximum number of port mappings that we will try to retrieve from the router.
+=======
      * The maximum number of port mappings that we will try to retrieve from the
      * router.
+>>>>>>> master
      */
     private final static int MAX_NUM_PORTMAPPINGS = 500;
 
@@ -174,8 +184,13 @@ public class SBBIRouter extends AbstractRouter {
 
     @Override
     public void addPortMappings(final Collection<PortMapping> mappings) throws RouterException {
+<<<<<<< HEAD
+        logger.info("Adding {} port mappings", mappings.size());
+        for (final PortMapping portMapping : mappings) {
+=======
         for (final PortMapping portMapping : mappings) {
             logger.info("Adding port mapping " + portMapping);
+>>>>>>> master
             addPortMapping(portMapping);
         }
     }

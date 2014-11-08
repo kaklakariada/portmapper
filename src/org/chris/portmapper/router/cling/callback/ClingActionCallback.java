@@ -1,14 +1,11 @@
 package org.chris.portmapper.router.cling.callback;
 
-import org.teleal.cling.controlpoint.ActionCallback;
-import org.teleal.cling.controlpoint.ControlPoint;
-import org.teleal.cling.model.action.ActionInvocation;
-import org.teleal.cling.model.message.UpnpResponse;
-import org.teleal.cling.model.meta.Service;
+import org.fourthline.cling.controlpoint.ActionCallback;
+import org.fourthline.cling.controlpoint.ControlPoint;
+import org.fourthline.cling.model.action.ActionInvocation;
+import org.fourthline.cling.model.message.UpnpResponse;
+import org.fourthline.cling.model.meta.Service;
 
-/**
- * 
- */
 abstract class ClingActionCallback extends ActionCallback {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })

@@ -3,20 +3,17 @@ package org.chris.portmapper.router.cling;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 
+import org.fourthline.cling.model.meta.Device;
+import org.fourthline.cling.model.meta.Service;
+import org.fourthline.cling.model.types.DeviceType;
+import org.fourthline.cling.model.types.ServiceType;
+import org.fourthline.cling.model.types.UDADeviceType;
+import org.fourthline.cling.model.types.UDAServiceType;
+import org.fourthline.cling.registry.DefaultRegistryListener;
+import org.fourthline.cling.registry.Registry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teleal.cling.model.meta.Device;
-import org.teleal.cling.model.meta.Service;
-import org.teleal.cling.model.types.DeviceType;
-import org.teleal.cling.model.types.ServiceType;
-import org.teleal.cling.model.types.UDADeviceType;
-import org.teleal.cling.model.types.UDAServiceType;
-import org.teleal.cling.registry.DefaultRegistryListener;
-import org.teleal.cling.registry.Registry;
 
-/**
- *
- */
 public class ClingRegistryListener extends DefaultRegistryListener {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());

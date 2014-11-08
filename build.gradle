@@ -1,6 +1,11 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
+repositories {
+    mavenLocal()
+    maven { url 'http://4thline.org/m2' }
+    mavenCentral()
+}
 
 version = '1.9.6'
 sourceCompatibility = 1.7
@@ -29,6 +34,12 @@ test {
 	jvmArgs '-XX:+HeapDumpOnOutOfMemoryError', '-enableassertions'
 }
 
+processResources {
+    filter org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+        "VERSION_NUMBER": project.version
+    ]
+}
+
 jar {
 	from {
 		configurations.compile.collect {
@@ -55,6 +66,7 @@ dependencies {
 	compile 'com.miglayout:miglayout:3.7.4'
 	compile 'org.jdesktop.bsaf:bsaf:1.9.2'
 	compile ':sbbi-upnplib:1.0.4'
+    compile 'org.fourthline.cling:cling-support:2.0.1'
 	runtime 'commons-jxpath:commons-jxpath:1.1' // sbbi
 }
 
