@@ -2,3 +2,4 @@
 .gradle
 /target
 /build
+/bin/
