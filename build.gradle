@@ -1,11 +1,9 @@
 apply plugin: 'java'
-apply plugin: 'application'
+apply plugin: 'eclipse'
 
-mainClassName = 'org.chris.portmapper.PortMapperStarter'
+
 version = '1.9.6'
 sourceCompatibility = 1.7
-def clingVersion = '1.0.5'
-
 
 sourceSets {
 	main {
@@ -15,24 +13,37 @@ sourceSets {
 		}
 		resources { srcDir 'resources' }
 	}
-	test {
-		java { srcDir 'test' }
-	}
+	test { java { srcDir 'test'
+		} }
 }
 
-[compileJava, compileTestJava]*.options*.compilerArgs = ['-Xlint:all']
+tasks.withType(JavaCompile) {
+	options.compilerArgs << '-Xlint:all'
+	options.encoding = 'UTF-8'
+}
+
+test {
+	if(logger.infoEnabled) {
+		testLogging.showStandardStreams = true
+	}
+	jvmArgs '-XX:+HeapDumpOnOutOfMemoryError', '-enableassertions'
+}
 
 jar {
-	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-	manifest { attributes 'Main-Class': mainClassName }
+	from {
+		configurations.compile.collect {
+			it.isDirectory() ? it : zipTree(it)
+		}
+		configurations.runtime.collect {
+			it.isDirectory() ? it : zipTree(it)
+		}
+	}
+	manifest { attributes 'Main-Class': 'org.chris.portmapper.PortMapperStarter' }
 }
 
 repositories {
 	flatDir { dirs 'lib' }
 	mavenCentral()
-	maven {
-		url 'http://teleal.org/m2'
-	}
 }
 
 dependencies {
@@ -40,12 +51,28 @@ dependencies {
 	testCompile 'org.mockito:mockito-core:1.9.5'
 	compile 'commons-cli:commons-cli:1.2'
 	compile 'org.slf4j:slf4j-api:1.7.6'
-    runtime 'org.slf4j:jul-to-slf4j:1.7.6'
 	compile 'ch.qos.logback:logback-classic:1.1.1'
 	compile 'com.miglayout:miglayout:3.7.4'
 	compile 'org.jdesktop.bsaf:bsaf:1.9.2'
 	compile ':sbbi-upnplib:1.0.4'
 	runtime 'commons-jxpath:commons-jxpath:1.1' // sbbi
-	compile "org.teleal.cling:cling-core:$clingVersion"
-	compile "org.teleal.cling:cling-support:$clingVersion"
+}
+
+
+eclipse {
+	classpath {
+		downloadSources = true
+		containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
+		def javaVersion = project.sourceCompatibility.toString()
+		def container = "org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-$javaVersion"
+		logger.info "Using container $container for $project"
+		containers container
+	}
+	jdt.file {
+		beforeMerged  { jdt ->
+		  File defaultProperties = new File("${rootProject.projectDir}/gradle/defaultEclipseJdtPrefs.properties").absoluteFile
+		  logger.info "Load defaults from $defaultProperties for $project"
+		  jdt.load(defaultProperties)
+		}
+	  }
 }
