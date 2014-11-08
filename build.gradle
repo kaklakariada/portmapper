@@ -1,4 +1,6 @@
 apply plugin: 'java'
+apply plugin: 'eclipse'
+
 
 version = '1.9.6'
 sourceCompatibility = 1.7
@@ -11,22 +13,31 @@ sourceSets {
 		}
 		resources { srcDir 'resources' }
 	}
-	test {
-		java { srcDir 'test' }
-	}
+	test { java { srcDir 'test'
+		} }
 }
 
-[compileJava, compileTestJava]*.options*.compilerArgs = ['-Xlint:all']
+tasks.withType(JavaCompile) {
+	options.compilerArgs << '-Xlint:all'
+	options.encoding = 'UTF-8'
+}
+
+test {
+	if(logger.infoEnabled) {
+		testLogging.showStandardStreams = true
+	}
+	jvmArgs '-XX:+HeapDumpOnOutOfMemoryError', '-enableassertions'
+}
 
 jar {
 	from {
-        configurations.compile.collect {
-            it.isDirectory() ? it : zipTree(it)
-        }
-        configurations.runtime.collect {
-            it.isDirectory() ? it : zipTree(it)
-        }
-    }
+		configurations.compile.collect {
+			it.isDirectory() ? it : zipTree(it)
+		}
+		configurations.runtime.collect {
+			it.isDirectory() ? it : zipTree(it)
+		}
+	}
 	manifest { attributes 'Main-Class': 'org.chris.portmapper.PortMapperStarter' }
 }
 
@@ -45,4 +56,23 @@ dependencies {
 	compile 'org.jdesktop.bsaf:bsaf:1.9.2'
 	compile ':sbbi-upnplib:1.0.4'
 	runtime 'commons-jxpath:commons-jxpath:1.1' // sbbi
+}
+
+
+eclipse {
+	classpath {
+		downloadSources = true
+		containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
+		def javaVersion = project.sourceCompatibility.toString()
+		def container = "org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-$javaVersion"
+		logger.info "Using container $container for $project"
+		containers container
+	}
+	jdt.file {
+		beforeMerged  { jdt ->
+		  File defaultProperties = new File("${rootProject.projectDir}/gradle/defaultEclipseJdtPrefs.properties").absoluteFile
+		  logger.info "Load defaults from $defaultProperties for $project"
+		  jdt.load(defaultProperties)
+		}
+	  }
 }
