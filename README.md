@@ -68,8 +68,6 @@ Generate Eclipse project files:
 
 Then import the project into your Eclipse workspace.
 
-    The main program window
-
 Participate
 ===========
 
