@@ -302,10 +302,24 @@ public class PortMapperCli {
 			final String[] optionValues) throws RouterException {
 
 		final String remoteHost = null;
-		final String internalClient = optionValues[0];
-		final int internalPort = Integer.parseInt(optionValues[1]);
-		final int externalPort = Integer.parseInt(optionValues[2]);
-		final Protocol protocol = Protocol.valueOf(optionValues[3]);
+		String internalClient = null;
+		int indexstart = 0;
+               
+		if (optionValues.length == 4)
+		{
+				internalClient = optionValues[0];
+		} else if (optionValues.length == 3){
+				internalClient = router.getLocalHostAddress();
+				indexstart = 1;
+		} else {
+				logger.error("Invalid number of arguments for option " 
+						+ ADD_OPTION);
+				return;
+		}
+                
+		final int internalPort = Integer.parseInt(optionValues[1 - indexstart]);
+		final int externalPort = Integer.parseInt(optionValues[2 - indexstart]);
+		final Protocol protocol = Protocol.valueOf(optionValues[3 - indexstart]);
 
 		final String description = "PortMapper " + protocol + "/"
 				+ internalClient + ":" + internalPort;
