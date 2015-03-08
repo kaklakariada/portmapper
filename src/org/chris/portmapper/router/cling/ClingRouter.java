@@ -2,21 +2,23 @@ package org.chris.portmapper.router.cling;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.chris.portmapper.model.PortMapping;
 import org.chris.portmapper.model.Protocol;
 import org.chris.portmapper.router.AbstractRouter;
 import org.chris.portmapper.router.RouterException;
+import org.chris.portmapper.router.cling.callback.GetExternalIpSync;
+import org.chris.portmapper.router.cling.callback.GetPortMappingEntry;
+import org.chris.portmapper.router.cling.callback.SyncActionCallback;
 import org.fourthline.cling.controlpoint.ControlPoint;
 import org.fourthline.cling.model.action.ActionInvocation;
 import org.fourthline.cling.model.message.UpnpResponse;
+import org.fourthline.cling.model.meta.RemoteService;
 import org.fourthline.cling.model.meta.Service;
 import org.fourthline.cling.model.meta.UDAVersion;
 import org.fourthline.cling.model.types.UnsignedIntegerFourBytes;
 import org.fourthline.cling.model.types.UnsignedIntegerTwoBytes;
 import org.fourthline.cling.registry.Registry;
-import org.fourthline.cling.support.igd.callback.GetExternalIP;
 import org.fourthline.cling.support.igd.callback.PortMappingAdd;
 import org.fourthline.cling.support.igd.callback.PortMappingDelete;
 import org.slf4j.Logger;
@@ -26,13 +28,13 @@ public class ClingRouter extends AbstractRouter {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final Service<?, ?> service;
+    private final RemoteService service;
 
     private final Registry registry;
 
     private final ControlPoint controlPoint;
 
-    public ClingRouter(final Service<?, ?> service, final Registry registry, final ControlPoint controlPoint) {
+    public ClingRouter(final RemoteService service, final Registry registry, final ControlPoint controlPoint) {
         super(getName(service));
         this.service = service;
         this.registry = registry;
@@ -45,20 +47,11 @@ public class ClingRouter extends AbstractRouter {
 
     @Override
     public String getExternalIPAddress() throws RouterException {
-        final AtomicReference<String> externalIP = new AtomicReference<>();
-        new GetExternalIP(service) {
-            @Override
-            public void failure(@SuppressWarnings("rawtypes") final ActionInvocation invocation,
-                    final UpnpResponse operation, final String defaultMsg) {
-                throw new RuntimeException("Failed to retrieve external ip address: " + defaultMsg);
-            }
+        return executeClingCallback(new GetExternalIpSync(service, controlPoint));
+    }
 
-            @Override
-            protected void success(final String externalIPAddress) {
-                externalIP.set(externalIPAddress);
-            }
-        }.setControlPoint(controlPoint).run();
-        return externalIP.get();
+    private <T> T executeClingCallback(final SyncActionCallback<T> callback) {
+        return callback.execute();
     }
 
     @Override
@@ -75,6 +68,7 @@ public class ClingRouter extends AbstractRouter {
 
     @Override
     public Collection<PortMapping> getPortMappings() throws RouterException {
+        final PortMapping portMapping = executeClingCallback(new GetPortMappingEntry(service, controlPoint, 0));
         return Collections.emptyList();
     }
 

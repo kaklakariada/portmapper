@@ -17,7 +17,7 @@ import org.fourthline.cling.DefaultUpnpServiceConfiguration;
 import org.fourthline.cling.UpnpService;
 import org.fourthline.cling.UpnpServiceConfiguration;
 import org.fourthline.cling.UpnpServiceImpl;
-import org.fourthline.cling.model.meta.Service;
+import org.fourthline.cling.model.meta.RemoteService;
 import org.jdesktop.application.Application.ExitListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,8 +50,8 @@ public class ClingRouterFactory extends AbstractRouterFactory {
 
         log.debug("Start searching using upnp service");
         upnpService.getControlPoint().search();
-        final Service<?, ?> service = clingRegistryListener.waitForServiceFound(DISCOVERY_TIMEOUT_SECONDS,
-                TimeUnit.SECONDS);
+        final RemoteService service = (RemoteService) clingRegistryListener.waitForServiceFound(
+                DISCOVERY_TIMEOUT_SECONDS, TimeUnit.SECONDS);
 
         if (service == null) {
             log.debug("Did not find a service after {} seconds", DISCOVERY_TIMEOUT_SECONDS);
