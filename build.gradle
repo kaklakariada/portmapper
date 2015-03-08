@@ -5,6 +5,7 @@ repositories {
     mavenLocal()
     maven { url 'http://4thline.org/m2' }
     mavenCentral()
+    flatDir { dirs 'lib' }
 }
 
 version = '1.9.6'
@@ -52,11 +53,6 @@ jar {
 	manifest { attributes 'Main-Class': 'org.chris.portmapper.PortMapperStarter' }
 }
 
-repositories {
-	flatDir { dirs 'lib' }
-	mavenCentral()
-}
-
 dependencies {
 	testCompile 'junit:junit:4.12'
 	testCompile 'org.mockito:mockito-core:1.10.19'
@@ -68,7 +64,7 @@ dependencies {
 	compile ':sbbi-upnplib:1.0.4'
     compile 'org.fourthline.cling:cling-support:2.0.1'
 	runtime 'commons-jxpath:commons-jxpath:1.1' // sbbi
-    runtime 'org.slf4j:jul-to-slf4j:1.7.7'
+    runtime 'org.slf4j:jul-to-slf4j:1.7.10'
 }
 
 
