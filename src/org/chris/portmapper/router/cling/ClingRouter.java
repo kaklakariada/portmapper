@@ -7,7 +7,8 @@ import org.chris.portmapper.model.PortMapping;
 import org.chris.portmapper.model.Protocol;
 import org.chris.portmapper.router.AbstractRouter;
 import org.chris.portmapper.router.RouterException;
-import org.chris.portmapper.router.cling.callback.GetExternalIpSync;
+import org.chris.portmapper.router.cling.action.ActionService;
+import org.chris.portmapper.router.cling.action.GetExternalIpAction;
 import org.chris.portmapper.router.cling.callback.GetPortMappingEntry;
 import org.chris.portmapper.router.cling.callback.SyncActionCallback;
 import org.fourthline.cling.controlpoint.ControlPoint;
@@ -34,11 +35,14 @@ public class ClingRouter extends AbstractRouter {
 
     private final ControlPoint controlPoint;
 
+    private final ActionService actionService;
+
     public ClingRouter(final RemoteService service, final Registry registry, final ControlPoint controlPoint) {
         super(getName(service));
         this.service = service;
         this.registry = registry;
         this.controlPoint = controlPoint;
+        actionService = new ActionService(service, controlPoint);
     }
 
     private static String getName(final Service<?, ?> service) {
@@ -47,7 +51,7 @@ public class ClingRouter extends AbstractRouter {
 
     @Override
     public String getExternalIPAddress() throws RouterException {
-        return executeClingCallback(new GetExternalIpSync(service, controlPoint));
+        return actionService.run(new GetExternalIpAction(service));
     }
 
     private <T> T executeClingCallback(final SyncActionCallback<T> callback) {
