@@ -32,15 +32,12 @@ public class ClingRouter extends AbstractRouter {
 
     private final Registry registry;
 
-    private final ControlPoint controlPoint;
-
     private final ActionService actionService;
 
     public ClingRouter(final RemoteService service, final Registry registry, final ControlPoint controlPoint) {
         super(getName(service));
         this.service = service;
         this.registry = registry;
-        this.controlPoint = controlPoint;
         actionService = new ActionService(service, controlPoint);
     }
 
@@ -66,6 +63,9 @@ public class ClingRouter extends AbstractRouter {
     }
 
     private URI getUri() {
+        if (service.getDevice().getDetails().getPresentationURI() != null) {
+            return service.getDevice().getDetails().getPresentationURI();
+        }
         if (service.getControlURI() != null) {
             return service.getControlURI();
         }
@@ -93,6 +93,8 @@ public class ClingRouter extends AbstractRouter {
         logger.info("Control uri: {}", service.getControlURI());
         logger.info("Descriptor uri: {}", service.getDescriptorURI());
         logger.info("Event subscription uri: {}", service.getEventSubscriptionURI());
+        logger.info("Device base url: {}", service.getDevice().getDetails().getBaseURL());
+        logger.info("Device presentation uri: {}", service.getDevice().getDetails().getPresentationURI());
     }
 
     @Override
