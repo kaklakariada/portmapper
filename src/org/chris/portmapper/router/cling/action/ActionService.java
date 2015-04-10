@@ -2,6 +2,7 @@ package org.chris.portmapper.router.cling.action;
 
 import java.net.URL;
 
+import org.chris.portmapper.router.cling.ClingOperationFailedException;
 import org.chris.portmapper.router.cling.ClingRouterException;
 import org.fourthline.cling.controlpoint.ControlPoint;
 import org.fourthline.cling.model.action.ActionInvocation;
@@ -9,8 +10,6 @@ import org.fourthline.cling.model.message.control.IncomingActionResponseMessage;
 import org.fourthline.cling.model.meta.RemoteService;
 import org.fourthline.cling.protocol.sync.SendingAction;
 
-/**
- */
 public class ActionService {
     private final RemoteService remoteService;
     private final ControlPoint controlPoint;
@@ -25,7 +24,7 @@ public class ActionService {
         final URL controLURL = remoteService.getDevice().normalizeURI(remoteService.getControlURI());
 
         // Do it
-        final ActionInvocation<?> actionInvocation = action.getActionInvocation();
+        final ActionInvocation<RemoteService> actionInvocation = action.getActionInvocation();
         final SendingAction prot = controlPoint.getProtocolFactory().createSendingAction(actionInvocation, controLURL);
         prot.run();
 
@@ -33,9 +32,13 @@ public class ActionService {
         if (response == null) {
             throw new ClingRouterException("Got null response");
         } else if (response.getOperation().isFailed()) {
-            throw new ClingRouterException("Invocation " + actionInvocation + " failed with operation "
-                    + response.getOperation());
+            throw new ClingOperationFailedException("Invocation " + actionInvocation + " failed with operation '"
+                    + response.getOperation() + "'", response);
         }
         return action.convert(actionInvocation);
+    }
+
+    public RemoteService getService() {
+        return remoteService;
     }
 }

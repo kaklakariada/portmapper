@@ -13,8 +13,7 @@ public class GetExternalIpAction extends AbstractClingAction<String> {
     }
 
     @Override
-    public String convert(final ActionInvocation<?> invocation) {
+    public String convert(final ActionInvocation<RemoteService> invocation) {
         return (String) invocation.getOutput("NewExternalIPAddress").getValue();
     }
-
 }

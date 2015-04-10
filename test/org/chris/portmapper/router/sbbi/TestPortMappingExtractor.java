@@ -22,7 +22,7 @@ import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 /**
- * Unit tests for {@link PortMappingExtractor}.
+ * Unit tests for {@link SBBIPortMappingExtractor}.
  */
 public class TestPortMappingExtractor {
 
@@ -30,12 +30,12 @@ public class TestPortMappingExtractor {
 	private InternetGatewayDevice routerMock;
 	@Mock
 	private Logger loggerMock;
-	private PortMappingExtractor portMappingExtractor;
+	private SBBIPortMappingExtractor portMappingExtractor;
 
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		portMappingExtractor = new PortMappingExtractor(routerMock, 5,
+		portMappingExtractor = new SBBIPortMappingExtractor(routerMock, 5,
 				loggerMock);
 	}
 

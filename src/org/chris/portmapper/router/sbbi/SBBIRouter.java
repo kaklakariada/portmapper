@@ -107,7 +107,7 @@ public class SBBIRouter extends AbstractRouter {
 
     @Override
     public Collection<PortMapping> getPortMappings() throws RouterException {
-        return new PortMappingExtractor(router, MAX_NUM_PORTMAPPINGS).getPortMappings();
+        return new SBBIPortMappingExtractor(router, MAX_NUM_PORTMAPPINGS).getPortMappings();
     }
 
     @Override

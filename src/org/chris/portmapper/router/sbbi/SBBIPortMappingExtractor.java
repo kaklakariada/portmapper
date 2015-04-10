@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  * This class fetches all {@link PortMapping} from an
  * {@link InternetGatewayDevice}.
  */
-class PortMappingExtractor {
+class SBBIPortMappingExtractor {
 
 	private final Logger logger;
 	private final InternetGatewayDevice router;
@@ -32,13 +32,13 @@ class PortMappingExtractor {
 	 */
 	private final int maxNumPortMappings;
 
-	PortMappingExtractor(final InternetGatewayDevice router,
+	SBBIPortMappingExtractor(final InternetGatewayDevice router,
 			final int maxNumPortMappings) {
 		this(router, maxNumPortMappings, LoggerFactory
-				.getLogger(PortMappingExtractor.class));
+				.getLogger(SBBIPortMappingExtractor.class));
 	}
 
-	PortMappingExtractor(final InternetGatewayDevice router,
+	SBBIPortMappingExtractor(final InternetGatewayDevice router,
 			final int maxNumPortMappings, final Logger logger) {
 		this.router = router;
 		this.maxNumPortMappings = maxNumPortMappings;

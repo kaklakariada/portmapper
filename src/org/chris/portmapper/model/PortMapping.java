@@ -7,8 +7,6 @@ import net.sbbi.upnp.messages.ActionResponse;
 
 /**
  * This immutable class represents a port mapping / forwarding on a router.
- *
- * @author chris
  */
 public class PortMapping implements Cloneable {
 
@@ -21,6 +19,8 @@ public class PortMapping implements Cloneable {
     public static final String MAPPING_ENTRY_INTERNAL_PORT = "NewInternalPort";
     public static final String MAPPING_ENTRY_EXTERNAL_PORT = "NewExternalPort";
 
+    private static final long DEFAULT_LEASE_DURATION = 0;
+
     private final int externalPort;
     private final Protocol protocol;
     private final int internalPort;
@@ -32,11 +32,13 @@ public class PortMapping implements Cloneable {
 
     public PortMapping(final Protocol protocol, final String remoteHost, final int externalPort,
             final String internalClient, final int internalPort, final String description) {
-        this(protocol, remoteHost, externalPort, internalClient, internalPort, description, true);
+        this(protocol, remoteHost, externalPort, internalClient, internalPort, description, true,
+                DEFAULT_LEASE_DURATION);
     }
 
-    private PortMapping(final Protocol protocol, final String remoteHost, final int externalPort,
-            final String internalClient, final int internalPort, final String description, final boolean enabled) {
+    public PortMapping(final Protocol protocol, final String remoteHost, final int externalPort,
+            final String internalClient, final int internalPort, final String description, final boolean enabled,
+            final long leaseDuration) {
         super();
         this.protocol = protocol;
         this.remoteHost = remoteHost;
@@ -45,7 +47,7 @@ public class PortMapping implements Cloneable {
         this.internalPort = internalPort;
         this.description = description;
         this.enabled = enabled;
-        this.leaseDuration = -1;
+        this.leaseDuration = leaseDuration;
     }
 
     private PortMapping(final ActionResponse response) {
@@ -135,8 +137,7 @@ public class PortMapping implements Cloneable {
 
     @Override
     public Object clone() {
-        final PortMapping clonedMapping = new PortMapping(protocol, remoteHost, externalPort, internalClient,
-                internalPort, description, enabled);
-        return clonedMapping;
+        return new PortMapping(protocol, remoteHost, externalPort, internalClient, internalPort, description, enabled,
+                leaseDuration);
     }
 }
