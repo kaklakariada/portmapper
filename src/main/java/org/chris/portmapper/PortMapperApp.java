@@ -17,6 +17,7 @@ import javax.swing.JOptionPane;
 import org.chris.portmapper.gui.PortMapperView;
 import org.chris.portmapper.logging.LogMessageListener;
 import org.chris.portmapper.logging.LogMessageOutputStream;
+import org.chris.portmapper.logging.LogbackConfiguration;
 import org.chris.portmapper.model.PortMappingPreset;
 import org.chris.portmapper.router.AbstractRouterFactory;
 import org.chris.portmapper.router.IRouter;
@@ -27,20 +28,10 @@ import org.jdesktop.application.utils.OSXAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.OutputStreamAppender;
-
 /**
  * The main application class
  */
 public class PortMapperApp extends SingleFrameApplication {
-
-    private static final String OUTPUT_STREAM_APPENDER_NAME = "OUTPUT_STREAM";
-
-    static final String LOGGER_NAME = "org.chris.portmapper";
 
     /**
      * The name of the system property which will be used as the directory where all configuration files will be stored.
@@ -56,12 +47,12 @@ public class PortMapperApp extends SingleFrameApplication {
 
     private IRouter router;
     private Settings settings;
-    private LogMessageOutputStream logMessageOutputStream;
+    private final LogMessageOutputStream logMessageOutputStream = new LogMessageOutputStream();
+    private final LogbackConfiguration logbackConfig = new LogbackConfiguration();
 
     @Override
     protected void startup() {
-
-        initTextAreaLogger();
+        logbackConfig.registerOutputStream(logMessageOutputStream);
 
         setCustomConfigDir();
 
@@ -164,29 +155,6 @@ public class PortMapperApp extends SingleFrameApplication {
             logger.debug("Got settings " + settings);
             this.setLogLevel(settings.getLogLevel());
         }
-    }
-
-    private void initTextAreaLogger() {
-        final LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
-
-        final PatternLayoutEncoder ple = new PatternLayoutEncoder();
-        ple.setContext(loggerContext);
-        ple.setPattern("%-5level %msg%n");
-        ple.start();
-
-        final OutputStreamAppender<ILoggingEvent> appender = new OutputStreamAppender<ILoggingEvent>();
-        appender.setContext(loggerContext);
-        appender.setEncoder(ple);
-
-        logMessageOutputStream = new LogMessageOutputStream();
-        appender.setOutputStream(logMessageOutputStream);
-        appender.setName(OUTPUT_STREAM_APPENDER_NAME);
-        appender.start();
-        final ch.qos.logback.classic.Logger logbackLogger = (ch.qos.logback.classic.Logger) LoggerFactory
-                .getLogger(LOGGER_NAME);
-        logbackLogger.addAppender(appender);
-        logbackLogger.setAdditive(false);
-        setLogLevel(settings.getLogLevel());
     }
 
     public void setLogMessageListener(final LogMessageListener listener) {
@@ -404,6 +372,6 @@ public class PortMapperApp extends SingleFrameApplication {
     }
 
     public void setLogLevel(final String logLevel) {
-        ((ch.qos.logback.classic.Logger) LoggerFactory.getLogger(LOGGER_NAME)).setLevel(Level.toLevel(logLevel));
+        this.logbackConfig.setLogLevel(logLevel);
     }
 }
