@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<launchConfiguration type="org.springsource.ide.eclipse.gradle.launch">
+<launchConfiguration type="org.eclipse.ui.externaltools.ProgramLaunchConfigurationType">
+<stringAttribute key="org.eclipse.debug.core.ATTR_REFRESH_SCOPE" value="${workspace}"/>
+<stringAttribute key="org.eclipse.debug.ui.ATTR_CONSOLE_ENCODING" value="UTF-8"/>
 <listAttribute key="org.eclipse.debug.ui.favoriteGroups">
 <listEntry value="org.eclipse.ui.externaltools.launchGroup"/>
 </listAttribute>
-<stringAttribute key="org.springsource.ide.eclipse.gradle.launch.PROJECT" value="PortMapper"/>
-<listAttribute key="org.springsource.ide.eclipse.gradle.launch.TASKLIST">
-<listEntry value=":clean"/>
-<listEntry value=":test"/>
-<listEntry value=":jar"/>
-</listAttribute>
+<stringAttribute key="org.eclipse.ui.externaltools.ATTR_LOCATION" value="${workspace_loc:/PortMapper/gradlew.bat}"/>
+<stringAttribute key="org.eclipse.ui.externaltools.ATTR_TOOL_ARGUMENTS" value="clean build --info"/>
+<stringAttribute key="org.eclipse.ui.externaltools.ATTR_WORKING_DIRECTORY" value="${workspace_loc:/PortMapper}"/>
 </launchConfiguration>
