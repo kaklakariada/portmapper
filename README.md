@@ -16,7 +16,7 @@ Download
 UPnP PortMapper requires Java 7 or later. You can download it at [java.com](http://java.com).
 
 Usage
------
+=====
 
 To run PortMapper, double click on the JAR file or run
 
@@ -26,24 +26,48 @@ on the command line.
 
 PortMapper also has a command line interface. You can see the available options by adding parameter -h:
 
-    $ java -jar PortMapper-1.9.6.jar -h
-    usage: java -jar PortMapper.jar [-a <ip port external_port protocol> | -d
-       <external_port protocol [...]> | -g | -h | -l | -r <port protocol [...]>
-       | -s]    [-i <index>]    [-u <class name>]
-    -a <ip port external_port protocol>   Add port forwarding
-    -d <external_port protocol [...]>     Delete port forwarding
-    -g                                    Start graphical user interface (default)
-    -h                                    print this message
-    -i <index>                            Router index (if more than one is found)
-    -l                                    List forwardings
-    -r <port protocol [...]>              Add all forwardings to the current host
-    -s                                    Get Connection status
-    -u <class name>                       UPnP library
-	Protocol is UDP or TCP
-	UPnP library class names:
-	- org.chris.portmapper.router.sbbi.SBBIRouterFactory (default)
-	- org.chris.portmapper.router.weupnp.WeUPnPRouterFactory
-	- org.chris.portmapper.router.dummy.DummyRouterFactory
+    $ java -jar PortMapper.jar -h
+     -add                  : Add a new port mapping
+     -delete               : Delete a new port mapping
+     -description VAL      : Description of the port mapping
+     -externalPort N       : External port of the port mapping
+     -gui                  : Start graphical user interface
+     -h (-help)            : Print usage help
+     -info                 : Print router info
+     -internalPort N       : Internal port of the port mapping
+     -ip VAL               : Internal IP of the port mapping (default: localhost)
+     -lib VAL              : UPnP library to use
+     -list                 : Print existing port mappings
+     -protocol [TCP | UDP] : Protocol of the port mapping
+     -routerIndex N        : Router index if more than one is found (zero-based)
+
+Examples
+--------
+- Create a new port mapping for a specific IP address
+
+     java -jar PortMapper.jar -add -externalPort <port> -internalPort <port> -ip <ip-addr> -protocol tcp
+
+- Create a new port mapping for the local machine (just omit the IP)
+
+     java -jar PortMapper.jar -add -externalPort <port> -internalPort <port> -protocol tcp
+
+- Delete a port forwarding
+
+     java -jar PortMapper.jar -delete -externalPort <port> -protocol tcp
+
+- List existing port forwardings
+
+     java -jar PortMapper.jar -list
+
+UPnP libraries
+--------------
+
+PortMapper includes three third party UPnP libraries. If the default does not work for your device, try using a different library.
+
+- [Cling](http://4thline.org/projects/cling/): `org.chris.portmapper.router.cling.ClingRouterFactory` (default)
+- [weupnp](https://github.com/bitletorg/weupnp): `org.chris.portmapper.router.weupnp.WeUPnPRouterFactory`
+- [SBBI UPnP lib](https://sourceforge.net/projects/upnplibmobile/): `org.chris.portmapper.router.sbbi.SBBIRouterFactory`
+- `org.chris.portmapper.router.dummy.DummyRouterFactory` (for testing)
 
 
 Known issues
@@ -59,7 +83,7 @@ Build PortMapper on the command line:
     $ git clone https://github.com/kaklakariada/portmapper.git
     $ cd portmapper
     $ ./gradlew build
-    $ java -jar build/libs/portmapper-1.9.6.jar
+    $ java -jar build/libs/portmapper-*.jar
 
 Developing using Eclipse
 ------------------------
@@ -75,8 +99,8 @@ Participate
 
 Your feedback is most welcome at the project page:
 
-- Found a bug? Post a [Bug report](http://sourceforge.net/p/upnp-portmapper/bugs/)!
-- Miss some important feature? Post a [Feature request](http://sourceforge.net/p/upnp-portmapper/feature-requests/)!
+- Found a bug? Create an [issue](https://github.com/kaklakariada/portmapper/issues)!
+- Miss some important feature? Create an [issue](https://github.com/kaklakariada/portmapper/issues)!
 - Need help using the UPnP PortMapper? Post a message in the Forum!
 - Want to help with developing? Contact [me](http://sourceforge.net/u/christoph/profile/) via [SourceForge.net](http://sourceforge.net/u/christoph/profile/send_message)!
 - Want to send me a mail? Use `christoph at users.sourceforge.net`!
