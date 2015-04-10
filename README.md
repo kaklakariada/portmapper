@@ -2,6 +2,7 @@ UPnP PortMapper
 ===============
 
 [![Build Status](https://travis-ci.org/kaklakariada/portmapper.svg?branch=master)](https://travis-ci.org/kaklakariada/portmapper)
+[![Download UPnP PortMapper](https://img.shields.io/sourceforge/dw/upnp-portmapper.svg)](https://sourceforge.net/projects/upnp-portmapper/files/latest/download)
 
 UPnP PortMapper is an easy to use program that manages the port mappings (port forwarding) of a UPnP enabled internet gateway device (router) in the local network. You can easily view, add and remove port mappings.
 
@@ -11,6 +12,8 @@ The interface is written in English and German. PortMapper automatically selects
 
 Download
 --------
+
+[![Download UPnP PortMapper](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/upnp-portmapper/files/latest/download)
 
 [Download](http://sourceforge.net/projects/upnp-portmapper/files/latest/download) binaries from [SourceForge](http://sourceforge.net/projects/upnp-portmapper/).
 UPnP PortMapper requires Java 7 or later. You can download it at [java.com](http://java.com).
@@ -45,19 +48,19 @@ Examples
 --------
 - Create a new port mapping for a specific IP address
 
-     java -jar PortMapper.jar -add -externalPort <port> -internalPort <port> -ip <ip-addr> -protocol tcp
+`java -jar PortMapper.jar -add -externalPort <port> -internalPort <port> -ip <ip-addr> -protocol tcp`
 
 - Create a new port mapping for the local machine (just omit the IP)
 
-     java -jar PortMapper.jar -add -externalPort <port> -internalPort <port> -protocol tcp
+`java -jar PortMapper.jar -add -externalPort <port> -internalPort <port> -protocol tcp`
 
 - Delete a port forwarding
 
-     java -jar PortMapper.jar -delete -externalPort <port> -protocol tcp
+`java -jar PortMapper.jar -delete -externalPort <port> -protocol tcp`
 
 - List existing port forwardings
 
-     java -jar PortMapper.jar -list
+`java -jar PortMapper.jar -list`
 
 UPnP libraries
 --------------
