@@ -28,6 +28,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
+import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.OutputStreamAppender;
 
 /**
@@ -40,8 +43,7 @@ public class PortMapperApp extends SingleFrameApplication {
     static final String LOGGER_NAME = "org.chris.portmapper";
 
     /**
-     * The name of the system property which will be used as the directory where
-     * all configuration files will be stored.
+     * The name of the system property which will be used as the directory where all configuration files will be stored.
      */
     private static final String CONFIG_DIR_PROPERTY_NAME = "portmapper.config.dir";
 
@@ -107,11 +109,9 @@ public class PortMapperApp extends SingleFrameApplication {
     }
 
     /**
-     * Read the system property with name
-     * {@link PortMapperApp#CONFIG_DIR_PROPERTY_NAME} and change the local
-     * storage directory if the property is given and points to a writable
-     * directory. If there is a directory named <code>PortMapperConf</code> in
-     * the current directory, use this as the configuration directory.
+     * Read the system property with name {@link PortMapperApp#CONFIG_DIR_PROPERTY_NAME} and change the local storage
+     * directory if the property is given and points to a writable directory. If there is a directory named
+     * <code>PortMapperConf</code> in the current directory, use this as the configuration directory.
      */
     private void setCustomConfigDir() {
         final String customConfigurationDir = System.getProperty(CONFIG_DIR_PROPERTY_NAME);
@@ -146,8 +146,7 @@ public class PortMapperApp extends SingleFrameApplication {
     }
 
     /**
-     * Load the application settings from file
-     * {@link PortMapperApp#SETTINGS_FILENAME} located in the configuration
+     * Load the application settings from file {@link PortMapperApp#SETTINGS_FILENAME} located in the configuration
      * directory.
      */
     private void loadSettings() {
@@ -168,20 +167,26 @@ public class PortMapperApp extends SingleFrameApplication {
     }
 
     private void initTextAreaLogger() {
-        final OutputStreamAppender<?> appender = getOutputStreamAppender();
-        if (appender != null) {
-            logMessageOutputStream = new LogMessageOutputStream();
-            appender.setOutputStream(logMessageOutputStream);
-            appender.start();
-        } else {
-            throw new RuntimeException("Did not find appender " + OUTPUT_STREAM_APPENDER_NAME
-                    + " for logger org.chris.portmapper");
-        }
-    }
+        final LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
 
-    static OutputStreamAppender<?> getOutputStreamAppender() {
-        return (OutputStreamAppender<?>) ((ch.qos.logback.classic.Logger) LoggerFactory.getLogger(LOGGER_NAME))
-                .getAppender(OUTPUT_STREAM_APPENDER_NAME);
+        final PatternLayoutEncoder ple = new PatternLayoutEncoder();
+        ple.setContext(loggerContext);
+        ple.setPattern("%-5level %msg%n");
+        ple.start();
+
+        final OutputStreamAppender<ILoggingEvent> appender = new OutputStreamAppender<ILoggingEvent>();
+        appender.setContext(loggerContext);
+        appender.setEncoder(ple);
+
+        logMessageOutputStream = new LogMessageOutputStream();
+        appender.setOutputStream(logMessageOutputStream);
+        appender.setName(OUTPUT_STREAM_APPENDER_NAME);
+        appender.start();
+        final ch.qos.logback.classic.Logger logbackLogger = (ch.qos.logback.classic.Logger) LoggerFactory
+                .getLogger(LOGGER_NAME);
+        logbackLogger.addAppender(appender);
+        logbackLogger.setAdditive(false);
+        setLogLevel(settings.getLogLevel());
     }
 
     public void setLogMessageListener(final LogMessageListener listener) {
@@ -321,9 +326,8 @@ public class PortMapperApp extends SingleFrameApplication {
 
     /**
      * Get the IP address of the local host.
-     * 
-     * @return IP address of the local host or <code>null</code>, if the address
-     *         could not be determined.
+     *
+     * @return IP address of the local host or <code>null</code>, if the address could not be determined.
      * @throws RouterException
      */
     public String getLocalHostAddress() {
