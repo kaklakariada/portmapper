@@ -8,20 +8,8 @@ repositories {
     flatDir { dirs 'lib' }
 }
 
-version = '1.9.6'
+version = '2.0.0-alpha1'
 sourceCompatibility = 1.7
-
-sourceSets {
-	main {
-		java {
-			srcDir 'src'
-			srcDir 'src_weupnp'
-		}
-		resources { srcDir 'resources' }
-	}
-	test { java { srcDir 'test'
-		} }
-}
 
 tasks.withType(JavaCompile) {
 	options.compilerArgs << '-Xlint:all'
