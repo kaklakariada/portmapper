@@ -1,143 +1,54 @@
 package org.chris.portmapper;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionGroup;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-import org.apache.commons.cli.PosixParser;
 import org.chris.portmapper.model.PortMapping;
 import org.chris.portmapper.model.Protocol;
 import org.chris.portmapper.router.AbstractRouterFactory;
 import org.chris.portmapper.router.IRouter;
 import org.chris.portmapper.router.RouterException;
-import org.chris.portmapper.router.dummy.DummyRouterFactory;
-import org.chris.portmapper.router.sbbi.SBBIRouterFactory;
-import org.chris.portmapper.router.weupnp.WeUPnPRouterFactory;
+import org.chris.portmapper.router.cling.ClingRouterFactory;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.utils.AppHelper;
 import org.jdesktop.application.utils.PlatformType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.qos.logback.core.OutputStreamAppender;
-
 public class PortMapperCli {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private static final String ADD_OPTION = "a";
-    private static final String HELP_OPTION = "h";
-    private static final String START_GUI_OPTION = "g";
-    private static final String STATUS_OPTION = "s";
-    private static final String DELETE_OPTION = "d";
-    private static final String LIST_OPTION = "l";
-    private static final String ADD_LOCALHOST_OPTION = "r";
-    private static final String UPNP_LIB_OPTION = "u";
-    private static final String ROUTER_INDEX_OPTION = "i";
-
-    private final Options options;
-    private final CommandLineParser parser;
-    private String routerFactoryClassName = SBBIRouterFactory.class.getName();
+    private final CommandLineArguments cmdLineArgs;
+    private String routerFactoryClassName = ClingRouterFactory.class.getName();
     private Integer routerIndex = null;
 
     public PortMapperCli() {
-        options = createOptions();
-        parser = new PosixParser();
-    }
-
-    private Options createOptions() {
-
-        final boolean useLongOpts = false;
-
-        final Option help = new Option(HELP_OPTION, useLongOpts ? "help" : null, false, "print this message");
-        final Option startGui = new Option(START_GUI_OPTION, useLongOpts ? "gui" : null, false,
-                "Start graphical user interface (default)");
-        final Option add = new Option(ADD_OPTION, useLongOpts ? "add" : null, true, "Add port forwarding");
-        add.setArgs(4);
-        add.setArgName("ip port external_port protocol");
-        add.setValueSeparator(' ');
-        add.setType(String.class);
-
-        final Option delete = new Option(DELETE_OPTION, useLongOpts ? "delete" : null, true, "Delete port forwarding");
-        delete.setArgs(20);
-        delete.setArgName("external_port protocol [...]");
-        delete.setValueSeparator(' ');
-        delete.setType(String.class);
-
-        final Option status = new Option(STATUS_OPTION, useLongOpts ? "status" : null, false, "Get Connection status");
-
-        final Option list = new Option(LIST_OPTION, useLongOpts ? "list" : null, false, "List forwardings");
-
-        final Option addLocalhost = new Option(ADD_LOCALHOST_OPTION, useLongOpts ? "addlocalhost" : null, true,
-                "Add all forwardings to the current host");
-        addLocalhost.setArgs(20);
-        addLocalhost.setArgName("port protocol [...]");
-        addLocalhost.setValueSeparator(' ');
-        addLocalhost.setType(String.class);
-
-        final Option upnpLib = new Option(UPNP_LIB_OPTION, useLongOpts ? "delete" : null, true, "UPnP library");
-        upnpLib.setArgs(1);
-        upnpLib.setArgName("class name");
-        upnpLib.setType(String.class);
-
-        final Option routerIndexOption = new Option(ROUTER_INDEX_OPTION, useLongOpts ? "index" : null, true,
-                "Router index (if more than one is found)");
-        routerIndexOption.setArgs(1);
-        routerIndexOption.setArgName("index");
-        routerIndexOption.setType(Integer.class);
-
-        final OptionGroup optionGroup = new OptionGroup();
-        optionGroup.setRequired(false);
-        optionGroup.addOption(help);
-        optionGroup.addOption(startGui);
-        optionGroup.addOption(add);
-        optionGroup.addOption(addLocalhost);
-        optionGroup.addOption(delete);
-        optionGroup.addOption(list);
-        optionGroup.addOption(status);
-
-        final Options allOptions = new Options();
-        allOptions.addOption(upnpLib);
-        allOptions.addOption(routerIndexOption);
-        allOptions.addOptionGroup(optionGroup);
-
-        return allOptions;
+        cmdLineArgs = new CommandLineArguments();
     }
 
     public void start(final String[] args) {
-        final CommandLine commandLine = parseCommandLine(args);
-        if (isStartGuiRequired(commandLine)) {
+        if (!cmdLineArgs.parse(args)) {
+            System.exit(1);
+        }
+        if (isStartGuiRequired()) {
             startGui(args);
             return;
         }
 
-        initDummyLogAppender();
-
-        if (commandLine.hasOption(UPNP_LIB_OPTION)) {
-            this.routerFactoryClassName = commandLine.getOptionValue(UPNP_LIB_OPTION);
+        if (cmdLineArgs.getUpnpLib() != null) {
+            this.routerFactoryClassName = cmdLineArgs.getUpnpLib();
             logger.info("Using router factory class '" + this.routerFactoryClassName + "'");
         }
 
-        if (commandLine.hasOption(ROUTER_INDEX_OPTION)) {
-            try {
-                this.routerIndex = Integer.parseInt(commandLine.getOptionValue(ROUTER_INDEX_OPTION));
-            } catch (final NumberFormatException e) {
-                printHelp();
-                System.exit(1);
-            }
+        if (cmdLineArgs.getRouterIndex() != null) {
+            this.routerIndex = cmdLineArgs.getRouterIndex();
             logger.info("Using router index " + this.routerIndex);
         }
 
-        if (commandLine.hasOption(HELP_OPTION)) {
+        if (cmdLineArgs.isPrintHelp()) {
             printHelp();
             return;
         }
@@ -148,16 +59,14 @@ public class PortMapperCli {
                 System.exit(1);
                 return;
             }
-            if (commandLine.hasOption(ADD_OPTION)) {
-                addPortForwarding(router, commandLine.getOptionValues(ADD_OPTION));
-            } else if (commandLine.hasOption(STATUS_OPTION)) {
+            if (cmdLineArgs.isAddPortMapping()) {
+                addPortForwarding(router);
+            } else if (cmdLineArgs.isPrintInfo()) {
                 printStatus(router);
-            } else if (commandLine.hasOption(DELETE_OPTION)) {
-                deletePortForwardings(router, commandLine.getOptionValues(DELETE_OPTION));
-            } else if (commandLine.hasOption(LIST_OPTION)) {
+            } else if (cmdLineArgs.isDeletePortMapping()) {
+                deletePortForwardings(router);
+            } else if (cmdLineArgs.isListPortMappings()) {
                 printPortForwardings(router);
-            } else if (commandLine.hasOption(ADD_LOCALHOST_OPTION)) {
-                addLocalhostPortForwardings(router, commandLine.getOptionValues(ADD_LOCALHOST_OPTION));
             } else {
                 router.disconnect();
                 System.err.println("Incorrect usage");
@@ -181,27 +90,7 @@ public class PortMapperCli {
         Application.launch(PortMapperApp.class, args);
     }
 
-    private void addLocalhostPortForwardings(final IRouter router, final String[] optionValues) throws RouterException {
-
-        if (optionValues.length == 0 || optionValues.length % 2 != 0) {
-            logger.error("Invalid number of arguments for option " + ADD_LOCALHOST_OPTION);
-            return;
-        }
-
-        final String internalClient = router.getLocalHostAddress();
-        for (int i = 0; i < optionValues.length; i += 2) {
-            final int port = Integer.parseInt(optionValues[i]);
-            final Protocol protocol = Protocol.valueOf(optionValues[i + 1]);
-            final String description = "PortMapper forwarding for " + protocol + "/" + internalClient + ":" + port;
-            final PortMapping mapping = new PortMapping(protocol, null, port, internalClient, port, description);
-            logger.info("Adding mapping " + mapping.getCompleteDescription());
-            router.addPortMapping(mapping);
-        }
-        printPortForwardings(router);
-    }
-
     private void printPortForwardings(final IRouter router) throws RouterException {
-
         final Collection<PortMapping> mappings = router.getPortMappings();
         if (mappings.size() == 0) {
             logger.info("No port mappings found");
@@ -214,25 +103,17 @@ public class PortMapperCli {
             if (iterator.hasNext()) {
                 b.append("\n");
             }
-
         }
         logger.info("Found " + mappings.size() + " port forwardings:\n" + b.toString());
     }
 
-    private void deletePortForwardings(final IRouter router, final String[] optionValues) throws RouterException {
-
-        if (optionValues.length == 0 || optionValues.length % 2 != 0) {
-            logger.error("Invalid number of arguments for option " + DELETE_OPTION);
-            return;
-        }
+    private void deletePortForwardings(final IRouter router) throws RouterException {
 
         final String remoteHost = null;
-        for (int i = 0; i < optionValues.length; i += 2) {
-            final int port = Integer.parseInt(optionValues[i]);
-            final Protocol protocol = Protocol.valueOf(optionValues[i + 1]);
-            logger.info("Deleting mapping for protocol " + protocol + " and external port " + port);
-            router.removePortMapping(protocol, remoteHost, port);
-        }
+        final int port = cmdLineArgs.getExternalPort();
+        final Protocol protocol = cmdLineArgs.getProtocol();
+        logger.info("Deleting mapping for protocol " + protocol + " and external port " + port);
+        router.removePortMapping(protocol, remoteHost, port);
         printPortForwardings(router);
     }
 
@@ -240,15 +121,17 @@ public class PortMapperCli {
         router.logRouterInfo();
     }
 
-    private void addPortForwarding(final IRouter router, final String[] optionValues) throws RouterException {
+    private void addPortForwarding(final IRouter router) throws RouterException {
 
         final String remoteHost = null;
-        final String internalClient = optionValues[0];
-        final int internalPort = Integer.parseInt(optionValues[1]);
-        final int externalPort = Integer.parseInt(optionValues[2]);
-        final Protocol protocol = Protocol.valueOf(optionValues[3]);
+        final String internalClient = cmdLineArgs.getInternalIp() != null ? cmdLineArgs.getInternalIp() : router
+                .getLocalHostAddress();
+        final int internalPort = cmdLineArgs.getInternalPort();
+        final int externalPort = cmdLineArgs.getExternalPort();
+        final Protocol protocol = cmdLineArgs.getProtocol();
 
-        final String description = "PortMapper " + protocol + "/" + internalClient + ":" + internalPort;
+        final String description = cmdLineArgs.getDescription() != null ? cmdLineArgs.getDescription() : "PortMapper "
+                + protocol + "/" + internalClient + ":" + internalPort;
         final PortMapping mapping = new PortMapping(protocol, remoteHost, externalPort, internalClient, internalPort,
                 description);
         logger.info("Adding mapping " + mapping);
@@ -257,84 +140,35 @@ public class PortMapperCli {
     }
 
     private void printHelp() {
-        final HelpFormatter formatter = new HelpFormatter();
-        formatter.setWidth(80);
-        // formatter.setDescPadding(0);
-        // formatter.setLeftPadding(0);
-        final String header = "";
-        final String cmdLineSyntax = "java -jar PortMapper.jar";
-        final StringBuilder footer = new StringBuilder();
-        footer.append("Protocol is UDP or TCP\n");
-        footer.append("UPnP library class names:\n");
-        footer.append("- ");
-        footer.append(SBBIRouterFactory.class.getName());
-        footer.append(" (default)\n");
-        footer.append("- ");
-        footer.append(WeUPnPRouterFactory.class.getName());
-        footer.append("\n- ");
-        footer.append(DummyRouterFactory.class.getName());
-
-        formatter.printHelp(formatter.getWidth(), cmdLineSyntax, header, options, footer.toString(), true);
+        cmdLineArgs.printHelp();
     }
 
-    private boolean isStartGuiRequired(final CommandLine commandLine) {
-        if (commandLine.hasOption(START_GUI_OPTION)) {
+    private boolean isStartGuiRequired() {
+        if (cmdLineArgs.isStartGui()) {
             return true;
         }
-        return !(commandLine.hasOption(HELP_OPTION) || commandLine.hasOption(ADD_LOCALHOST_OPTION)
-                || commandLine.hasOption(ADD_OPTION) || commandLine.hasOption(STATUS_OPTION)
-                || commandLine.hasOption(LIST_OPTION) || commandLine.hasOption(DELETE_OPTION));
-    }
-
-    private void initDummyLogAppender() {
-        final OutputStreamAppender<?> appender = PortMapperApp.getOutputStreamAppender();
-        if (appender != null) {
-            appender.setOutputStream(new DummyOutputStream());
-        }
-    }
-
-    private static class DummyOutputStream extends OutputStream {
-        @Override
-        public void write(final int b) throws IOException {
-            // ignore
-        }
-
-        @Override
-        public void write(final byte[] b, final int off, final int len) throws IOException {
-            // ignore
-        }
-    }
-
-    private CommandLine parseCommandLine(final String[] args) {
-        try {
-            return parser.parse(options, args);
-        } catch (final ParseException e) {
-            initDummyLogAppender();
-            logger.error("Could not parse command line: " + e.getMessage());
-            System.exit(1);
-            return null;
-        }
+        return !(cmdLineArgs.isPrintHelp() || cmdLineArgs.isAddPortMapping() || cmdLineArgs.isPrintInfo()
+                || cmdLineArgs.isListPortMappings() || cmdLineArgs.isDeletePortMapping());
     }
 
     @SuppressWarnings("unchecked")
     private AbstractRouterFactory createRouterFactory() throws RouterException {
         Class<AbstractRouterFactory> routerFactoryClass;
-        logger.info("Creating router factory for class " + routerFactoryClassName);
+        logger.info("Creating router factory for class {}", routerFactoryClassName);
         try {
             routerFactoryClass = (Class<AbstractRouterFactory>) Class.forName(routerFactoryClassName);
-        } catch (final ClassNotFoundException e1) {
-            throw new RouterException("Did not find router factory class for name " + routerFactoryClassName, e1);
+        } catch (final ClassNotFoundException e) {
+            throw new RouterException("Did not find router factory class for name " + routerFactoryClassName, e);
         }
 
-        AbstractRouterFactory routerFactory;
-        logger.debug("Creating a new instance of the router factory class " + routerFactoryClass);
+        logger.debug("Creating a new instance of the router factory class {}", routerFactoryClass);
         try {
-            routerFactory = routerFactoryClass.newInstance();
+            final Constructor<AbstractRouterFactory> constructor = routerFactoryClass
+                    .getConstructor(PortMapperApp.class);
+            return constructor.newInstance(new PortMapperApp());
         } catch (final Exception e) {
-            throw new RouterException("Could not create a router factory for name " + routerFactoryClassName, e);
+            throw new RouterException("Error creating a router factory using class " + routerFactoryClass.getName(), e);
         }
-        logger.debug("Router factory created");
-        return routerFactory;
     }
 
     private IRouter connect() throws RouterException {
