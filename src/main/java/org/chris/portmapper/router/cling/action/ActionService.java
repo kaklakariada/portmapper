@@ -33,7 +33,7 @@ public class ActionService {
             throw new ClingRouterException("Got null response");
         } else if (response.getOperation().isFailed()) {
             throw new ClingOperationFailedException("Invocation " + actionInvocation + " failed with operation '"
-                    + response.getOperation() + "'", response);
+                    + response.getOperation() + "', body '" + response.getBodyString() + "'", response);
         }
         return action.convert(actionInvocation);
     }
