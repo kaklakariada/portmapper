@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.ActionMap;
@@ -32,10 +33,14 @@ import ch.qos.logback.classic.Level;
 
 /**
  * This class represents the settings dialog.
- *
- * @author chris
  */
 public class SettingsDialog extends JDialog {
+
+    private static final List<String> AVAILABLE_ROUTER_FACTORIES = Arrays.asList(ClingRouterFactory.class.getName(),
+            SBBIRouterFactory.class.getName(), WeUPnPRouterFactory.class.getName(), DummyRouterFactory.class.getName());
+
+    private static final List<Level> AVAILABLE_LOG_LEVELS = Arrays.asList(Level.ALL, Level.TRACE, Level.DEBUG,
+            Level.INFO, Level.WARN, Level.ERROR, Level.OFF);
 
     private static final long serialVersionUID = 1L;
 
@@ -104,17 +109,14 @@ public class SettingsDialog extends JDialog {
 
         dialogPane.add(createLabel("settings_dialog.log_level"));
 
-        logLevelComboBox = new JComboBox<>(new Vector<>(Arrays.asList(Level.ALL, Level.TRACE, Level.DEBUG, Level.INFO,
-                Level.WARN, Level.ERROR, Level.OFF)));
+        logLevelComboBox = new JComboBox<>(new Vector<>(AVAILABLE_LOG_LEVELS));
         logLevelComboBox.setSelectedItem(Level.toLevel(settings.getLogLevel()));
 
         dialogPane.add(logLevelComboBox, "wrap");
 
         dialogPane.add(createLabel("settings_dialog.upnp_lib"));
 
-        routerFactoryClassComboBox = new JComboBox<>(new Vector<>(Arrays.asList(SBBIRouterFactory.class.getName(),
-                WeUPnPRouterFactory.class.getName(), ClingRouterFactory.class.getName(),
-                DummyRouterFactory.class.getName())));
+        routerFactoryClassComboBox = new JComboBox<>(new Vector<>(AVAILABLE_ROUTER_FACTORIES));
         routerFactoryClassComboBox.setSelectedItem(settings.getRouterFactoryClassName());
         dialogPane.add(routerFactoryClassComboBox, "span 2, wrap");
 

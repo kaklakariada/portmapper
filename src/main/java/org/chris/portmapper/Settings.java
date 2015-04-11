@@ -7,13 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.chris.portmapper.model.PortMappingPreset;
-import org.chris.portmapper.router.sbbi.SBBIRouterFactory;
+import org.chris.portmapper.router.cling.ClingRouterFactory;
 
 import ch.qos.logback.classic.Level;
 
-/**
- * @author chris
- */
 public class Settings implements Serializable {
 
     private static final long serialVersionUID = -1349121864190290050L;
@@ -31,7 +28,7 @@ public class Settings implements Serializable {
         useEntityEncoding = true;
         logLevel = Level.INFO.toString();
         presets = new ArrayList<>();
-        routerFactoryClassName = SBBIRouterFactory.class.getName();
+        routerFactoryClassName = ClingRouterFactory.class.getName();
         propertyChangeSupport = new PropertyChangeSupport(this);
     }
 
