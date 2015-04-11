@@ -27,6 +27,7 @@ processResources {
     filter org.apache.tools.ant.filters.ReplaceTokens, tokens: [
         "VERSION_NUMBER": project.version
     ]
+    rename(/(\w+)_en.properties/, '$1.properties')
 }
 
 jar {
