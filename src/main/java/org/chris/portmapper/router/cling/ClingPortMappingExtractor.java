@@ -43,7 +43,7 @@ class ClingPortMappingExtractor {
          * This is a little trick to get all port mappings. There is a method that gets the number of available port
          * mappings (getNatMappingsCount()), but it seems, that this method just tries to get all port mappings and
          * checks, if an error is returned.
-         *
+         * 
          * In order to speed this up, we will do the same here, but stop, when the first exception is thrown.
          */
 
@@ -62,7 +62,6 @@ class ClingPortMappingExtractor {
 
         checkMaxNumPortMappingsReached();
 
-        logger.info("Found " + mappings.size() + " mappings");
         return mappings;
     }
 

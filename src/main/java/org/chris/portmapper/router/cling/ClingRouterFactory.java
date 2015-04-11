@@ -1,13 +1,10 @@
 package org.chris.portmapper.router.cling;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EventObject;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.LogManager;
 
 import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.router.AbstractRouterFactory;
@@ -24,21 +21,11 @@ import org.slf4j.LoggerFactory;
 
 public class ClingRouterFactory extends AbstractRouterFactory {
 
-    private static final String JUL_LOGGING_PROPERTIES = "/jul-logging.properties";
     private static final long DISCOVERY_TIMEOUT_SECONDS = 5;
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     public ClingRouterFactory(final PortMapperApp app) {
         super(app, "Cling lib");
-        loadJavaUtilLoggingConfiguration();
-    }
-
-    private void loadJavaUtilLoggingConfiguration() {
-        try (final InputStream inputStream = getClass().getResourceAsStream(JUL_LOGGING_PROPERTIES)) {
-            LogManager.getLogManager().readConfiguration(inputStream);
-        } catch (final IOException e) {
-            log.error("Error reading j.u.l configuration from {}", JUL_LOGGING_PROPERTIES);
-        }
     }
 
     @Override
