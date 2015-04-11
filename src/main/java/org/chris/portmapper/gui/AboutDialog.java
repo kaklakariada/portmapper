@@ -19,10 +19,6 @@ import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.gui.util.URLLabel;
 import org.jdesktop.application.Action;
 
-/**
- *
- * @author chris
- */
 public class AboutDialog extends JDialog {
 
     private static final long serialVersionUID = 1L;
@@ -46,7 +42,8 @@ public class AboutDialog extends JDialog {
         pane.add(new URLLabel("about_dialog.weupnp_label"), "");
         pane.add(new URLLabel("about_dialog.cling_label"), "wrap");
         pane.add(new URLLabel("about_dialog.app_framework_label"), "wrap");
-        pane.add(new URLLabel("about_dialog.logback_label"), "split 2");
+        pane.add(new URLLabel("about_dialog.slf4j_label"), "split 3");
+        pane.add(new URLLabel("about_dialog.logback_label"), "");
         pane.add(new URLLabel("about_dialog.miglayout_label"), "wrap unrelated");
 
         pane.add(createLabel("about_dialog.label5"), "wrap related");
