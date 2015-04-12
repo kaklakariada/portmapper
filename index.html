@@ -1,52 +1,178 @@
 <!DOCTYPE html>
 <html>
-
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="UPnP Portmapper : A tool for managing port forwardings via UPnP" />
-
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>UPnP Portmapper</title>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>UPnP Portmapper by kaklakariada</title>
   </head>
 
   <body>
+    <div id="container">
+      <div class="inner">
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/kaklakariada/portmapper">View on GitHub</a>
-
-          <h1 id="project_title">UPnP Portmapper</h1>
-          <h2 id="project_tagline">A tool for managing port forwardings via UPnP</h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/kaklakariada/portmapper/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/kaklakariada/portmapper/tarball/master">Download this project as a tar.gz file</a>
-            </section>
+        <header>
+          <h1>UPnP Portmapper</h1>
+          <h2>A tool for managing port forwardings via UPnP</h2>
         </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/kaklakariada/portmapper/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/kaklakariada/portmapper/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/kaklakariada/portmapper" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h1>
+<a id="upnp-portmapper" class="anchor" href="#upnp-portmapper" aria-hidden="true"><span class="octicon octicon-link"></span></a>UPnP PortMapper</h1>
+
+<p><a href="https://travis-ci.org/kaklakariada/portmapper"><img src="https://travis-ci.org/kaklakariada/portmapper.svg?branch=master" alt="Build Status"></a>
+<a href="https://sourceforge.net/projects/upnp-portmapper/files/latest/download"><img src="https://img.shields.io/sourceforge/dw/upnp-portmapper.svg" alt="Download UPnP PortMapper"></a></p>
+
+<p>UPnP PortMapper is an easy to use program that manages the port mappings (port forwarding) of a UPnP enabled internet gateway device (router) in the local network. You can easily view, add and remove port mappings.</p>
+
+<p>Using port forwarding, it is possible to access servers (SSH, Web, Game servers, ...) running in a private network from the internet. Port mappings can be configured using the web administration interface of a router, but using the UPnP PortMapper is much more convenient: Just create a new preset or select an existing preset and click one button to add a port mapping for your current computer, the IP address is retrieved automatically!</p>
+
+<p>The interface is written in English and German. PortMapper automatically selects the language according your operating system.</p>
+
+<h2>
+<a id="download" class="anchor" href="#download" aria-hidden="true"><span class="octicon octicon-link"></span></a>Download</h2>
+
+<p><a href="https://sourceforge.net/projects/upnp-portmapper/files/latest/download"><img src="https://a.fsdn.com/con/app/sf-download-button" alt="Download UPnP PortMapper"></a></p>
+
+<p><a href="http://sourceforge.net/projects/upnp-portmapper/files/latest/download">Download</a> binaries from <a href="http://sourceforge.net/projects/upnp-portmapper/">SourceForge</a>.
+UPnP PortMapper requires Java 7 or later. You can download it at <a href="http://java.com">java.com</a>.</p>
+
+<h1>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h1>
+
+<p>To run PortMapper, double click on the JAR file or run</p>
+
+<pre><code>$ java -jar PortMapper-1.9.6.jar
+</code></pre>
+
+<p>on the command line.</p>
+
+<p>PortMapper also has a command line interface. You can see the available options by adding parameter -h:</p>
+
+<pre><code>$ java -jar PortMapper.jar -h
+ -add                  : Add a new port mapping
+ -delete               : Delete a new port mapping
+ -description VAL      : Description of the port mapping
+ -externalPort N       : External port of the port mapping
+ -gui                  : Start graphical user interface
+ -h (-help)            : Print usage help
+ -info                 : Print router info
+ -internalPort N       : Internal port of the port mapping
+ -ip VAL               : Internal IP of the port mapping (default: localhost)
+ -lib VAL              : UPnP library to use
+ -list                 : Print existing port mappings
+ -protocol [TCP | UDP] : Protocol of the port mapping
+ -routerIndex N        : Router index if more than one is found (zero-based)
+</code></pre>
+
+<h2>
+<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h2>
+
+<ul>
+<li>Create a new port mapping for a specific IP address</li>
+</ul>
+
+<p><code>java -jar PortMapper.jar -add -externalPort &lt;port&gt; -internalPort &lt;port&gt; -ip &lt;ip-addr&gt; -protocol tcp</code></p>
+
+<ul>
+<li>Create a new port mapping for the local machine (just omit the IP)</li>
+</ul>
+
+<p><code>java -jar PortMapper.jar -add -externalPort &lt;port&gt; -internalPort &lt;port&gt; -protocol tcp</code></p>
+
+<ul>
+<li>Delete a port forwarding</li>
+</ul>
+
+<p><code>java -jar PortMapper.jar -delete -externalPort &lt;port&gt; -protocol tcp</code></p>
+
+<ul>
+<li>List existing port forwardings</li>
+</ul>
+
+<p><code>java -jar PortMapper.jar -list</code></p>
+
+<h2>
+<a id="upnp-libraries" class="anchor" href="#upnp-libraries" aria-hidden="true"><span class="octicon octicon-link"></span></a>UPnP libraries</h2>
+
+<p>PortMapper includes three third party UPnP libraries. If the default does not work for your device, try using a different library.</p>
+
+<ul>
+<li>
+<a href="http://4thline.org/projects/cling/">Cling</a>: <code>org.chris.portmapper.router.cling.ClingRouterFactory</code> (default)</li>
+<li>
+<a href="https://github.com/bitletorg/weupnp">weupnp</a>: <code>org.chris.portmapper.router.weupnp.WeUPnPRouterFactory</code>
+</li>
+<li>
+<a href="https://sourceforge.net/projects/upnplibmobile/">SBBI UPnP lib</a>: <code>org.chris.portmapper.router.sbbi.SBBIRouterFactory</code>
+</li>
+<li>
+<code>org.chris.portmapper.router.dummy.DummyRouterFactory</code> (for testing)</li>
+</ul>
+
+<h2>
+<a id="known-issues" class="anchor" href="#known-issues" aria-hidden="true"><span class="octicon octicon-link"></span></a>Known issues</h2>
+
+<ul>
+<li>Under Ubuntu Linux it is not possible to retrieve the IP address of the local host, the address must be entered manually.</li>
+</ul>
+
+<h1>
+<a id="building" class="anchor" href="#building" aria-hidden="true"><span class="octicon octicon-link"></span></a>Building</h1>
+
+<p>Build PortMapper on the command line:</p>
+
+<pre><code>$ git clone https://github.com/kaklakariada/portmapper.git
+$ cd portmapper
+$ ./gradlew build
+$ java -jar build/libs/portmapper-*.jar
+</code></pre>
+
+<h2>
+<a id="developing-using-eclipse" class="anchor" href="#developing-using-eclipse" aria-hidden="true"><span class="octicon octicon-link"></span></a>Developing using Eclipse</h2>
+
+<p>Generate Eclipse project files:</p>
+
+<pre><code>$ ./gradlew eclipse
+</code></pre>
+
+<p>Then import the project into your Eclipse workspace.</p>
+
+<h1>
+<a id="participate" class="anchor" href="#participate" aria-hidden="true"><span class="octicon octicon-link"></span></a>Participate</h1>
+
+<p>Your feedback is most welcome at the project page:</p>
+
+<ul>
+<li>Found a bug? Create an <a href="https://github.com/kaklakariada/portmapper/issues">issue</a>!</li>
+<li>Miss some important feature? Create an <a href="https://github.com/kaklakariada/portmapper/issues">issue</a>!</li>
+<li>Need help using the UPnP PortMapper? Post a message in the Forum!</li>
+<li>Want to help with developing? Contact <a href="http://sourceforge.net/u/christoph/profile/">me</a> via <a href="http://sourceforge.net/u/christoph/profile/send_message">SourceForge.net</a>!</li>
+<li>Want to send me a mail? Use <code>christoph at users.sourceforge.net</code>!</li>
+</ul>
+        </section>
+
+        <footer>
+          UPnP Portmapper is maintained by <a href="https://github.com/kaklakariada">kaklakariada</a><br>
+          This page was generated by <a href="https://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
     </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h1>
-<a name="portmapper" class="anchor" href="#portmapper"><span class="octicon octicon-link"></span></a>portmapper</h1>
-
-<p>A tool for managing port forwardings via UPnP</p>
-      </section>
-    </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">UPnP Portmapper maintained by <a href="https://github.com/kaklakariada">kaklakariada</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
-
-    
-
   </body>
 </html>
