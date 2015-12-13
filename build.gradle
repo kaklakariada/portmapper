@@ -24,11 +24,17 @@ test {
 }
 
 processResources {
-    filter org.apache.tools.ant.filters.ReplaceTokens, tokens: [
-        "VERSION_NUMBER": project.version
-    ]
     rename(/(\w+)_en.properties/, '$1.properties')
 }
+
+task replaceVersionTokenInTranslations << {
+    ant.replace(dir: 'build/resources/main', encoding: 'ISO-8859-1') {
+        include(name: '**/*.properties')
+        replacefilter(token: '@VERSION_NUMBER@', value: project.version)
+    }
+}
+
+jar.dependsOn(replaceVersionTokenInTranslations)
 
 jar {
 	from {
