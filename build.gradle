@@ -10,6 +10,7 @@ repositories {
 
 version = '2.0.0-alpha2'
 sourceCompatibility = 1.7
+targetCompatibility = 1.7
 
 tasks.withType(JavaCompile) {
 	options.compilerArgs << '-Xlint:all'
