@@ -60,6 +60,7 @@ dependencies {
 	compile 'org.jdesktop.bsaf:bsaf:1.9.2'
 	compile ':sbbi-upnplib:1.0.4'
     compile 'org.fourthline.cling:cling-support:2.1.0'
+    compile 'org.bitlet:weupnp:0.1.4'
     
 	runtime 'commons-jxpath:commons-jxpath:1.1' // sbbi
     compile 'org.slf4j:jul-to-slf4j:1.7.13'

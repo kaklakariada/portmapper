@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.bitlet.weupnp.GatewayDevice;
+import org.bitlet.weupnp.PortMappingEntry;
 import org.chris.portmapper.model.PortMapping;
 import org.chris.portmapper.model.Protocol;
 import org.chris.portmapper.router.AbstractRouter;
@@ -19,13 +21,9 @@ import org.chris.portmapper.router.IRouter;
 import org.chris.portmapper.router.RouterException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wetorrent.upnp.GatewayDevice;
-import org.wetorrent.upnp.PortMappingEntry;
-import org.wetorrent.upnp.WeUPnPException;
 
 /**
- * This class is an implements an {@link IRouter} using the weupnp library's
- * {@link GatewayDevice}.
+ * This class is an implements an {@link IRouter} using the weupnp library's {@link GatewayDevice}.
  *
  * @author chris
  */
@@ -47,7 +45,7 @@ public class WeUPnPRouter extends AbstractRouter {
         try {
             device.addPortMapping(mapping.getExternalPort(), mapping.getInternalPort(), mapping.getInternalClient(),
                     mapping.getProtocol().getName(), mapping.getDescription());
-        } catch (final WeUPnPException e) {
+        } catch (final Exception e) {
             throw new RouterException("Could not add portmapping", e);
         }
     }
@@ -68,7 +66,7 @@ public class WeUPnPRouter extends AbstractRouter {
     public String getExternalIPAddress() throws RouterException {
         try {
             return device.getExternalIPAddress();
-        } catch (final WeUPnPException e) {
+        } catch (final Exception e) {
             throw new RouterException("Could not get external IP address", e);
         }
     }
@@ -111,12 +109,14 @@ public class WeUPnPRouter extends AbstractRouter {
         boolean morePortMappings = true;
         int index = 0;
         while (morePortMappings) {
-            PortMappingEntry entry = null;
+            final PortMappingEntry entry = new PortMappingEntry();
             try {
                 logger.debug("Getting port mapping " + index + "...");
-                entry = device.getGenericPortMappingEntry(index);
+                if (!device.getGenericPortMappingEntry(index, entry)) {
+                    throw new RuntimeException();
+                }
                 logger.debug("Got port mapping " + index + ": " + entry);
-            } catch (final WeUPnPException e) {
+            } catch (final Exception e) {
                 morePortMappings = false;
                 logger.debug("Got an exception with message '" + e.getMessage() + "' for index " + index
                         + ", stop getting more mappings");
@@ -163,7 +163,7 @@ public class WeUPnPRouter extends AbstractRouter {
             throws RouterException {
         try {
             device.deletePortMapping(externalPort, protocol.getName());
-        } catch (final WeUPnPException e) {
+        } catch (final Exception e) {
             throw new RouterException("Could not delete port mapping", e);
         }
     }
