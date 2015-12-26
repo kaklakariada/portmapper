@@ -17,16 +17,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class implements a label that looks and behaves like a link, i.e. you
- * can click on it and the URL is opened in a browser.
+ * This class implements a label that looks and behaves like a link, i.e. you can click on it and the URL is opened in a
+ * browser.
  *
  * @author chris
  */
 public class URLLabel extends JLabel {
 
     /**
-	 *
-	 */
+     *
+     */
     private static final long serialVersionUID = 1L;
 
     private final static Logger logger = LoggerFactory.getLogger(URLLabel.class);

@@ -12,9 +12,8 @@ package org.chris.portmapper.logging;
 import javax.swing.JTextArea;
 
 /**
- * The {@link LogMessageWriter} copies every written string to a
- * {@link LogMessageListener}. All written strings are buffered, so no string is
- * missed. A {@link LogMessageListener} can be registered using method
+ * The {@link LogMessageWriter} copies every written string to a {@link LogMessageListener}. All written strings are
+ * buffered, so no string is missed. A {@link LogMessageListener} can be registered using method
  * {@link #registerListener(JTextArea)}.
  *
  * @author Christoph
@@ -22,8 +21,7 @@ import javax.swing.JTextArea;
 public interface LogMessageListener {
 
     /**
-     * Process the given log message. This could mean e.g. to display the
-     * message to the user.
+     * Process the given log message. This could mean e.g. to display the message to the user.
      * 
      * @param message
      *            the message to process.

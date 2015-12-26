@@ -23,9 +23,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class represents a router device and provides methods for managing port
- * mappings and getting information about the router. It useses the SBBI
- * library's {@link InternetGatewayDevice}.
+ * This class represents a router device and provides methods for managing port mappings and getting information about
+ * the router. It useses the SBBI library's {@link InternetGatewayDevice}.
  *
  * @author chris
  */
@@ -39,8 +38,7 @@ public class SBBIRouter extends AbstractRouter {
     final private InternetGatewayDevice router;
 
     /**
-     * The maximum number of port mappings that we will try to retrieve from the
-     * router.
+     * The maximum number of port mappings that we will try to retrieve from the router.
      */
     private final static int MAX_NUM_PORTMAPPINGS = 500;
 
@@ -124,8 +122,8 @@ public class SBBIRouter extends AbstractRouter {
         info.put("modelNumber", rootDevice.getModelNumber());
         info.put("modelURL", rootDevice.getModelURL());
         info.put("manufacturerURL", rootDevice.getManufacturerURL().toExternalForm());
-        info.put("presentationURL", rootDevice.getPresentationURL() != null ? rootDevice.getPresentationURL()
-                .toExternalForm() : null);
+        info.put("presentationURL",
+                rootDevice.getPresentationURL() != null ? rootDevice.getPresentationURL().toExternalForm() : null);
         info.put("urlBase", rootDevice.getURLBase().toExternalForm());
 
         final SortedSet<String> sortedKeys = new TreeSet<>(info.keySet());
@@ -147,7 +145,7 @@ public class SBBIRouter extends AbstractRouter {
 
     private boolean addPortMapping(final String description, final Protocol protocol, final String remoteHost,
             final int externalPort, final String internalClient, final int internalPort, final int leaseDuration)
-            throws RouterException {
+                    throws RouterException {
 
         final String protocolString = protocol == Protocol.TCP ? "TCP" : "UDP";
 

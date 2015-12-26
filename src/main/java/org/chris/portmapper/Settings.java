@@ -47,15 +47,15 @@ public class Settings implements Serializable {
     public void addPreset(final PortMappingPreset newPreset) {
         final List<PortMappingPreset> oldPresets = new ArrayList<>(this.presets);
         this.presets.add(newPreset);
-        this.propertyChangeSupport.firePropertyChange(PROPERTY_PORT_MAPPING_PRESETS, oldPresets, new ArrayList<>(
-                this.presets));
+        this.propertyChangeSupport.firePropertyChange(PROPERTY_PORT_MAPPING_PRESETS, oldPresets,
+                new ArrayList<>(this.presets));
     }
 
     public void removePresets(final PortMappingPreset selectedPreset) {
         final List<PortMappingPreset> oldPresets = new ArrayList<>(this.presets);
         this.presets.remove(selectedPreset);
-        this.propertyChangeSupport.firePropertyChange(PROPERTY_PORT_MAPPING_PRESETS, oldPresets, new ArrayList<>(
-                this.presets));
+        this.propertyChangeSupport.firePropertyChange(PROPERTY_PORT_MAPPING_PRESETS, oldPresets,
+                new ArrayList<>(this.presets));
     }
 
     public void savePreset(final PortMappingPreset portMappingPreset) {

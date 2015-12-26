@@ -50,9 +50,8 @@ public abstract class AbstractRouter implements IRouter {
     }
 
     /**
-     * Get the ip of the local host by connecting to the router and fetching the
-     * ip from the socket. This only works when we are connected to the router
-     * and know its internal upnp port.
+     * Get the ip of the local host by connecting to the router and fetching the ip from the socket. This only works
+     * when we are connected to the router and know its internal upnp port.
      * 
      * @return the ip of the local host.
      * @throws RouterException
@@ -73,8 +72,8 @@ public abstract class AbstractRouter implements IRouter {
                 try (Socket socket = new Socket(getInternalHostName(), routerInternalPort)) {
                     localHostIP = socket.getLocalAddress();
                 } catch (final UnknownHostException e) {
-                    throw new RouterException("Could not create socked to " + getInternalHostName() + ":"
-                            + routerInternalPort, e);
+                    throw new RouterException(
+                            "Could not create socked to " + getInternalHostName() + ":" + routerInternalPort, e);
                 }
 
                 logger.debug("Got address " + localHostIP + " from socket.");
@@ -86,8 +85,9 @@ public abstract class AbstractRouter implements IRouter {
             // so we have to use the traditional method.
             if (localHostIP == null) {
 
-                logger.debug("Not connected to router or got invalid port number, can not use socket to determine the address of the localhost. "
-                        + "If no address is found, please connect to the router.");
+                logger.debug(
+                        "Not connected to router or got invalid port number, can not use socket to determine the address of the localhost. "
+                                + "If no address is found, please connect to the router.");
 
                 localHostIP = InetAddress.getLocalHost();
 

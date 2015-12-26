@@ -16,8 +16,7 @@ import javax.swing.JTextArea;
 import org.chris.portmapper.logging.LogMessageListener;
 
 /**
- * The {@link LogTextArea} appends all log message to the displayed text and
- * scrolls down.
+ * The {@link LogTextArea} appends all log message to the displayed text and scrolls down.
  *
  * @author Christoph
  */

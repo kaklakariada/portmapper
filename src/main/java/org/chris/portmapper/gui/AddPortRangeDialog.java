@@ -27,8 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class represents the dialog that can add a range of ports to the edit
- * presets dialog.
+ * This class represents the dialog that can add a range of ports to the edit presets dialog.
  *
  * @author chris
  */
@@ -193,8 +192,7 @@ public class AddPortRangeDialog extends JDialog {
     }
 
     /**
-     * This method is executed when the user clicks the save button. The method
-     * saves the entered preset
+     * This method is executed when the user clicks the save button. The method saves the entered preset
      */
     @Action(name = ACTION_ADD)
     public void addPortRange() {

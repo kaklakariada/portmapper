@@ -116,8 +116,8 @@ public class PortMapperApp extends SingleFrameApplication {
                 System.exit(1);
             }
             if (!dir.canRead() || !dir.canWrite()) {
-                logger.error("Can not read or write to custom configuration directory '" + customConfigurationDir
-                        + "'.");
+                logger.error(
+                        "Can not read or write to custom configuration directory '" + customConfigurationDir + "'.");
                 System.exit(1);
             }
             logger.info("Using custom configuration directory '" + dir.getAbsolutePath() + "'.");
@@ -240,8 +240,8 @@ public class PortMapperApp extends SingleFrameApplication {
         try {
             routerFactoryClass = (Class<AbstractRouterFactory>) Class.forName(settings.getRouterFactoryClassName());
         } catch (final ClassNotFoundException e1) {
-            throw new RouterException("Did not find router factory class for name "
-                    + settings.getRouterFactoryClassName(), e1);
+            throw new RouterException(
+                    "Did not find router factory class for name " + settings.getRouterFactoryClassName(), e1);
         }
 
         final Constructor<AbstractRouterFactory> constructor;
@@ -258,8 +258,8 @@ public class PortMapperApp extends SingleFrameApplication {
         try {
             routerFactory = constructor.newInstance(this);
         } catch (final Exception e) {
-            throw new RouterException("Could not create a router factory for name "
-                    + settings.getRouterFactoryClassName(), e);
+            throw new RouterException(
+                    "Could not create a router factory for name " + settings.getRouterFactoryClassName(), e);
         }
         logger.debug("Router factory created");
         return routerFactory;

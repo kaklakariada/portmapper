@@ -18,8 +18,7 @@ public interface IRouter {
     /**
      * Get the IP address of the local host.
      * 
-     * @return IP address of the local host or <code>null</code>, if the address
-     *         could not be determined.
+     * @return IP address of the local host or <code>null</code>, if the address could not be determined.
      * @throws RouterException
      */
     public String getLocalHostAddress() throws RouterException;

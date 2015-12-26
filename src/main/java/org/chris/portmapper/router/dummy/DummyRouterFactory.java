@@ -16,20 +16,20 @@ import org.chris.portmapper.router.RouterException;
  */
 public class DummyRouterFactory extends AbstractRouterFactory {
 
-	public DummyRouterFactory(final PortMapperApp app) {
-		super(app, "Dummy library");
-	}
+    public DummyRouterFactory(final PortMapperApp app) {
+        super(app, "Dummy library");
+    }
 
-	@Override
-	protected List<IRouter> findRoutersInternal() throws RouterException {
-		final List<IRouter> routers = new LinkedList<>();
-		routers.add(new DummyRouter("DummyRouter1"));
-		routers.add(new DummyRouter("DummyRouter2"));
-		return routers;
-	}
+    @Override
+    protected List<IRouter> findRoutersInternal() throws RouterException {
+        final List<IRouter> routers = new LinkedList<>();
+        routers.add(new DummyRouter("DummyRouter1"));
+        routers.add(new DummyRouter("DummyRouter2"));
+        return routers;
+    }
 
-	@Override
-	protected IRouter connect(final String locationUrl) throws RouterException {
-		return new DummyRouter("DummyRouter @ " + locationUrl);
-	}
+    @Override
+    protected IRouter connect(final String locationUrl) throws RouterException {
+        return new DummyRouter("DummyRouter @ " + locationUrl);
+    }
 }

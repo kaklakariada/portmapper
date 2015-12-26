@@ -124,14 +124,14 @@ public class PortMapperCli {
     private void addPortForwarding(final IRouter router) throws RouterException {
 
         final String remoteHost = null;
-        final String internalClient = cmdLineArgs.getInternalIp() != null ? cmdLineArgs.getInternalIp() : router
-                .getLocalHostAddress();
+        final String internalClient = cmdLineArgs.getInternalIp() != null ? cmdLineArgs.getInternalIp()
+                : router.getLocalHostAddress();
         final int internalPort = cmdLineArgs.getInternalPort();
         final int externalPort = cmdLineArgs.getExternalPort();
         final Protocol protocol = cmdLineArgs.getProtocol();
 
-        final String description = cmdLineArgs.getDescription() != null ? cmdLineArgs.getDescription() : "PortMapper "
-                + protocol + "/" + internalClient + ":" + internalPort;
+        final String description = cmdLineArgs.getDescription() != null ? cmdLineArgs.getDescription()
+                : "PortMapper " + protocol + "/" + internalClient + ":" + internalPort;
         final PortMapping mapping = new PortMapping(protocol, remoteHost, externalPort, internalClient, internalPort,
                 description);
         logger.info("Adding mapping " + mapping);

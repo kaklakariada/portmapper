@@ -37,8 +37,8 @@ public class ClingRouterFactory extends AbstractRouterFactory {
 
         log.debug("Start searching using upnp service");
         upnpService.getControlPoint().search();
-        final RemoteService service = (RemoteService) clingRegistryListener.waitForServiceFound(
-                DISCOVERY_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+        final RemoteService service = (RemoteService) clingRegistryListener
+                .waitForServiceFound(DISCOVERY_TIMEOUT_SECONDS, TimeUnit.SECONDS);
 
         if (service == null) {
             log.debug("Did not find a service after {} seconds", DISCOVERY_TIMEOUT_SECONDS);
@@ -46,8 +46,8 @@ public class ClingRouterFactory extends AbstractRouterFactory {
         }
 
         log.debug("Found service {}", service);
-        return Arrays.<IRouter> asList(new ClingRouter(service, upnpService.getRegistry(), upnpService
-                .getControlPoint()));
+        return Arrays
+                .<IRouter> asList(new ClingRouter(service, upnpService.getRegistry(), upnpService.getControlPoint()));
     }
 
     private void shutdownServiceOnExit(final UpnpService upnpService) {

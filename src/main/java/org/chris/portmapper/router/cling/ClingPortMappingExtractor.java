@@ -51,8 +51,8 @@ class ClingPortMappingExtractor {
             logger.debug("Getting port mapping with entry number " + currentMappingNumber + "...");
 
             try {
-                final PortMapping portMapping = actionService.run(new GetPortMappingEntryAction(actionService
-                        .getService(), currentMappingNumber));
+                final PortMapping portMapping = actionService
+                        .run(new GetPortMappingEntryAction(actionService.getService(), currentMappingNumber));
                 mappings.add(portMapping);
             } catch (final ClingOperationFailedException e) {
                 handleFailureResponse(e.getResponse());
@@ -70,8 +70,7 @@ class ClingPortMappingExtractor {
      */
     private void checkMaxNumPortMappingsReached() {
         if (currentMappingNumber == maxNumPortMappings) {
-            logger.warn("Reached max number of port mappings to get ("
-                    + maxNumPortMappings
+            logger.warn("Reached max number of port mappings to get (" + maxNumPortMappings
                     + "). Perhaps not all port mappings where retrieved. Try to increase SBBIRouter.MAX_NUM_PORTMAPPINGS.");
         }
     }
@@ -84,7 +83,8 @@ class ClingPortMappingExtractor {
         if (isNoMoreMappingsException(incomingActionResponseMessage)) {
             moreEntries = false;
             logger.debug("Got no port mapping for entry number " + currentMappingNumber + " (status: "
-                    + incomingActionResponseMessage.getOperation().getStatusMessage() + "). Stop getting more entries.");
+                    + incomingActionResponseMessage.getOperation().getStatusMessage()
+                    + "). Stop getting more entries.");
         } else {
             moreEntries = false;
             logger.error("Got error respons when fetching port mapping for entry number " + currentMappingNumber
@@ -105,13 +105,14 @@ class ClingPortMappingExtractor {
      * </ul>
      * See bug reports
      * <ul>
-     * <li><a href= "https://sourceforge.net/tracker/index.php?func=detail&aid=1939749&group_id=213879&atid=1027466"
-     * >https://sourceforge.net/tracker/index.php?func=detail&aid= 1939749&group_id=213879&atid=1027466</a></li>
-     * <li><a href="http://www.sbbi.net/forum/viewtopic.php?p=394">http://www.sbbi .net/forum/viewtopic.php?p=394</a></li>
-     * <li><a href= "http://sourceforge.net/tracker/?func=detail&atid=1027466&aid=3325388&group_id=213879"
-     * >http://sourceforge.net/tracker/?func=detail&atid=1027466&aid=3325388& group_id=213879</a></li>
-     * <a href= "https://sourceforge.net/tracker2/?func=detail&aid=2540478&group_id=213879&atid=1027466"
-     * >https://sourceforge.net/tracker2/?func=detail&aid=2540478&group_id= 213879&atid=1027466</a></li>
+     * <li><a href= "https://sourceforge.net/tracker/index.php?func=detail&aid=1939749&group_id=213879&atid=1027466" >
+     * https://sourceforge.net/tracker/index.php?func=detail&aid= 1939749&group_id=213879&atid=1027466</a></li>
+     * <li><a href="http://www.sbbi.net/forum/viewtopic.php?p=394">http://www.sbbi .net/forum/viewtopic.php?p=394</a>
+     * </li>
+     * <li><a href= "http://sourceforge.net/tracker/?func=detail&atid=1027466&aid=3325388&group_id=213879" >http://
+     * sourceforge.net/tracker/?func=detail&atid=1027466&aid=3325388& group_id=213879</a></li>
+     * <a href= "https://sourceforge.net/tracker2/?func=detail&aid=2540478&group_id=213879&atid=1027466" >https://
+     * sourceforge.net/tracker2/?func=detail&aid=2540478&group_id= 213879&atid=1027466</a></li>
      * </ul>
      *
      * @param incomingActionResponseMessage

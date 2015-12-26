@@ -6,9 +6,8 @@ package org.chris.portmapper.model;
 import java.io.Serializable;
 
 /**
- * This class is used by {@link PortMapping} to store the information about a
- * single port mapping, i.e. the protocol (TCP or UDP) and internal and extern
- * port.
+ * This class is used by {@link PortMapping} to store the information about a single port mapping, i.e. the protocol
+ * (TCP or UDP) and internal and extern port.
  *
  * @author chris
  */

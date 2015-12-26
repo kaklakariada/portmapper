@@ -17,11 +17,11 @@ public class CommandLineArguments {
             "-list" })
     private boolean startGui;
 
-    @Option(name = "-add", usage = "Add a new port mapping", depends = { "-internalPort", "-externalPort", "-protocol" }, forbids = {
-            "-gui", "-delete", "-info", "-list" })
+    @Option(name = "-add", usage = "Add a new port mapping", depends = { "-internalPort", "-externalPort",
+            "-protocol" }, forbids = { "-gui", "-delete", "-info", "-list" })
     private boolean addPortMapping;
-    @Option(name = "-delete", usage = "Delete a new port mapping", depends = { "-externalPort", "-protocol" }, forbids = {
-            "-gui", "-add", "-info", "-list" })
+    @Option(name = "-delete", usage = "Delete a new port mapping", depends = { "-externalPort",
+            "-protocol" }, forbids = { "-gui", "-add", "-info", "-list" })
     private boolean deletePortMapping;
     @Option(name = "-info", usage = "Print router info", forbids = { "-gui", "-delete", "-add", "-list" })
     private boolean printInfo;
@@ -64,8 +64,8 @@ public class CommandLineArguments {
 
     public void printHelp() {
         parser.printUsage(System.err);
-        System.err
-                .println(" Example: java -jar PortMapper.jar -add -externalPort 22 -internalPort 22 [-ip <ip-addr>] -description desc");
+        System.err.println(
+                " Example: java -jar PortMapper.jar -add -externalPort 22 -internalPort 22 [-ip <ip-addr>] -description desc");
     }
 
     public boolean isPrintHelp() {
