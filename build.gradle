@@ -1,3 +1,7 @@
+plugins {
+    id "com.github.hierynomus.license" version "0.12.1"
+}
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
@@ -66,6 +70,12 @@ dependencies {
     compile 'org.slf4j:jul-to-slf4j:1.7.13'
 }
 
+license {
+    header = file('gradle/license-header.txt')
+    ext.year = Calendar.getInstance().get(Calendar.YEAR)
+    ext.name = 'Christoph Pirkl'
+    ext.email = 'christoph at users.sourceforge.net'
+}
 
 eclipse {
 	classpath {
