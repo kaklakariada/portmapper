@@ -122,7 +122,7 @@ public class WeUPnPRouter extends AbstractRouter {
                         + ", stop getting more mappings");
             }
 
-            if (entry != null) {
+            if (entry.getProtocol() != null) {
                 final Protocol protocol = entry.getProtocol().equalsIgnoreCase("TCP") ? Protocol.TCP : Protocol.UDP;
                 final PortMapping m = new PortMapping(protocol, entry.getRemoteHost(), entry.getExternalPort(),
                         entry.getInternalClient(), entry.getInternalPort(), entry.getPortMappingDescription());
