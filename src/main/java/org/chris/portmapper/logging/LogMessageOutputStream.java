@@ -15,15 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * This is free software licensed under the Terms of the GNU Public
- * license (GPL) V3 (see http://www.gnu.org/licenses/gpl-3.0.html
- * for details
- *
- * No warranty whatsoever is provided. Use at your own risk.
- *
- * @author Christoph
- */
 package org.chris.portmapper.logging;
 
 import java.io.IOException;
@@ -80,7 +71,7 @@ public class LogMessageOutputStream extends OutputStream {
     /**
      * Append the given message to the registered {@link LogMessageListener}. If no listener is registered, the string
      * is written to a buffer. When a listener is registered, the buffered text will be appended to the listener.
-     * 
+     *
      * @param message
      *            the message to append.
      */
@@ -95,7 +86,7 @@ public class LogMessageOutputStream extends OutputStream {
     /**
      * Registers a {@link JTextArea}, so that all strings written to this writer are appended to the given text area.
      * After registration, all buffered strings are appended to the text area, so that no string is missed.
-     * 
+     *
      * @param textArea
      *            the text area to wich to append the strings.
      */

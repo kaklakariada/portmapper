@@ -27,8 +27,6 @@ import org.chris.portmapper.Settings;
 /**
  * This class stores a port mapping preset containing a description, internal and remote host and a {@link List} of
  * {@link SinglePortMapping}s.
- *
- * @author chris
  */
 public class PortMappingPreset implements Cloneable, Serializable {
 
@@ -173,7 +171,7 @@ public class PortMappingPreset implements Cloneable, Serializable {
 
     /**
      * @param settings
-     * 
+     *
      */
     public void save(final Settings settings) {
         if (this.isNew) {

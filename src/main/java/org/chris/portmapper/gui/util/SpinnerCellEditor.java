@@ -30,9 +30,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.TableCellEditor;
 
-/**
- * @author chris
- */
 public class SpinnerCellEditor extends AbstractCellEditor implements TableCellEditor, ChangeListener {
 
     private static final long serialVersionUID = 1L;

@@ -27,9 +27,6 @@ import org.chris.portmapper.router.RouterException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author chris
- */
 public class DummyRouter extends AbstractRouter {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());

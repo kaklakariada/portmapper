@@ -25,10 +25,6 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import net.sbbi.upnp.devices.UPNPRootDevice;
-import net.sbbi.upnp.impls.InternetGatewayDevice;
-import net.sbbi.upnp.messages.UPNPResponseException;
-
 import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.Settings;
 import org.chris.portmapper.model.PortMapping;
@@ -39,11 +35,13 @@ import org.chris.portmapper.util.EncodingUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.sbbi.upnp.devices.UPNPRootDevice;
+import net.sbbi.upnp.impls.InternetGatewayDevice;
+import net.sbbi.upnp.messages.UPNPResponseException;
+
 /**
  * This class represents a router device and provides methods for managing port mappings and getting information about
  * the router. It useses the SBBI library's {@link InternetGatewayDevice}.
- *
- * @author chris
  */
 public class SBBIRouter extends AbstractRouter {
 

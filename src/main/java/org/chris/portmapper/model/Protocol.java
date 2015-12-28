@@ -23,8 +23,6 @@ package org.chris.portmapper.model;
 /**
  * This {@link Enum} represents the protocol of a {@link SinglePortMapping}, possible values are {@link #TCP} and
  * {@link #UDP}.
- *
- * @author chris
  */
 public enum Protocol {
 

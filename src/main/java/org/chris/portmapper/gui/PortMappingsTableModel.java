@@ -25,9 +25,6 @@ import javax.swing.table.AbstractTableModel;
 import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.model.PortMapping;
 
-/**
- * @author chris
- */
 public class PortMappingsTableModel extends AbstractTableModel {
 
     private static final long serialVersionUID = 1L;

@@ -19,9 +19,6 @@ package org.chris.portmapper;
 
 /**
  * This class contains mac specific settings for the application name and the application menu.
- * 
- * @author chris
- * 
  */
 public class MacSetup {
 

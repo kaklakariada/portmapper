@@ -23,9 +23,6 @@ package org.chris.portmapper.util;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author chris
- */
 public class EncodingUtilities {
 
     private static Map<Character, String> knownEncodings;
@@ -39,9 +36,8 @@ public class EncodingUtilities {
 
     /**
      * Replace all special characters with their html entities. This was found at
-     * <a href= "http://www.owasp.org/index.php/How_to_perform_HTML_entity_encoding_in_Java" >http://www.owasp.org/index
-     * .php/ How_to_perform_HTML_entity_encoding_in_Java</a>
-     * 
+     * <code><a href= "http://www.owasp.org/index.php/How_to_perform_HTML_entity_encoding_in_Java">http://www.owasp.org/index.php/How_to_perform_HTML_entity_encoding_in_Java</a></code>
+     *
      * @param s
      *            the string in which to replace the special characters.
      * @return the result of the replacement.

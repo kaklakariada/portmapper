@@ -30,8 +30,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * This is the abstract super class for all routers.
- *
- * @author chris
  */
 public abstract class AbstractRouter implements IRouter {
 
@@ -69,7 +67,7 @@ public abstract class AbstractRouter implements IRouter {
     /**
      * Get the ip of the local host by connecting to the router and fetching the ip from the socket. This only works
      * when we are connected to the router and know its internal upnp port.
-     * 
+     *
      * @return the ip of the local host.
      * @throws RouterException
      */
@@ -119,7 +117,7 @@ public abstract class AbstractRouter implements IRouter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override

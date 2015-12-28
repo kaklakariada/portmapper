@@ -41,8 +41,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * This class is an implements an {@link IRouter} using the weupnp library's {@link GatewayDevice}.
- *
- * @author chris
  */
 public class WeUPnPRouter extends AbstractRouter {
 
