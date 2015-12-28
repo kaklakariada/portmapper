@@ -76,13 +76,12 @@ public abstract class AbstractRouter implements IRouter {
 
             // In order to use the socket method to get the address, we have to
             // be connected to the router.
-
             final int routerInternalPort = getInternalPort();
-            logger.debug("Got internal router port " + routerInternalPort);
+            logger.debug("Got internal router port {}", routerInternalPort);
 
             // Check, if we got a correct port number
             if (routerInternalPort > 0) {
-                logger.debug("Creating socket to router: " + getInternalHostName() + ":" + routerInternalPort + "...");
+                logger.debug("Creating socket to router: {}:{}...", getInternalHostName(), routerInternalPort);
                 try (Socket socket = new Socket(getInternalHostName(), routerInternalPort)) {
                     localHostIP = socket.getLocalAddress();
                 } catch (final UnknownHostException e) {
@@ -90,9 +89,9 @@ public abstract class AbstractRouter implements IRouter {
                             "Could not create socked to " + getInternalHostName() + ":" + routerInternalPort, e);
                 }
 
-                logger.debug("Got address " + localHostIP + " from socket.");
+                logger.debug("Got address {} from socket.", localHostIP);
             } else {
-                logger.debug("Got invalid internal router port number " + routerInternalPort);
+                logger.debug("Got invalid internal router port number {}", routerInternalPort);
             }
 
             // We are not connected to the router or got an invalid port number,
@@ -105,7 +104,7 @@ public abstract class AbstractRouter implements IRouter {
 
                 localHostIP = InetAddress.getLocalHost();
 
-                logger.debug("Got address " + localHostIP + " via InetAddress.getLocalHost().");
+                logger.debug("Got address {} via InetAddress.getLocalHost().", localHostIP);
             }
 
         } catch (final IOException e) {
@@ -116,8 +115,6 @@ public abstract class AbstractRouter implements IRouter {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder();
-        sb.append(getName()).append(" (").append(getInternalHostName()).append(")");
-        return sb.toString();
+        return getName() + " (" + getInternalHostName() + ")";
     }
 }

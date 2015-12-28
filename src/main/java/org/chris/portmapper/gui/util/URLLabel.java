@@ -66,9 +66,9 @@ public class URLLabel extends JLabel {
     }
 
     private void openUrl() {
-        logger.debug("User clicked on URLLabel: open URL '" + uri + "' in browser");
+        logger.debug("User clicked on URLLabel: open URL '{}' in browser", uri);
         if (desktop == null || !desktop.isSupported(Desktop.Action.BROWSE)) {
-            logger.warn("Opening URLs is not supported on this machine, please open url manually: " + uri);
+            logger.warn("Opening URLs is not supported on this machine, please open url manually: {}", uri);
             return;
         }
         try {

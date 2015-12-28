@@ -53,7 +53,7 @@ public class DummyRouter extends AbstractRouter {
 
     @Override
     public void addPortMappings(final Collection<PortMapping> mappingsToAdd) {
-        logger.debug("Adding mappings " + mappingsToAdd);
+        logger.debug("Adding {} mappings: {}", mappingsToAdd.size(), mappingsToAdd);
         this.mappings.addAll(mappingsToAdd);
     }
 
@@ -80,6 +80,7 @@ public class DummyRouter extends AbstractRouter {
     @Override
     public Collection<PortMapping> getPortMappings() {
         try {
+            logger.debug("Sleep 3s to simulate delay when fetching port mappings.");
             Thread.sleep(3000);
         } catch (final InterruptedException e) {
             // ignore

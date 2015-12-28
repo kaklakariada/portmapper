@@ -126,27 +126,26 @@ public class PortMapperApp extends SingleFrameApplication {
         if (customConfigurationDir != null) {
             final File dir = new File(customConfigurationDir);
             if (!dir.isDirectory()) {
-                logger.error("Custom configuration directory '" + customConfigurationDir + "' is not a directory.");
+                logger.error("Custom configuration directory '{}' is not a directory.", customConfigurationDir);
                 System.exit(1);
             }
             if (!dir.canRead() || !dir.canWrite()) {
-                logger.error(
-                        "Can not read or write to custom configuration directory '" + customConfigurationDir + "'.");
+                logger.error("Can not read or write to custom configuration directory '{}'.", customConfigurationDir);
                 System.exit(1);
             }
-            logger.info("Using custom configuration directory '" + dir.getAbsolutePath() + "'.");
+            logger.info("Using custom configuration directory '{}'.", dir.getAbsolutePath());
             getContext().getLocalStorage().setDirectory(dir);
 
             // check, if the portable app directory exists and use this one
         } else if (portableAppConfigDir.isDirectory() && portableAppConfigDir.canRead()
                 && portableAppConfigDir.canWrite()) {
-            logger.info("Found portable app configuration directory '" + portableAppConfigDir.getAbsolutePath() + "'.");
+            logger.info("Found portable app configuration directory '{}'.", portableAppConfigDir.getAbsolutePath());
             getContext().getLocalStorage().setDirectory(portableAppConfigDir);
 
             // use the default configuration directory
         } else {
-            logger.info("Using default configuration directory '"
-                    + getContext().getLocalStorage().getDirectory().getAbsolutePath() + "'.");
+            logger.info("Using default configuration directory '{}'.",
+                    getContext().getLocalStorage().getDirectory().getAbsolutePath());
         }
     }
 
@@ -155,18 +154,18 @@ public class PortMapperApp extends SingleFrameApplication {
      * directory.
      */
     private void loadSettings() {
-        logger.debug("Loading settings from file " + SETTINGS_FILENAME);
+        logger.debug("Loading settings from file {}", SETTINGS_FILENAME);
         try {
             settings = (Settings) getContext().getLocalStorage().load(SETTINGS_FILENAME);
         } catch (final IOException e) {
-            logger.warn("Could not load settings from file", e);
+            logger.warn("Could not load settings from file " + SETTINGS_FILENAME, e);
         }
 
         if (settings == null) {
-            logger.debug("Settings were not loaded from file: create new settings");
+            logger.debug("Settings were not loaded from file {}: create new settings", SETTINGS_FILENAME);
             settings = new Settings();
         } else {
-            logger.debug("Got settings " + settings);
+            logger.debug("Got settings {}", settings);
             this.setLogLevel(settings.getLogLevel());
         }
     }
@@ -178,16 +177,16 @@ public class PortMapperApp extends SingleFrameApplication {
     @Override
     protected void shutdown() {
         super.shutdown();
-        logger.debug("Saving settings " + settings + " to file " + SETTINGS_FILENAME);
+        logger.debug("Saving settings {} to file {}", settings, SETTINGS_FILENAME);
         if (logger.isTraceEnabled()) {
             for (final PortMappingPreset preset : settings.getPresets()) {
-                logger.trace("Saving port mapping " + preset.getCompleteDescription());
+                logger.trace("Saving port mapping {}", preset.getCompleteDescription());
             }
         }
         try {
             getContext().getLocalStorage().save(settings, SETTINGS_FILENAME);
         } catch (final IOException e) {
-            logger.warn("Could not save settings to file", e);
+            logger.warn("Could not save settings to file " + SETTINGS_FILENAME, e);
         }
     }
 
@@ -209,7 +208,7 @@ public class PortMapperApp extends SingleFrameApplication {
         try {
             routerFactory = createRouterFactory();
         } catch (final RouterException e) {
-            logger.error("Could not create router factory", e);
+            logger.error("Could not create router factory: " + e.getMessage(), e);
             return;
         }
         logger.info("Searching for routers...");
@@ -224,13 +223,13 @@ public class PortMapperApp extends SingleFrameApplication {
         // One router found: use it.
         if (foundRouters.size() == 1) {
             router = foundRouters.iterator().next();
-            logger.info("Connected to router " + router.getName());
+            logger.info("Connected to router '{}'", router.getName());
             this.getView().fireConnectionStateChange();
             return;
         }
 
         // More than one router found: ask user.
-        logger.info("Found more than one router: ask user.");
+        logger.info("Found more than one router (count: {}): ask user.", foundRouters.size());
 
         final ResourceMap resourceMap = getResourceMap();
         final IRouter selectedRouter = (IRouter) JOptionPane.showInputDialog(this.getView().getFrame(),
@@ -247,41 +246,44 @@ public class PortMapperApp extends SingleFrameApplication {
         this.getView().fireConnectionStateChange();
     }
 
-    @SuppressWarnings("unchecked")
     private AbstractRouterFactory createRouterFactory() throws RouterException {
-        Class<AbstractRouterFactory> routerFactoryClass;
-        logger.info("Creating router factory for class " + settings.getRouterFactoryClassName());
-        try {
-            routerFactoryClass = (Class<AbstractRouterFactory>) Class.forName(settings.getRouterFactoryClassName());
-        } catch (final ClassNotFoundException e1) {
-            throw new RouterException(
-                    "Did not find router factory class for name " + settings.getRouterFactoryClassName(), e1);
-        }
-
-        final Constructor<AbstractRouterFactory> constructor;
-        try {
-            constructor = routerFactoryClass.getConstructor(PortMapperApp.class);
-        } catch (final NoSuchMethodException e1) {
-            throw new RouterException("Could not find constructor of " + routerFactoryClass.getName(), e1);
-        } catch (final SecurityException e1) {
-            throw new RouterException("Could not find constructor of " + routerFactoryClass.getName(), e1);
-        }
-
-        final AbstractRouterFactory routerFactory;
-        logger.debug("Creating a new instance of the router factory class " + routerFactoryClass);
-        try {
-            routerFactory = constructor.newInstance(this);
-        } catch (final Exception e) {
-            throw new RouterException(
-                    "Could not create a router factory for name " + settings.getRouterFactoryClassName(), e);
-        }
-        logger.debug("Router factory created");
+        logger.info("Creating router factory for class {}", settings.getRouterFactoryClassName());
+        final Class<AbstractRouterFactory> routerFactoryClass = getClassForName(settings.getRouterFactoryClassName());
+        final Constructor<AbstractRouterFactory> constructor = getConstructor(routerFactoryClass);
+        final AbstractRouterFactory routerFactory = createInstance(constructor);
+        logger.debug("Router factory {} created", routerFactory);
         return routerFactory;
     }
 
-    /**
-     * @return
-     */
+    private AbstractRouterFactory createInstance(final Constructor<AbstractRouterFactory> constructor)
+            throws RouterException {
+        try {
+            return constructor.newInstance(this);
+        } catch (final Exception e) {
+            throw new RouterException("Could not create a router factory using constructor " + constructor, e);
+        }
+    }
+
+    private static Constructor<AbstractRouterFactory> getConstructor(final Class<AbstractRouterFactory> clazz)
+            throws RouterException {
+        try {
+            return clazz.getConstructor(PortMapperApp.class);
+        } catch (final NoSuchMethodException e) {
+            throw new RouterException("Could not find constructor of " + clazz.getName(), e);
+        } catch (final SecurityException e1) {
+            throw new RouterException("Could not find constructor of " + clazz.getName(), e1);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Class<AbstractRouterFactory> getClassForName(final String className) throws RouterException {
+        try {
+            return (Class<AbstractRouterFactory>) Class.forName(className);
+        } catch (final ClassNotFoundException e) {
+            throw new RouterException("Did not find router factory class for name " + className, e);
+        }
+    }
+
     public boolean disconnectRouter() {
         if (this.router == null) {
             logger.warn("Not connected to router. Can not disconnect.");
@@ -335,10 +337,6 @@ public class PortMapperApp extends SingleFrameApplication {
         return null;
     }
 
-    /**
-     * @return
-     * @throws RouterException
-     */
     private InetAddress getLocalhostAddressFromNetworkInterface() throws RouterException {
         try {
             final List<NetworkInterface> networkInterfaces = Collections.list(NetworkInterface.getNetworkInterfaces());

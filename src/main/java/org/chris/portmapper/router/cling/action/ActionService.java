@@ -46,7 +46,7 @@ public class ActionService {
 
         final IncomingActionResponseMessage response = prot.getOutputMessage();
         if (response == null) {
-            throw new ClingRouterException("Got null response");
+            throw new ClingRouterException("Got null response for action " + actionInvocation);
         } else if (response.getOperation().isFailed()) {
             throw new ClingOperationFailedException("Invocation " + actionInvocation + " failed with operation '"
                     + response.getOperation() + "', body '" + response.getBodyString() + "'", response);

@@ -101,8 +101,8 @@ public class WeUPnPRouter extends AbstractRouter {
     public int getInternalPort() throws RouterException {
         String url = device.getPresentationURL();
         if (url == null) {
-            logger.info("Presentation url is null: use url base");
             url = device.getURLBase();
+            logger.info("Presentation url is null: use url base '{}'", url);
         }
         if (url == null) {
             throw new RouterException("Presentation URL and URL base are null");
@@ -123,15 +123,15 @@ public class WeUPnPRouter extends AbstractRouter {
         while (morePortMappings) {
             final PortMappingEntry entry = new PortMappingEntry();
             try {
-                logger.debug("Getting port mapping " + index + "...");
+                logger.debug("Getting port mapping {}...", index);
                 if (!device.getGenericPortMappingEntry(index, entry)) {
                     throw new RuntimeException();
                 }
-                logger.debug("Got port mapping " + index + ": " + entry);
+                logger.debug("Got port mapping {}: {}", index, entry);
             } catch (final Exception e) {
                 morePortMappings = false;
-                logger.debug("Got an exception with message '" + e.getMessage() + "' for index " + index
-                        + ", stop getting more mappings");
+                logger.debug("Got an exception with message '{}‘ for index {}, stop getting more mappings",
+                        e.getMessage(), index);
             }
 
             if (entry.getProtocol() != null) {
@@ -140,7 +140,7 @@ public class WeUPnPRouter extends AbstractRouter {
                         entry.getInternalClient(), entry.getInternalPort(), entry.getPortMappingDescription());
                 mappings.add(m);
             } else {
-                logger.debug("Got null port mapping for index " + index);
+                logger.debug("Got null port mapping for index {}", index);
             }
             index++;
         }
@@ -158,11 +158,11 @@ public class WeUPnPRouter extends AbstractRouter {
 
         for (final String key : sortedKeys) {
             final String value = info.get(key);
-            logger.info("Router Info: " + key + " \t= " + value);
+            logger.info("Router Info: {} \t= {}", key, value);
         }
 
-        logger.info("def loc " + device.getLocation());
-        logger.info("device type " + device.getDeviceType());
+        logger.info("def loc: {}", device.getLocation());
+        logger.info("device type: {}", device.getDeviceType());
     }
 
     @Override

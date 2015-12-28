@@ -17,13 +17,14 @@
  */
 package org.chris.portmapper.router;
 
-import java.util.Arrays;
+import static java.util.Arrays.*;
+
 import java.util.Collection;
 import java.util.List;
 
+import org.chris.portmapper.PortMapperApp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.chris.portmapper.PortMapperApp;
 
 /**
  * The base class for all router factories.
@@ -45,6 +46,7 @@ public abstract class AbstractRouterFactory {
 
     /**
      * Get the name of the router factory that can be displayed to the user.
+     *
      * @return the name of the router factory that can be displayed to the user.
      */
     public String getName() {
@@ -54,16 +56,17 @@ public abstract class AbstractRouterFactory {
     public List<IRouter> findRouters() throws RouterException {
         final String locationUrl = System.getProperty(LOCATION_URL_SYSTEM_PROPERTY);
         if (locationUrl == null) {
-            logger.debug("System property " + LOCATION_URL_SYSTEM_PROPERTY
-                    + " not defined: discover routers automatically.");
+            logger.debug("System property '{}' not defined: discover routers automatically.",
+                    LOCATION_URL_SYSTEM_PROPERTY);
             return findRoutersInternal();
         }
-        logger.info("Trying to connect using location url " + locationUrl);
-        return Arrays.asList(connect(locationUrl));
+        logger.info("Trying to connect using location url {}", locationUrl);
+        return asList(connect(locationUrl));
     }
 
     /**
      * Search for routers on the network.
+     *
      * @return the found router or an empty {@link Collection} if no router was found.
      * @throws RouterException
      *             if something goes wrong during discovery.
@@ -72,6 +75,7 @@ public abstract class AbstractRouterFactory {
 
     /**
      * Directly connect to a router using a location url like <code>http://192.168.179.1:49000/igddesc.xml</code>.
+     *
      * @param locationUrl
      *            a location url
      * @return a router if the connection was successful.

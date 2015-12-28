@@ -20,8 +20,6 @@ package org.chris.portmapper.router.cling;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import net.sbbi.upnp.impls.InternetGatewayDevice;
-
 import org.chris.portmapper.model.PortMapping;
 import org.chris.portmapper.router.RouterException;
 import org.chris.portmapper.router.cling.action.ActionService;
@@ -29,6 +27,8 @@ import org.chris.portmapper.router.cling.action.GetPortMappingEntryAction;
 import org.fourthline.cling.model.message.control.IncomingActionResponseMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import net.sbbi.upnp.impls.InternetGatewayDevice;
 
 /**
  * This class fetches all {@link PortMapping} from an {@link InternetGatewayDevice}.
@@ -60,7 +60,7 @@ class ClingPortMappingExtractor {
          * This is a little trick to get all port mappings. There is a method that gets the number of available port
          * mappings (getNatMappingsCount()), but it seems, that this method just tries to get all port mappings and
          * checks, if an error is returned.
-         * 
+         *
          * In order to speed this up, we will do the same here, but stop, when the first exception is thrown.
          */
 
@@ -87,8 +87,9 @@ class ClingPortMappingExtractor {
      */
     private void checkMaxNumPortMappingsReached() {
         if (currentMappingNumber == maxNumPortMappings) {
-            logger.warn("Reached max number of port mappings to get (" + maxNumPortMappings
-                    + "). Perhaps not all port mappings where retrieved. Try to increase SBBIRouter.MAX_NUM_PORTMAPPINGS.");
+            logger.warn(
+                    "Reached max number of port mappings to get ({}). Perhaps not all port mappings where retrieved.",
+                    maxNumPortMappings);
         }
     }
 
@@ -99,13 +100,13 @@ class ClingPortMappingExtractor {
     private void handleFailureResponse(final IncomingActionResponseMessage incomingActionResponseMessage) {
         if (isNoMoreMappingsException(incomingActionResponseMessage)) {
             moreEntries = false;
-            logger.debug("Got no port mapping for entry number " + currentMappingNumber + " (status: "
-                    + incomingActionResponseMessage.getOperation().getStatusMessage()
-                    + "). Stop getting more entries.");
+            logger.debug("Got no port mapping for entry number {} (status: {}). Stop getting more entries.",
+                    currentMappingNumber, incomingActionResponseMessage.getOperation().getStatusMessage());
         } else {
             moreEntries = false;
-            logger.error("Got error respons when fetching port mapping for entry number " + currentMappingNumber
-                    + ". Stop getting more entries {}", incomingActionResponseMessage);
+            logger.info(
+                    "Got error response when fetching port mapping for entry number {}: '{}'. Stop getting more entries.",
+                    currentMappingNumber, incomingActionResponseMessage);
         }
     }
 

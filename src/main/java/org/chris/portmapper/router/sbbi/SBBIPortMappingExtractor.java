@@ -21,14 +21,14 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import net.sbbi.upnp.impls.InternetGatewayDevice;
-import net.sbbi.upnp.messages.ActionResponse;
-import net.sbbi.upnp.messages.UPNPResponseException;
-
 import org.chris.portmapper.model.PortMapping;
 import org.chris.portmapper.router.RouterException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import net.sbbi.upnp.impls.InternetGatewayDevice;
+import net.sbbi.upnp.messages.ActionResponse;
+import net.sbbi.upnp.messages.UPNPResponseException;
 
 /**
  * This class fetches all {@link PortMapping} from an {@link InternetGatewayDevice}.
@@ -69,12 +69,12 @@ class SBBIPortMappingExtractor {
              * This is a little trick to get all port mappings. There is a method that gets the number of available port
              * mappings (getNatMappingsCount()), but it seems, that this method just tries to get all port mappings and
              * checks, if an error is returned.
-             * 
+             *
              * In order to speed this up, we will do the same here, but stop, when the first exception is thrown.
              */
 
             while (morePortMappingsAvailable()) {
-                logger.debug("Getting port mapping with entry number " + currentMappingNumber + "...");
+                logger.debug("Getting port mapping with entry number {}...", currentMappingNumber);
 
                 try {
                     final ActionResponse response = router.getGenericPortMappingEntry(currentMappingNumber);
@@ -92,7 +92,7 @@ class SBBIPortMappingExtractor {
             throw new RouterException("Could not get NAT mappings: " + e.getMessage(), e);
         }
 
-        logger.info("Found " + mappings.size() + " mappings, " + nullPortMappings + " mappings returned as null.");
+        logger.debug("Found {} mappings, {} mappings returned as null.", mappings.size(), nullPortMappings);
         return mappings;
     }
 
@@ -101,8 +101,9 @@ class SBBIPortMappingExtractor {
      */
     private void checkMaxNumPortMappingsReached() {
         if (currentMappingNumber == maxNumPortMappings) {
-            logger.warn("Reached max number of port mappings to get (" + maxNumPortMappings
-                    + "). Perhaps not all port mappings where retrieved. Try to increase SBBIRouter.MAX_NUM_PORTMAPPINGS.");
+            logger.warn(
+                    "Reached max number of port mappings to get ({}). Perhaps not all port mappings where retrieved.",
+                    maxNumPortMappings);
         }
     }
 
@@ -115,25 +116,21 @@ class SBBIPortMappingExtractor {
         if (response != null) {
             final PortMapping newMapping = PortMapping.create(response);
             if (logger.isTraceEnabled()) {
-                logger.trace("Got port mapping #" + currentMappingNumber + ": " + newMapping.getCompleteDescription());
+                logger.trace("Got port mapping #{}: {}", currentMappingNumber, newMapping.getCompleteDescription());
             }
             mappings.add(newMapping);
         } else {
             nullPortMappings++;
-            if (logger.isTraceEnabled()) {
-                logger.trace("Got a null port mapping for number " + currentMappingNumber + " (" + nullPortMappings
-                        + " so far).");
-            }
+            logger.trace("Got a null port mapping for number {} ({} so far)", currentMappingNumber, nullPortMappings);
         }
     }
 
     private void handleUPNPResponseException(final UPNPResponseException e) {
         if (isNoMoreMappingsException(e)) {
-
             moreEntries = false;
-            logger.debug("Got no port mapping for entry number " + currentMappingNumber + " (error code: "
-                    + e.getDetailErrorCode() + ", error description: " + e.getDetailErrorDescription()
-                    + "). Stop getting more entries.");
+            logger.debug(
+                    "Got no port mapping for entry number {} (error code: {}, error description: {}). Stop getting more entries.",
+                    currentMappingNumber, e.getDetailErrorCode(), e.getDetailErrorDescription());
         } else {
             moreEntries = false;
             logger.error("Got exception when fetching port mapping for entry number " + currentMappingNumber
@@ -163,7 +160,7 @@ class SBBIPortMappingExtractor {
      * <a href= "https://sourceforge.net/tracker2/?func=detail&aid=2540478&group_id=213879&atid=1027466" >https://
      * sourceforge.net/tracker2/?func=detail&aid=2540478&group_id= 213879&atid=1027466</a></li>
      * </ul>
-     * 
+     *
      * @param e
      *            the exception to check
      * @return <code>true</code>, if the given exception means, that no more port mappings are available, else
@@ -182,5 +179,4 @@ class SBBIPortMappingExtractor {
             return false;
         }
     }
-
 }

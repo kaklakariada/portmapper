@@ -89,7 +89,7 @@ public class SBBIRouter extends AbstractRouter {
             return null;
         }
         final String ipAddress = presentationURL.getHost();
-        logger.info("Got internal host name '" + ipAddress + "' for router.");
+        logger.info("Got internal host name '{}' for router.", ipAddress);
         return ipAddress;
     }
 
@@ -104,16 +104,19 @@ public class SBBIRouter extends AbstractRouter {
             // Some routers send an invalid presentationURL, in this case use
             // URLBase.
             if (presentationUrlPort > 0) {
-                logger.debug("Got valid internal port " + presentationUrlPort + " from presentation URL.");
+                logger.debug("Got valid internal port {} from presentation URL '{}'", presentationUrlPort,
+                        presentationURL);
                 return presentationUrlPort;
             } else {
-                logger.debug("Got invalid port " + presentationUrlPort + " from presentation url " + presentationURL);
+                logger.debug("Got invalid port {} from presentation url '{}'", presentationUrlPort, presentationURL);
             }
         } else {
             logger.debug("Presentation url is null");
         }
-        final int urlBasePort = router.getIGDRootDevice().getURLBase().getPort();
-        logger.debug("Presentation URL is null or returns invalid port: using url base port " + urlBasePort);
+        final URL urlBase = router.getIGDRootDevice().getURLBase();
+        final int urlBasePort = urlBase.getPort();
+        logger.debug("Presentation URL is null or returns invalid port: using port {} of base url '{}'", urlBasePort,
+                urlBase);
 
         return urlBasePort;
     }
@@ -145,17 +148,17 @@ public class SBBIRouter extends AbstractRouter {
 
         for (final String key : sortedKeys) {
             final String value = info.get(key);
-            logger.info("Router Info: " + key + " \t= " + value);
+            logger.info("Router Info: {} \t= {}", key, value);
         }
 
-        logger.info("def loc " + rootDevice.getDeviceDefLoc());
-        logger.info("def loc data " + rootDevice.getDeviceDefLocData());
-        logger.info("icons " + rootDevice.getDeviceIcons());
-        logger.info("device type " + rootDevice.getDeviceType());
-        logger.info("direct parent " + rootDevice.getDirectParent());
-        logger.info("disc udn " + rootDevice.getDiscoveryUDN());
-        logger.info("disc usn " + rootDevice.getDiscoveryUSN());
-        logger.info("udn " + rootDevice.getUDN());
+        logger.info("def loc: {}", rootDevice.getDeviceDefLoc());
+        logger.trace("def loc data: {}", rootDevice.getDeviceDefLocData());
+        logger.info("icons: {}", rootDevice.getDeviceIcons());
+        logger.info("device type: {}", rootDevice.getDeviceType());
+        logger.info("direct parent: {}", rootDevice.getDirectParent());
+        logger.info("disc udn: {}", rootDevice.getDiscoveryUDN());
+        logger.info("disc usn: {}", rootDevice.getDiscoveryUSN());
+        logger.info("udn: {}", rootDevice.getUDN());
     }
 
     private boolean addPortMapping(final String description, final Protocol protocol, final String remoteHost,
@@ -188,14 +191,14 @@ public class SBBIRouter extends AbstractRouter {
     @Override
     public void addPortMappings(final Collection<PortMapping> mappings) throws RouterException {
         for (final PortMapping portMapping : mappings) {
-            logger.info("Adding port mapping " + portMapping);
+            logger.info("Adding port mapping {}", portMapping);
             addPortMapping(portMapping);
         }
     }
 
     @Override
     public void addPortMapping(final PortMapping mapping) throws RouterException {
-        logger.info("Adding port mapping " + mapping.getCompleteDescription());
+        logger.info("Adding port mapping ()", mapping.getCompleteDescription());
         addPortMapping(mapping.getDescription(), mapping.getProtocol(), mapping.getRemoteHost(),
                 mapping.getExternalPort(), mapping.getInternalClient(), mapping.getInternalPort(), 0);
     }
