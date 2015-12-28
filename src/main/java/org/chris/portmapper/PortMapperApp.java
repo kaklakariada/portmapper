@@ -41,7 +41,9 @@ import org.chris.portmapper.router.IRouter;
 import org.chris.portmapper.router.RouterException;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
+import org.jdesktop.application.utils.AppHelper;
 import org.jdesktop.application.utils.OSXAdapter;
+import org.jdesktop.application.utils.PlatformType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,14 +92,9 @@ public class PortMapperApp extends SingleFrameApplication {
 
         show(view);
 
-        if (isOSX()) {
+        if (AppHelper.getPlatform() == PlatformType.OS_X) {
             registerMacOSXListeners();
         }
-    }
-
-    private static boolean isOSX() {
-        final String osName = System.getProperty("os.name");
-        return osName.contains("OS X");
     }
 
     private void registerMacOSXListeners() {
