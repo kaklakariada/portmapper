@@ -44,9 +44,6 @@ public enum Protocol {
         throw new IllegalArgumentException("Invalid protocol name '" + name + "'");
     }
 
-    /**
-     * @return
-     */
     public String getName() {
         return name;
     }

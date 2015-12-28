@@ -56,7 +56,6 @@ public class PortMapping implements Cloneable {
     public PortMapping(final Protocol protocol, final String remoteHost, final int externalPort,
             final String internalClient, final int internalPort, final String description, final boolean enabled,
             final long leaseDuration) {
-        super();
         this.protocol = protocol;
         this.remoteHost = remoteHost;
         this.externalPort = externalPort;

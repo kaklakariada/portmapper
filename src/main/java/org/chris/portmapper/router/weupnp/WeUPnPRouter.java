@@ -47,9 +47,6 @@ public class WeUPnPRouter extends AbstractRouter {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final GatewayDevice device;
 
-    /**
-     * @param device
-     */
     WeUPnPRouter(final GatewayDevice device) {
         super(device.getFriendlyName());
         this.device = device;

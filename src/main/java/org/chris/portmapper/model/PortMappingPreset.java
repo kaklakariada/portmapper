@@ -150,17 +150,10 @@ public class PortMappingPreset implements Cloneable, Serializable {
         return internalClient;
     }
 
-    /**
-     * @return the isNew
-     */
     public boolean isNew() {
         return isNew;
     }
 
-    /**
-     * @param isNew
-     *            the isNew to set
-     */
     public void setNew(final boolean isNew) {
         this.isNew = isNew;
     }
@@ -169,10 +162,6 @@ public class PortMappingPreset implements Cloneable, Serializable {
         return this.getInternalClient() == null || this.getInternalClient().length() == 0;
     }
 
-    /**
-     * @param settings
-     *
-     */
     public void save(final Settings settings) {
         if (this.isNew) {
             settings.addPreset(this);

@@ -70,11 +70,6 @@ public class WeUPnPRouterFactory extends AbstractRouterFactory {
         return routers;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.chris.portmapper.router.IRouterFactory#connect(java.lang.String)
-     */
     @Override
     protected IRouter connect(final String locationUrl) throws RouterException {
 

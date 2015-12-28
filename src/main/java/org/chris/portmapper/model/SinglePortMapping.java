@@ -37,13 +37,7 @@ public class SinglePortMapping implements Cloneable, Serializable {
         this(Protocol.TCP, 1, 1);
     }
 
-    /**
-     * @param protocol
-     * @param internalPort
-     * @param externalPort
-     */
     public SinglePortMapping(final Protocol protocol, final int internalPort, final int externalPort) {
-        super();
         this.protocol = protocol;
         this.internalPort = internalPort;
         this.externalPort = externalPort;

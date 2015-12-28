@@ -61,7 +61,6 @@ public abstract class AbstractRouter implements IRouter {
         }
 
         return localHostIP.getHostAddress();
-
     }
 
     /**
@@ -115,11 +114,6 @@ public abstract class AbstractRouter implements IRouter {
         return localHostIP;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();

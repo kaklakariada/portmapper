@@ -33,7 +33,7 @@ public class LogbackConfiguration {
 
     private static final String PATTERN_LAYOUT = "%-5level %msg%n";
     private static final String OUTPUT_STREAM_APPENDER_NAME = "OUTPUT_STREAM";
-    private static final String LOGGER_NAME = "ROOT";// "org.chris.portmapper";
+    private static final String LOGGER_NAME = "ROOT";
 
     private final LoggerContext loggerContext;
 

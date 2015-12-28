@@ -15,9 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * 
- */
 package org.chris.portmapper.router;
 
 import java.util.Arrays;
@@ -48,7 +45,6 @@ public abstract class AbstractRouterFactory {
 
     /**
      * Get the name of the router factory that can be displayed to the user.
-     * 
      * @return the name of the router factory that can be displayed to the user.
      */
     public String getName() {
@@ -68,7 +64,6 @@ public abstract class AbstractRouterFactory {
 
     /**
      * Search for routers on the network.
-     * 
      * @return the found router or an empty {@link Collection} if no router was found.
      * @throws RouterException
      *             if something goes wrong during discovery.
@@ -77,7 +72,6 @@ public abstract class AbstractRouterFactory {
 
     /**
      * Directly connect to a router using a location url like <code>http://192.168.179.1:49000/igddesc.xml</code>.
-     * 
      * @param locationUrl
      *            a location url
      * @return a router if the connection was successful.

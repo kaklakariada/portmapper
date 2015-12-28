@@ -40,7 +40,6 @@ public class ActionService {
         // Figure out the remote URL where we'd like to send the action request to
         final URL controLURL = remoteService.getDevice().normalizeURI(remoteService.getControlURI());
 
-        // Do it
         final ActionInvocation<RemoteService> actionInvocation = action.getActionInvocation();
         final SendingAction prot = controlPoint.getProtocolFactory().createSendingAction(actionInvocation, controLURL);
         prot.run();

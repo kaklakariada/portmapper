@@ -37,7 +37,6 @@ public class PresetListModel extends AbstractListModel<PortMappingPreset> implem
     private final Settings settings;
 
     public PresetListModel(final Settings settings) {
-        super();
         this.settings = settings;
         settings.addPropertyChangeListener(Settings.PROPERTY_PORT_MAPPING_PRESETS, this);
     }

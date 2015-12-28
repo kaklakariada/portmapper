@@ -26,14 +26,14 @@ import org.chris.portmapper.logging.LogMessageListener;
 /**
  * The {@link LogTextArea} appends all log message to the displayed text and scrolls down.
  */
-@SuppressWarnings("serial")
 public class LogTextArea extends JTextArea implements LogMessageListener {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * Create a new instance and set default properties.
      */
     public LogTextArea() {
-        super();
         setFont(Font.decode("Monospaced"));
         setEditable(false);
         setWrapStyleWord(true);
