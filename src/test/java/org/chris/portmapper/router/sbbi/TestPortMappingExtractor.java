@@ -17,13 +17,12 @@
  */
 package org.chris.portmapper.router.sbbi;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
+import static java.util.Arrays.*;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
 
-import net.sbbi.upnp.impls.InternetGatewayDevice;
-import net.sbbi.upnp.messages.ActionResponse;
-import net.sbbi.upnp.messages.UPNPResponseException;
+import java.io.IOException;
+import java.util.HashSet;
 
 import org.chris.portmapper.model.PortMapping;
 import org.chris.portmapper.router.RouterException;
@@ -33,10 +32,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-
 import static org.mockito.Mockito.*;
+
+import net.sbbi.upnp.impls.InternetGatewayDevice;
+import net.sbbi.upnp.messages.ActionResponse;
+import net.sbbi.upnp.messages.UPNPResponseException;
 
 /**
  * Unit tests for {@link SBBIPortMappingExtractor}.
@@ -59,7 +59,7 @@ public class TestPortMappingExtractor {
     public void allMappingsNull() throws RouterException, IOException, UPNPResponseException {
         simulateUPNPException(5, 713);
         assertEquals(0, portMappingExtractor.getPortMappings().size());
-        verify(loggerMock, times(1)).warn(anyString());
+        verify(loggerMock, times(1)).warn(anyString(), anyInt());
         verify(loggerMock, never()).error(anyString());
         assertNumMappingsFound(0, 5);
     }
@@ -67,7 +67,7 @@ public class TestPortMappingExtractor {
     @Test
     public void allMappingsNullMaxNumReached() throws RouterException {
         assertEquals(0, portMappingExtractor.getPortMappings().size());
-        verify(loggerMock, times(1)).warn(anyString());
+        verify(loggerMock, times(1)).warn(anyString(), anyInt());
         verify(loggerMock, never()).error(anyString());
         assertNumMappingsFound(0, 5);
     }
@@ -101,7 +101,7 @@ public class TestPortMappingExtractor {
     }
 
     private void assertNumMappingsFound(final int numFound, final int numNull) {
-        verify(loggerMock).info("Found " + numFound + " mappings, " + numNull + " mappings returned as null.");
+        verify(loggerMock).debug("Found {} mappings, {} mappings returned as null.", numFound, numNull);
     }
 
     private void assertNoWarningOrErrorLogged() {
@@ -113,8 +113,8 @@ public class TestPortMappingExtractor {
 
     private void simulateMapping(final int mappingEntry) throws IOException, UPNPResponseException {
         final ActionResponse response = mock(ActionResponse.class);
-        when(response.getOutActionArgumentNames()).thenReturn(new HashSet<Object>(
-                Arrays.asList(PortMapping.MAPPING_ENTRY_ENABLED, PortMapping.MAPPING_ENTRY_EXTERNAL_PORT,
+        when(response.getOutActionArgumentNames()).thenReturn(
+                new HashSet<Object>(asList(PortMapping.MAPPING_ENTRY_ENABLED, PortMapping.MAPPING_ENTRY_EXTERNAL_PORT,
                         PortMapping.MAPPING_ENTRY_INTERNAL_CLIENT, PortMapping.MAPPING_ENTRY_INTERNAL_PORT,
                         PortMapping.MAPPING_ENTRY_LEASE_DURATION, PortMapping.MAPPING_ENTRY_PORT_MAPPING_DESCRIPTION,
                         PortMapping.MAPPING_ENTRY_PROTOCOL, PortMapping.MAPPING_ENTRY_REMOTE_HOST)));
@@ -135,5 +135,4 @@ public class TestPortMappingExtractor {
         when(routerMock.getGenericPortMappingEntry(mappingEntry)).thenThrow(new UPNPResponseException(errorCode,
                 "exception for entry " + mappingEntry + ", error code " + errorCode));
     }
-
 }
