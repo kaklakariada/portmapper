@@ -2,6 +2,8 @@ package org.chris.portmapper.fx;
 
 import org.chris.portmapper.fx.main.MainView;
 
+import com.airhacks.afterburner.injection.Injector;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -17,6 +19,11 @@ public class FxApplication extends Application {
         scene.getStylesheets().add(uri);
         stage.setScene(scene);
         stage.show();
+    }
+
+    @Override
+    public void stop() throws Exception {
+        Injector.forgetAll();
     }
 
     public static void main(final String[] args) {
