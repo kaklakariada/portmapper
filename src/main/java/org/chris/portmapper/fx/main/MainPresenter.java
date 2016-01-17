@@ -1,8 +1,5 @@
 package org.chris.portmapper.fx.main;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import org.chris.portmapper.fx.log.LogView;
 import org.chris.portmapper.fx.mappings.MappingsView;
 import org.chris.portmapper.fx.presets.PresetsView;
@@ -13,10 +10,9 @@ import org.slf4j.LoggerFactory;
 import com.airhacks.afterburner.views.FXMLView;
 
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.layout.AnchorPane;
 
-public class MainPresenter implements Initializable {
+public class MainPresenter {
 
     private static final Logger LOG = LoggerFactory.getLogger(MainPresenter.class);
 
@@ -29,9 +25,8 @@ public class MainPresenter implements Initializable {
     @FXML
     private AnchorPane logPane;
 
-    @Override
-    public void initialize(final URL location, final ResourceBundle resources) {
-        LOG.debug("Initializing: location={}, resources={}", location, resources);
+    public void initialize() {
+        LOG.debug("Initializing");
         addChild(mappingsPane, new MappingsView());
         addChild(routerPane, new RouterView());
         addChild(presetsPane, new PresetsView());
