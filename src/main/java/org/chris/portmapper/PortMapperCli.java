@@ -22,13 +22,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.chris.portmapper.fx.FxApplication;
 import org.chris.portmapper.model.PortMapping;
 import org.chris.portmapper.model.Protocol;
 import org.chris.portmapper.router.AbstractRouterFactory;
 import org.chris.portmapper.router.IRouter;
 import org.chris.portmapper.router.RouterException;
 import org.chris.portmapper.router.cling.ClingRouterFactory;
-import org.jdesktop.application.Application;
 import org.jdesktop.application.utils.AppHelper;
 import org.jdesktop.application.utils.PlatformType;
 import org.slf4j.Logger;
@@ -104,7 +104,7 @@ public class PortMapperCli {
         if (AppHelper.getPlatform() == PlatformType.OS_X) {
             MacSetup.setupMac();
         }
-        Application.launch(PortMapperApp.class, args);
+        FxApplication.main(args);
     }
 
     private void printPortForwardings(final IRouter router) throws RouterException {

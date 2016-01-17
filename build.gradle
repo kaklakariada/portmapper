@@ -12,9 +12,9 @@ repositories {
     flatDir { dirs 'lib' }
 }
 
-version = '2.0.0-alpha3'
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+version = '2.1.0-alpha1-SNAPSHOT'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 tasks.withType(JavaCompile) {
 	options.compilerArgs << '-Xlint:all'
@@ -65,6 +65,8 @@ dependencies {
 	compile ':sbbi-upnplib:1.0.4'
     compile 'org.fourthline.cling:cling-support:2.1.0'
     compile 'org.bitlet:weupnp:0.1.4'
+
+    compile 'com.airhacks:afterburner.fx:1.6.2'
     
 	runtime 'commons-jxpath:commons-jxpath:1.1' // sbbi
     compile 'org.slf4j:jul-to-slf4j:1.7.13'
