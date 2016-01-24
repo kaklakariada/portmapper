@@ -15,7 +15,7 @@
 			<items>
 				<VBox prefHeight="404.0" prefWidth="726.0" spacing="5.0">
 					<children>
-						<AnchorPane fx:id="mappingsPane" prefHeight="200.0" VBox.vgrow="ALWAYS" />
+						<AnchorPane fx:id="mappingsPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" VBox.vgrow="ALWAYS" />
 						<HBox prefHeight="200.0" spacing="5.0" VBox.vgrow="SOMETIMES">
 							<children>
 								<AnchorPane fx:id="routerPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="SOMETIMES" />
