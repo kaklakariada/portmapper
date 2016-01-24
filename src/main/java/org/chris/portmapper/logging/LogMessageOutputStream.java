@@ -21,8 +21,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.LinkedList;
 import java.util.List;
-
-import javax.swing.JTextArea;
+import java.util.function.Consumer;
 
 /**
  * This class implements an output stream that appends to a list and allows listeners to register for written lines.
@@ -32,7 +31,7 @@ public class LogMessageOutputStream extends OutputStream {
     /**
      * The listener to which the strings will be forwarded.
      */
-    private LogMessageListener logListener;
+    private Consumer<String> logListener;
 
     /**
      * The buffer to which the written strings are added until a listener is registered.
@@ -75,27 +74,28 @@ public class LogMessageOutputStream extends OutputStream {
      * @param message
      *            the message to append.
      */
-    public void addMessage(final String message) {
+    private void addMessage(final String message) {
         if (this.logListener != null) {
-            this.logListener.addLogMessage(message);
+            this.logListener.accept(message);
         } else {
             unprocessedMessagesBuffer.add(message);
         }
     }
 
     /**
-     * Registers a {@link JTextArea}, so that all strings written to this writer are appended to the given text area.
-     * After registration, all buffered strings are appended to the text area, so that no string is missed.
+     * Registers a {@link Consumer} for log messages, so that all strings written to this writer are appended to the
+     * given consumer. After registration, all buffered strings are appended to the consumer, so that no string is
+     * missed.
      *
-     * @param textArea
-     *            the text area to wich to append the strings.
+     * @param listener
+     *            the {@link Consumer} to which to append the log messages.
      */
-    public void registerListener(final LogMessageListener textArea) {
-        this.logListener = textArea;
+    public void registerListener(final Consumer<String> listener) {
+        this.logListener = listener;
 
         // append the buffered text to the text area.
         for (final String line : unprocessedMessagesBuffer) {
-            this.logListener.addLogMessage(line);
+            this.logListener.accept(line);
         }
         // we do not need the buffer any more, all text will be appended
         // to the text area.

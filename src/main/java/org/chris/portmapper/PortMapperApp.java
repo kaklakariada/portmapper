@@ -18,39 +18,30 @@
 package org.chris.portmapper;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.EventObject;
 import java.util.List;
+import java.util.function.Consumer;
 
 import javax.swing.JOptionPane;
 
-import org.chris.portmapper.gui.PortMapperView;
-import org.chris.portmapper.logging.LogMessageListener;
 import org.chris.portmapper.logging.LogMessageOutputStream;
 import org.chris.portmapper.logging.LogbackConfiguration;
-import org.chris.portmapper.model.PortMappingPreset;
 import org.chris.portmapper.router.AbstractRouterFactory;
 import org.chris.portmapper.router.IRouter;
 import org.chris.portmapper.router.RouterException;
 import org.jdesktop.application.ResourceMap;
-import org.jdesktop.application.SingleFrameApplication;
-import org.jdesktop.application.utils.AppHelper;
-import org.jdesktop.application.utils.OSXAdapter;
-import org.jdesktop.application.utils.PlatformType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * The main application class
  */
-public class PortMapperApp extends SingleFrameApplication {
+public class PortMapperApp {
 
     /**
      * The name of the system property which will be used as the directory where all configuration files will be stored.
@@ -69,48 +60,10 @@ public class PortMapperApp extends SingleFrameApplication {
     private final LogMessageOutputStream logMessageOutputStream = new LogMessageOutputStream();
     private final LogbackConfiguration logbackConfig = new LogbackConfiguration();
 
-    @Override
-    protected void startup() {
+    public void startup() {
         logbackConfig.registerOutputStream(logMessageOutputStream);
-
         setCustomConfigDir();
-
         loadSettings();
-
-        final PortMapperView view = new PortMapperView(this);
-        addExitListener(new ExitListener() {
-            @Override
-            public boolean canExit(final EventObject arg0) {
-                return true;
-            }
-
-            @Override
-            public void willExit(final EventObject arg0) {
-                disconnectRouter();
-            }
-        });
-
-        show(view);
-
-        if (AppHelper.getPlatform() == PlatformType.OS_X) {
-            registerMacOSXListeners();
-        }
-    }
-
-    private void registerMacOSXListeners() {
-        final PortMapperView view = getView();
-        OSXAdapter.setPreferencesHandler(view, getMethod(PortMapperView.class, "changeSettings"));
-        OSXAdapter.setAboutHandler(view, getMethod(PortMapperView.class, "showAboutDialog"));
-    }
-
-    private static Method getMethod(final Class<?> clazz, final String name, final Class<?>... parameterTypes) {
-        try {
-            return clazz.getMethod(name, parameterTypes);
-        } catch (final SecurityException e) {
-            throw new RuntimeException("Error getting method " + name + " of class " + clazz.getName(), e);
-        } catch (final NoSuchMethodException e) {
-            throw new RuntimeException("Error getting method " + name + " of class " + clazz.getName(), e);
-        }
     }
 
     /**
@@ -134,18 +87,18 @@ public class PortMapperApp extends SingleFrameApplication {
                 System.exit(1);
             }
             logger.info("Using custom configuration directory '{}'.", dir.getAbsolutePath());
-            getContext().getLocalStorage().setDirectory(dir);
+            // getContext().getLocalStorage().setDirectory(dir);
 
             // check, if the portable app directory exists and use this one
         } else if (portableAppConfigDir.isDirectory() && portableAppConfigDir.canRead()
                 && portableAppConfigDir.canWrite()) {
             logger.info("Found portable app configuration directory '{}'.", portableAppConfigDir.getAbsolutePath());
-            getContext().getLocalStorage().setDirectory(portableAppConfigDir);
+            // getContext().getLocalStorage().setDirectory(portableAppConfigDir);
 
             // use the default configuration directory
         } else {
-            logger.info("Using default configuration directory '{}'.",
-                    getContext().getLocalStorage().getDirectory().getAbsolutePath());
+            // logger.info("Using default configuration directory '{}'.",
+            // getContext().getLocalStorage().getDirectory().getAbsolutePath());
         }
     }
 
@@ -155,11 +108,7 @@ public class PortMapperApp extends SingleFrameApplication {
      */
     private void loadSettings() {
         logger.debug("Loading settings from file {}", SETTINGS_FILENAME);
-        try {
-            settings = (Settings) getContext().getLocalStorage().load(SETTINGS_FILENAME);
-        } catch (final IOException e) {
-            logger.warn("Could not load settings from file " + SETTINGS_FILENAME, e);
-        }
+        // settings = (Settings) getContext().getLocalStorage().load(SETTINGS_FILENAME);
 
         if (settings == null) {
             logger.debug("Settings were not loaded from file {}: create new settings", SETTINGS_FILENAME);
@@ -170,32 +119,8 @@ public class PortMapperApp extends SingleFrameApplication {
         }
     }
 
-    public void setLogMessageListener(final LogMessageListener listener) {
+    public void setLogMessageListener(final Consumer<String> listener) {
         this.logMessageOutputStream.registerListener(listener);
-    }
-
-    @Override
-    protected void shutdown() {
-        super.shutdown();
-        logger.debug("Saving settings {} to file {}", settings, SETTINGS_FILENAME);
-        if (logger.isTraceEnabled()) {
-            for (final PortMappingPreset preset : settings.getPresets()) {
-                logger.trace("Saving port mapping {}", preset.getCompleteDescription());
-            }
-        }
-        try {
-            getContext().getLocalStorage().save(settings, SETTINGS_FILENAME);
-        } catch (final IOException e) {
-            logger.warn("Could not save settings to file " + SETTINGS_FILENAME, e);
-        }
-    }
-
-    public ResourceMap getResourceMap() {
-        return getContext().getResourceMap();
-    }
-
-    public PortMapperView getView() {
-        return (PortMapperView) getMainView();
     }
 
     public void connectRouter() throws RouterException {

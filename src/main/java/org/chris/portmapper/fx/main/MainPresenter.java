@@ -1,6 +1,11 @@
 package org.chris.portmapper.fx.main;
 
-import org.chris.portmapper.fx.log.LogView;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+import javax.inject.Inject;
+
+import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.fx.mappings.MappingsView;
 import org.chris.portmapper.fx.presets.PresetsView;
 import org.chris.portmapper.fx.router.RouterView;
@@ -10,9 +15,11 @@ import org.slf4j.LoggerFactory;
 import com.airhacks.afterburner.views.FXMLView;
 
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 
-public class MainPresenter {
+public class MainPresenter implements Initializable {
 
     private static final Logger LOG = LoggerFactory.getLogger(MainPresenter.class);
 
@@ -23,14 +30,19 @@ public class MainPresenter {
     @FXML
     private AnchorPane presetsPane;
     @FXML
-    private AnchorPane logPane;
+    private TextArea logTextArea;
 
-    public void initialize() {
-        LOG.debug("Initializing");
+    @Inject
+    private PortMapperApp app;
+
+    @Override
+    public void initialize(final URL location, final ResourceBundle resources) {
+        LOG.debug("Initializing main presenter views");
         addChild(mappingsPane, new MappingsView());
         addChild(routerPane, new RouterView());
         addChild(presetsPane, new PresetsView());
-        addChild(logPane, new LogView());
+        LOG.debug("Initializing, text area: {}, {}, {}", logTextArea, mappingsPane, routerPane);
+        app.setLogMessageListener(logTextArea::appendText);
     }
 
     private void addChild(final AnchorPane pane, final FXMLView view) {
