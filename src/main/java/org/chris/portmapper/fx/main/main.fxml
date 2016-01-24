@@ -10,26 +10,26 @@
 <?import javafx.scene.layout.*?>
 
 <AnchorPane id="AnchorPane" prefHeight="724.0" prefWidth="728.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.chris.portmapper.fx.main.MainPresenter">
-   <children>
-      <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <items>
-            <VBox prefHeight="404.0" prefWidth="726.0">
-               <children>
-                  <AnchorPane fx:id="mappingsPane" prefHeight="200.0" VBox.vgrow="ALWAYS" />
-                  <HBox prefHeight="200.0">
-                     <children>
-                        <AnchorPane fx:id="routerPane" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="SOMETIMES" />
-                        <AnchorPane fx:id="presetsPane" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                     </children>
-                  </HBox>
-               </children>
-            </VBox>
-            <AnchorPane>
-               <children>
-                  <TextArea fx:id="logTextArea" layoutX="149.0" layoutY="70.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-               </children>
-            </AnchorPane>
-        </items>
-      </SplitPane>
-   </children>
+	<children>
+		<SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+			<items>
+				<VBox prefHeight="404.0" prefWidth="726.0">
+					<children>
+						<AnchorPane fx:id="mappingsPane" prefHeight="200.0" VBox.vgrow="ALWAYS" />
+						<HBox prefHeight="200.0">
+							<children>
+								<AnchorPane fx:id="routerPane" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="SOMETIMES" />
+								<AnchorPane fx:id="presetsPane" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+							</children>
+						</HBox>
+					</children>
+				</VBox>
+				<TitledPane text="Log messages">
+					<content>
+						<TextArea fx:id="logTextArea" layoutX="149.0" layoutY="70.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+					</content>
+				</TitledPane>
+			</items>
+		</SplitPane>
+	</children>
 </AnchorPane>

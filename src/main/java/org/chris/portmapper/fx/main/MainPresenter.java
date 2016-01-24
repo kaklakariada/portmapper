@@ -37,11 +37,10 @@ public class MainPresenter implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        LOG.debug("Initializing main presenter views");
+        LOG.debug("Initializing main presenter views and log text area");
         addChild(mappingsPane, new MappingsView());
         addChild(routerPane, new RouterView());
         addChild(presetsPane, new PresetsView());
-        LOG.debug("Initializing, text area: {}, {}, {}", logTextArea, mappingsPane, routerPane);
         app.setLogMessageListener(logTextArea::appendText);
     }
 
