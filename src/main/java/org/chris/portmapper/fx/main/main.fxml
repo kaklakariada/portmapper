@@ -9,23 +9,23 @@
 <?import javafx.scene.input.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.chris.portmapper.fx.main.MainPresenter">
+<AnchorPane id="AnchorPane" prefHeight="724.0" prefWidth="728.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.chris.portmapper.fx.main.MainPresenter">
    <children>
-      <SplitPane dividerPositions="0.7809278350515464" orientation="VERTICAL" prefHeight="390.0" prefWidth="664.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <items>
-            <SplitPane dividerPositions="0.3879598662207358" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
-              <items>
-                <AnchorPane fx:id="mappingsPane" minHeight="0.0" minWidth="0.0" prefHeight="91.0" prefWidth="662.0" />
-                <SplitPane dividerPositions="0.5936555891238671" orientation="HORIZONTAL">
-                <items>
-                <AnchorPane fx:id="routerPane" minHeight="0.0" minWidth="0.0" prefHeight="91.0" prefWidth="662.0" />
-                <AnchorPane fx:id="presetsPane" minHeight="0.0" minWidth="0.0" prefHeight="91.0" prefWidth="662.0" />
-                </items>
-                </SplitPane>
-              </items>
-            </SplitPane>
-                <AnchorPane fx:id="logPane" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
-         </items>
+      <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <items>
+            <VBox prefHeight="404.0" prefWidth="726.0">
+               <children>
+                  <AnchorPane fx:id="mappingsPane" prefHeight="200.0" VBox.vgrow="ALWAYS" />
+                  <HBox prefHeight="200.0">
+                     <children>
+                        <AnchorPane fx:id="routerPane" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="SOMETIMES" />
+                        <AnchorPane fx:id="presetsPane" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <AnchorPane fx:id="logPane" prefHeight="200.0" prefWidth="200.0" />
+        </items>
       </SplitPane>
    </children>
 </AnchorPane>
