@@ -13,13 +13,13 @@
 	<children>
 		<SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 			<items>
-				<VBox prefHeight="404.0" prefWidth="726.0">
+				<VBox prefHeight="404.0" prefWidth="726.0" spacing="5.0">
 					<children>
 						<AnchorPane fx:id="mappingsPane" prefHeight="200.0" VBox.vgrow="ALWAYS" />
-						<HBox prefHeight="200.0">
+						<HBox prefHeight="200.0" spacing="5.0" VBox.vgrow="SOMETIMES">
 							<children>
-								<AnchorPane fx:id="routerPane" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="SOMETIMES" />
-								<AnchorPane fx:id="presetsPane" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+								<AnchorPane fx:id="routerPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="SOMETIMES" />
+								<AnchorPane fx:id="presetsPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
 							</children>
 						</HBox>
 					</children>
