@@ -74,7 +74,7 @@ dependencies {
 
 license {
     header = file('gradle/license-header.txt')
-    ext.year = Calendar.getInstance().get(Calendar.YEAR)
+    ext.year = 2015
     ext.name = 'Christoph Pirkl'
     ext.email = 'christoph at users.sourceforge.net'
 }
