@@ -80,11 +80,6 @@ license {
 eclipse {
 	classpath {
 		downloadSources = true
-		containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
-		def javaVersion = project.sourceCompatibility.toString()
-		def container = "org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-$javaVersion"
-		logger.info "Using container $container for $project"
-		containers container
 	}
 	jdt.file {
 		beforeMerged  { jdt ->
