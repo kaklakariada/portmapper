@@ -1,5 +1,5 @@
 plugins {
-    id "com.github.hierynomus.license" version "0.12.1"
+    id "com.github.hierynomus.license" version "0.13.1"
 }
 
 apply plugin: 'java'
