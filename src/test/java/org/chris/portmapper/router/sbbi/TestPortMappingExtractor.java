@@ -19,7 +19,7 @@ package org.chris.portmapper.router.sbbi;
 
 import static java.util.Arrays.*;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
+import static org.mockito.ArgumentMatchers.*;
 
 import java.io.IOException;
 import java.util.HashSet;

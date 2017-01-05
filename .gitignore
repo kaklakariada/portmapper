@@ -3,5 +3,7 @@ target/
 build/
 bin/
 .settings/org.eclipse.jdt.core.prefs
+.settings/org.eclipse.buildship.core.prefs
 .classpath
 .project
+.nb-gradle/

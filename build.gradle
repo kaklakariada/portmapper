@@ -1,9 +1,8 @@
 plugins {
-    id "com.github.hierynomus.license" version "0.12.1"
+    id 'java'
+    id 'eclipse'
+    id "com.github.hierynomus.license" version "0.13.1"
 }
-
-apply plugin: 'java'
-apply plugin: 'eclipse'
 
 repositories {
     mavenLocal()
@@ -32,10 +31,12 @@ processResources {
     rename(/(\w+)_en.properties/, '$1.properties')
 }
 
-task replaceVersionTokenInTranslations << {
-    ant.replace(dir: 'build/resources/main', encoding: 'ISO-8859-1') {
-        include(name: '**/*.properties')
-        replacefilter(token: '@VERSION_NUMBER@', value: project.version)
+task replaceVersionTokenInTranslations {
+    doLast {
+        ant.replace(dir: 'build/resources/main', encoding: 'ISO-8859-1') {
+            include(name: '**/*.properties')
+            replacefilter(token: '@VERSION_NUMBER@', value: project.version)
+        }
     }
 }
 
@@ -54,22 +55,22 @@ jar {
 }
 
 dependencies {
-	testCompile 'junit:junit:4.12'
-	testCompile 'org.mockito:mockito-core:1.10.19'
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:2.1.0'
     
-    compile 'args4j:args4j:2.32'
-	compile 'org.slf4j:slf4j-api:1.7.13'
-	compile 'ch.qos.logback:logback-classic:1.1.3'
-	compile 'com.miglayout:miglayout-swing:5.0'
-	compile 'org.jdesktop.bsaf:bsaf:1.9.2'
-	compile ':sbbi-upnplib:1.0.4'
-    compile 'org.fourthline.cling:cling-support:2.1.0'
+    compile 'args4j:args4j:2.33'
+    compile 'org.slf4j:slf4j-api:1.7.22'
+    compile 'ch.qos.logback:logback-classic:1.1.8'
+    compile 'com.miglayout:miglayout-swing:5.0'
+    compile 'org.jdesktop.bsaf:bsaf:1.9.2'
+    compile ':sbbi-upnplib:1.0.4'
+    compile 'org.fourthline.cling:cling-support:2.1.1'
     compile 'org.bitlet:weupnp:0.1.4'
 
     compile 'com.airhacks:afterburner.fx:1.6.2'
     
-	runtime 'commons-jxpath:commons-jxpath:1.1' // sbbi
-    compile 'org.slf4j:jul-to-slf4j:1.7.13'
+    runtime 'commons-jxpath:commons-jxpath:1.1' // sbbi
+    compile 'org.slf4j:jul-to-slf4j:1.7.22'
 }
 
 license {
@@ -82,11 +83,6 @@ license {
 eclipse {
 	classpath {
 		downloadSources = true
-		containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
-		def javaVersion = project.sourceCompatibility.toString()
-		def container = "org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-$javaVersion"
-		logger.info "Using container $container for $project"
-		containers container
 	}
 	jdt.file {
 		beforeMerged  { jdt ->
