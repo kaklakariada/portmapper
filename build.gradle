@@ -83,6 +83,12 @@ license {
 eclipse {
 	classpath {
 		downloadSources = true
+		file {
+            whenMerged {
+                def jre = entries.find { it.path.contains 'org.eclipse.jdt.launching.JRE_CONTAINER' }
+                jre.accessRules.add(new org.gradle.plugins.ide.eclipse.model.AccessRule('accessible', 'javafx/**'))
+            }
+        }
 	}
 	jdt.file {
 		beforeMerged  { jdt ->
