@@ -1,9 +1,8 @@
 plugins {
+    id 'java'
+    id 'eclipse'
     id "com.github.hierynomus.license" version "0.13.1"
 }
-
-apply plugin: 'java'
-apply plugin: 'eclipse'
 
 repositories {
     mavenLocal()
@@ -54,19 +53,19 @@ jar {
 }
 
 dependencies {
-	testCompile 'junit:junit:4.12'
-	testCompile 'org.mockito:mockito-core:2.1.0'
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:2.1.0'
     
     compile 'args4j:args4j:2.33'
-	compile 'org.slf4j:slf4j-api:1.7.22'
-	compile 'ch.qos.logback:logback-classic:1.1.8'
-	compile 'com.miglayout:miglayout-swing:5.0'
-	compile 'org.jdesktop.bsaf:bsaf:1.9.2'
-	compile ':sbbi-upnplib:1.0.4'
+    compile 'org.slf4j:slf4j-api:1.7.22'
+    compile 'ch.qos.logback:logback-classic:1.1.8'
+    compile 'com.miglayout:miglayout-swing:5.0'
+    compile 'org.jdesktop.bsaf:bsaf:1.9.2'
+    compile ':sbbi-upnplib:1.0.4'
     compile 'org.fourthline.cling:cling-support:2.1.1'
     compile 'org.bitlet:weupnp:0.1.4'
     
-	runtime 'commons-jxpath:commons-jxpath:1.1' // sbbi
+    runtime 'commons-jxpath:commons-jxpath:1.1' // sbbi
     compile 'org.slf4j:jul-to-slf4j:1.7.22'
 }
 
