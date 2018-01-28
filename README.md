@@ -16,7 +16,7 @@ Download
 [![Download UPnP PortMapper](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/upnp-portmapper/files/latest/download)
 
 [Download](http://sourceforge.net/projects/upnp-portmapper/files/latest/download) binaries from [SourceForge](http://sourceforge.net/projects/upnp-portmapper/).
-UPnP PortMapper requires Java 7 or later. You can download it at [java.com](http://java.com).
+UPnP PortMapper requires Java 8 or later. You can download it at [java.com](http://java.com).
 
 Usage
 =====
