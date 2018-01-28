@@ -28,18 +28,10 @@ test {
 
 processResources {
     rename(/(\w+)_en.properties/, '$1.properties')
+    filter { line -> line.replaceAll(/@VERSION_NUMBER@/, project.version) }
+    filter(org.apache.tools.ant.filters.EscapeUnicode)
 }
 
-task replaceVersionTokenInTranslations {
-    doLast {
-        ant.replace(dir: 'build/resources/main', encoding: 'ISO-8859-1') {
-            include(name: '**/*.properties')
-            replacefilter(token: '@VERSION_NUMBER@', value: project.version)
-        }
-    }
-}
-
-jar.dependsOn(replaceVersionTokenInTranslations)
 
 jar {
 	from {
