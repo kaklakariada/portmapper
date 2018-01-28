@@ -4,7 +4,6 @@ plugins {
 }
 
 repositories {
-    mavenLocal()
     maven { url 'http://4thline.org/m2' }
     jcenter()
     flatDir { dirs 'lib' }
@@ -31,7 +30,6 @@ processResources {
     filter { line -> line.replaceAll(/@VERSION_NUMBER@/, project.version) }
     filter(org.apache.tools.ant.filters.EscapeUnicode)
 }
-
 
 jar {
 	from {
