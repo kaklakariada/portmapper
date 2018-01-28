@@ -88,14 +88,6 @@ Build PortMapper on the command line:
     $ ./gradlew build
     $ java -jar build/libs/portmapper-*.jar
 
-Developing using Eclipse
-------------------------
-
-Generate Eclipse project files:
-
-    $ ./gradlew eclipse
-
-Then import the project into your Eclipse workspace.
 
 Participate
 ===========

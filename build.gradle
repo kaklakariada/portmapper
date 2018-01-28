@@ -1,6 +1,5 @@
 plugins {
     id 'java'
-    id 'eclipse'
     id "com.github.hierynomus.license" version "0.13.1"
 }
 
@@ -76,17 +75,4 @@ license {
     ext.year = 2015
     ext.name = 'Christoph Pirkl'
     ext.email = 'christoph at users.sourceforge.net'
-}
-
-eclipse {
-	classpath {
-		downloadSources = true
-	}
-	jdt.file {
-		beforeMerged  { jdt ->
-		  File defaultProperties = new File("${rootProject.projectDir}/gradle/defaultEclipseJdtPrefs.properties").absoluteFile
-		  logger.info "Load defaults from $defaultProperties for $project"
-		  jdt.load(defaultProperties)
-		}
-	  }
 }
