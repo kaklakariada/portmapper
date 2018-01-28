@@ -62,6 +62,13 @@ Examples
 
 `java -jar PortMapper.jar -list`
 
+Select language
+---------------
+
+PortMapper is translated to English (`en`) and German (`de`). It automatically detects the operating system's language using English as default. If you want use a different language, add command line option `-Duser.language=de` to java, e.g.:
+
+    java -Duser.language=de -jar PortMapper.jar
+
 UPnP libraries
 --------------
 
