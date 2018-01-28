@@ -88,6 +88,13 @@ Build PortMapper on the command line:
     $ ./gradlew build
     $ java -jar build/libs/portmapper-*.jar
 
+Generate license header for added files
+---------------------------------------
+
+```bash
+$ ./gradlew licenseFormat
+```
+
 
 Participate
 ===========

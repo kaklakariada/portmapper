@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id "com.github.hierynomus.license" version "0.13.1"
+    id "com.github.hierynomus.license" version "0.14.0"
 }
 
 repositories {
@@ -72,7 +72,4 @@ dependencies {
 
 license {
     header = file('gradle/license-header.txt')
-    ext.year = 2015
-    ext.name = 'Christoph Pirkl'
-    ext.email = 'christoph at users.sourceforge.net'
 }

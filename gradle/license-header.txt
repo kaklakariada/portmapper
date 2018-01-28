@@ -1,5 +1,5 @@
 UPnP PortMapper - A tool for managing port forwardings via UPnP
-Copyright (C) ${year} ${name} <${email}>
+Copyright (C) 2015 Christoph Pirkl <christoph at users.sourceforge.net>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
