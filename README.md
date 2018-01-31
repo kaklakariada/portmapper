@@ -20,7 +20,9 @@ UPnP PortMapper requires Java 8 or later. You can download it at [java.com](http
 
 To run PortMapper, double click on the JAR file or run
 
-	$ java -jar portmapper-2.1.1.jar
+```bash
+$ java -jar portmapper.jar
+```
 
 on the command line.
 
@@ -42,38 +44,48 @@ If adding port forwardings is not possible, check that your router allows write 
 
 PortMapper also has a command line interface. You can see the available options by adding parameter -h:
 
-    $ java -jar portmapper.jar -h
-     -add                  : Add a new port mapping
-     -delete               : Delete a new port mapping
-     -description VAL      : Description of the port mapping
-     -externalPort N       : External port of the port mapping
-     -gui                  : Start graphical user interface
-     -h (-help)            : Print usage help
-     -info                 : Print router info
-     -internalPort N       : Internal port of the port mapping
-     -ip VAL               : Internal IP of the port mapping (default: localhost)
-     -lib VAL              : UPnP library to use
-     -list                 : Print existing port mappings
-     -protocol [TCP | UDP] : Protocol of the port mapping
-     -routerIndex N        : Router index if more than one is found (zero-based)
+```
+$ java -jar portmapper.jar -h
+-add                  : Add a new port mapping
+-delete               : Delete a new port mapping
+-description VAL      : Description of the port mapping
+-externalPort N       : External port of the port mapping
+-gui                  : Start graphical user interface
+-h (-help)            : Print usage help
+-info                 : Print router info
+-internalPort N       : Internal port of the port mapping
+-ip VAL               : Internal IP of the port mapping (default: host)
+-lib VAL              : UPnP library to use
+-list                 : Print existing port mappings
+-protocol [TCP | UDP] : Protocol of the port mapping
+-routerIndex N        : Router index if more than one is found (zero-based)
+```
 
 ### Examples
 
 - Create a new port mapping for a specific IP address
 
-`java -jar portmapper.jar -add -externalPort <port> -internalPort <port> -ip <ip-addr> -protocol tcp`
+```bash
+$ java -jar portmapper.jar -add -externalPort <port> -internalPort <port> -ip <ip-addr> -protocol tcp
+```
 
 - Create a new port mapping for the local machine (just omit the IP)
 
-`java -jar portmapper.jar -add -externalPort <port> -internalPort <port> -protocol tcp`
+```bash
+$ java -jar portmapper.jar -add -externalPort <port> -internalPort <port> -protocol tcp
+```
 
 - Delete a port forwarding
 
-`java -jar portmapper.jar -delete -externalPort <port> -protocol tcp`
+```bash
+$ java -jar portmapper.jar -delete -externalPort <port> -protocol tcp
+```
 
 - List existing port forwardings
 
-`java -jar portmapper.jar -list`
+```bash
+$ java -jar portmapper.jar -list
+```
 
 ### UPnP libraries
 
@@ -88,16 +100,20 @@ PortMapper includes three third party UPnP libraries. If the default does not wo
 
 PortMapper is translated to English (`en`) and German (`de`). It automatically detects the operating system's language using English as default. If you want use a different language, add command line option `-Duser.language=de` to java, e.g.:
 
-    java -Duser.language=de -jar portmapper.jar
+```bash
+$ java -Duser.language=de -jar portmapper.jar
+```
 
 ## Development
 
 Build PortMapper on the command line:
 
-    $ git clone https://github.com/kaklakariada/portmapper.git
-    $ cd portmapper
-    $ ./gradlew build
-    $ java -jar build/libs/portmapper-*.jar
+```bash
+$ git clone https://github.com/kaklakariada/portmapper.git
+$ cd portmapper
+$ ./gradlew build
+$ java -jar build/libs/portmapper-*.jar
+```
 
 ### Generate license header for added files
 
