@@ -28,13 +28,15 @@ on the command line.
 
 ## Troubleshooting
 
-If PortMapper does not find your router you can try the following:
+### Router not found
 
 - Check if UPnP is activated in your router's settings.
 - Use a different UPnP library in the settings. Please note that `DummyRouterFactory` is just for testing.
 - Set Log level to `TRACE` in the settings, connect again and check the log.
 
-If adding port forwardings is not possible, check that your router allows write access via UPnP.
+### Adding port forwardings not possible
+
+* Check that your router allows write access via UPnP.
 
 ### Known issues
 
