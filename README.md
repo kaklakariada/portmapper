@@ -1,5 +1,4 @@
-UPnP PortMapper
-===============
+# UPnP PortMapper
 
 [![Build Status](https://travis-ci.org/kaklakariada/portmapper.svg?branch=master)](https://travis-ci.org/kaklakariada/portmapper)
 [![Download UPnP PortMapper](https://img.shields.io/sourceforge/dw/upnp-portmapper.svg)](https://sourceforge.net/projects/upnp-portmapper/files/latest/download)
@@ -10,16 +9,14 @@ Using port forwarding, it is possible to access servers (SSH, Web, Game servers,
 
 The interface is written in English and German. PortMapper automatically selects the language according your operating system.
 
-Download
---------
+## Download
 
 [![Download UPnP PortMapper](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/upnp-portmapper/files/latest/download)
 
 [Download](http://sourceforge.net/projects/upnp-portmapper/files/latest/download) binaries from [SourceForge](http://sourceforge.net/projects/upnp-portmapper/).
 UPnP PortMapper requires Java 8 or later. You can download it at [java.com](http://java.com).
 
-Usage
-=====
+## Usage
 
 To run PortMapper, double click on the JAR file or run
 
@@ -27,8 +24,7 @@ To run PortMapper, double click on the JAR file or run
 
 on the command line.
 
-Troubleshooting
----------------
+## Troubleshooting
 
 If PortMapper does not find your router you can try the following:
 
@@ -38,8 +34,11 @@ If PortMapper does not find your router you can try the following:
 
 If adding port forwardings is not possible, check that your router allows write access via UPnP.
 
-Command line interface
-======================
+### Known issues
+
+* Under Ubuntu Linux it is not possible to retrieve the IP address of the local host, the address must be entered manually.
+
+## Command line interface
 
 PortMapper also has a command line interface. You can see the available options by adding parameter -h:
 
@@ -58,8 +57,8 @@ PortMapper also has a command line interface. You can see the available options 
      -protocol [TCP | UDP] : Protocol of the port mapping
      -routerIndex N        : Router index if more than one is found (zero-based)
 
-Examples
---------
+### Examples
+
 - Create a new port mapping for a specific IP address
 
 `java -jar portmapper.jar -add -externalPort <port> -internalPort <port> -ip <ip-addr> -protocol tcp`
@@ -76,32 +75,22 @@ Examples
 
 `java -jar portmapper.jar -list`
 
+### UPnP libraries
 
-Select language
----------------
+PortMapper includes three third party UPnP libraries. If the default does not work for your device, try using a different library.
+
+- [Cling](https://github.com/4thline/cling): `org.chris.portmapper.router.cling.ClingRouterFactory` (default)
+- [weupnp](https://github.com/bitletorg/weupnp): `org.chris.portmapper.router.weupnp.WeUPnPRouterFactory`
+- [SBBI UPnP lib](https://sourceforge.net/projects/upnplibmobile/): `org.chris.portmapper.router.sbbi.SBBIRouterFactory`
+- `org.chris.portmapper.router.dummy.DummyRouterFactory` (for testing only)
+
+### Select language
 
 PortMapper is translated to English (`en`) and German (`de`). It automatically detects the operating system's language using English as default. If you want use a different language, add command line option `-Duser.language=de` to java, e.g.:
 
     java -Duser.language=de -jar portmapper.jar
 
-UPnP libraries
---------------
-
-PortMapper includes three third party UPnP libraries. If the default does not work for your device, try using a different library.
-
-- [Cling](http://4thline.org/projects/cling/): `org.chris.portmapper.router.cling.ClingRouterFactory` (default)
-- [weupnp](https://github.com/bitletorg/weupnp): `org.chris.portmapper.router.weupnp.WeUPnPRouterFactory`
-- [SBBI UPnP lib](https://sourceforge.net/projects/upnplibmobile/): `org.chris.portmapper.router.sbbi.SBBIRouterFactory`
-- `org.chris.portmapper.router.dummy.DummyRouterFactory` (for testing)
-
-
-Known issues
-============
-
-* Under Ubuntu Linux it is not possible to retrieve the IP address of the local host, the address must be entered manually.
-
-Development
-===========
+## Development
 
 Build PortMapper on the command line:
 
@@ -110,16 +99,13 @@ Build PortMapper on the command line:
     $ ./gradlew build
     $ java -jar build/libs/portmapper-*.jar
 
-Generate license header for added files
----------------------------------------
+### Generate license header for added files
 
 ```bash
 $ ./gradlew licenseFormat
 ```
 
-
-Participate
-===========
+## Participate
 
 Your feedback is most welcome at the project page:
 
