@@ -23,13 +23,27 @@ Usage
 
 To run PortMapper, double click on the JAR file or run
 
-	$ java -jar PortMapper-1.9.6.jar
+	$ java -jar portmapper-2.1.1.jar
 
 on the command line.
 
+Troubleshooting
+---------------
+
+If PortMapper does not find your router you can try the following:
+
+- Check if UPnP is activated in your router's settings.
+- Use a different UPnP library in the settings. Please note that `DummyRouterFactory` is just for testing.
+- Set Log level to `TRACE` in the settings, connect again and check the log.
+
+If adding port forwardings is not possible, check that your router allows write access via UPnP.
+
+Command line interface
+======================
+
 PortMapper also has a command line interface. You can see the available options by adding parameter -h:
 
-    $ java -jar PortMapper.jar -h
+    $ java -jar portmapper.jar -h
      -add                  : Add a new port mapping
      -delete               : Delete a new port mapping
      -description VAL      : Description of the port mapping
@@ -48,26 +62,27 @@ Examples
 --------
 - Create a new port mapping for a specific IP address
 
-`java -jar PortMapper.jar -add -externalPort <port> -internalPort <port> -ip <ip-addr> -protocol tcp`
+`java -jar portmapper.jar -add -externalPort <port> -internalPort <port> -ip <ip-addr> -protocol tcp`
 
 - Create a new port mapping for the local machine (just omit the IP)
 
-`java -jar PortMapper.jar -add -externalPort <port> -internalPort <port> -protocol tcp`
+`java -jar portmapper.jar -add -externalPort <port> -internalPort <port> -protocol tcp`
 
 - Delete a port forwarding
 
-`java -jar PortMapper.jar -delete -externalPort <port> -protocol tcp`
+`java -jar portmapper.jar -delete -externalPort <port> -protocol tcp`
 
 - List existing port forwardings
 
-`java -jar PortMapper.jar -list`
+`java -jar portmapper.jar -list`
+
 
 Select language
 ---------------
 
 PortMapper is translated to English (`en`) and German (`de`). It automatically detects the operating system's language using English as default. If you want use a different language, add command line option `-Duser.language=de` to java, e.g.:
 
-    java -Duser.language=de -jar PortMapper.jar
+    java -Duser.language=de -jar portmapper.jar
 
 UPnP libraries
 --------------
@@ -81,12 +96,12 @@ PortMapper includes three third party UPnP libraries. If the default does not wo
 
 
 Known issues
-------------
+============
 
 * Under Ubuntu Linux it is not possible to retrieve the IP address of the local host, the address must be entered manually.
 
-Building
-========
+Development
+===========
 
 Build PortMapper on the command line:
 
