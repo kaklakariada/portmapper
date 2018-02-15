@@ -157,7 +157,7 @@ public class PortMapperApp extends SingleFrameApplication {
         logger.debug("Loading settings from file {}", SETTINGS_FILENAME);
         try {
             settings = (Settings) getContext().getLocalStorage().load(SETTINGS_FILENAME);
-        } catch (final IOException e) {
+        } catch (final IOException | ArrayIndexOutOfBoundsException e) {
             logger.warn("Could not load settings from file " + SETTINGS_FILENAME, e);
         }
 
