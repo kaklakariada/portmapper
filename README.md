@@ -28,6 +28,10 @@ on the command line.
 
 ## Troubleshooting
 
+### General
+
+- Update the firmware of your router to the latest version.
+
 ### Router not found
 
 - Check if UPnP is activated in your router's settings.
@@ -36,11 +40,11 @@ on the command line.
 
 ### Adding port forwardings not possible
 
-* Check that your router allows write access via UPnP.
+- Check that your router allows write access via UPnP.
 
 ### Known issues
 
-* Under Ubuntu Linux it is not possible to retrieve the IP address of the local host, the address must be entered manually.
+- Under Ubuntu Linux it is not possible to retrieve the IP address of the local host, the address must be entered manually.
 
 ## Command line interface
 
