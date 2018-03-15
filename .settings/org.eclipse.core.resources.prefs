@@ -1,6 +1,8 @@
 eclipse.preferences.version=1
 encoding//src/main/resources/org/chris/portmapper/resources/ConnectTask_de.properties=UTF-8
 encoding//src/main/resources/org/chris/portmapper/resources/ConnectTask_en.properties=UTF-8
+encoding//src/main/resources/org/chris/portmapper/resources/ConnectTask_zh_cn.properties=UTF-8
 encoding//src/main/resources/org/chris/portmapper/resources/PortMapperApp_de.properties=UTF-8
 encoding//src/main/resources/org/chris/portmapper/resources/PortMapperApp_en.properties=UTF-8
+encoding//src/main/resources/org/chris/portmapper/resources/PortMapperApp_zh_cn.properties=UTF-8
 encoding/<project>=UTF-8
