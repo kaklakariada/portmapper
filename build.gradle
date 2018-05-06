@@ -9,7 +9,7 @@ repositories {
     flatDir { dirs 'lib' }
 }
 
-version = '2.1.1'
+version = '2.1.2'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -44,12 +44,11 @@ jar {
 }
 
 dependencies {
-    
     compile 'args4j:args4j:2.33'
     compile 'org.slf4j:slf4j-api:1.7.25'
     compile 'org.slf4j:jul-to-slf4j:1.7.25'
     compile 'ch.qos.logback:logback-classic:1.2.3'
-    compile 'com.miglayout:miglayout-swing:5.0'
+    compile 'com.miglayout:miglayout-swing:5.1'
     compile 'org.jdesktop.bsaf:bsaf:1.9.2'
     compile ':sbbi-upnplib:1.0.4'
     compile 'org.fourthline.cling:cling-support:2.1.1'
