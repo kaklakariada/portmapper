@@ -29,6 +29,8 @@ import org.chris.portmapper.router.cling.action.AddPortMappingAction;
 import org.chris.portmapper.router.cling.action.DeletePortMappingAction;
 import org.chris.portmapper.router.cling.action.GetExternalIpAction;
 import org.fourthline.cling.controlpoint.ControlPoint;
+import org.fourthline.cling.model.meta.DeviceDetails;
+import org.fourthline.cling.model.meta.RemoteDevice;
 import org.fourthline.cling.model.meta.RemoteService;
 import org.fourthline.cling.model.meta.Service;
 import org.fourthline.cling.model.meta.UDAVersion;
@@ -102,16 +104,18 @@ public class ClingRouter extends AbstractRouter {
 
     @Override
     public void logRouterInfo() throws RouterException {
-        logger.info("Service id: " + service.getServiceId());
-        logger.info("Reference: " + service.getReference());
-        logger.info("Display name: " + service.getDevice().getDisplayString());
-        final UDAVersion version = service.getDevice().getVersion();
-        logger.info("Version: " + version.getMajor() + "." + version.getMinor());
+        final RemoteDevice device = service.getDevice();
+        final UDAVersion version = device.getVersion();
+        final DeviceDetails deviceDetails = device.getDetails();
+        logger.info("Service id: {}", service.getServiceId());
+        logger.info("Reference: {}", service.getReference());
+        logger.info("Display name: {}", device.getDisplayString());
+        logger.info("Version: {}.{}", version.getMajor(), version.getMinor());
         logger.info("Control uri: {}", service.getControlURI());
         logger.info("Descriptor uri: {}", service.getDescriptorURI());
         logger.info("Event subscription uri: {}", service.getEventSubscriptionURI());
-        logger.info("Device base url: {}", service.getDevice().getDetails().getBaseURL());
-        logger.info("Device presentation uri: {}", service.getDevice().getDetails().getPresentationURI());
+        logger.info("Device base url: {}", deviceDetails.getBaseURL());
+        logger.info("Device presentation uri: {}", deviceDetails.getPresentationURI());
     }
 
     @Override

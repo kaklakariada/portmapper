@@ -50,7 +50,7 @@ public class SBBIRouter extends AbstractRouter {
     /**
      * The wrapped router device.
      */
-    final private InternetGatewayDevice router;
+    private final InternetGatewayDevice router;
 
     /**
      * The maximum number of port mappings that we will try to retrieve from the router.
@@ -72,11 +72,11 @@ public class SBBIRouter extends AbstractRouter {
         try {
             ipAddress = router.getExternalIPAddress();
         } catch (final UPNPResponseException e) {
-            throw new RouterException("Could not get external IP", e);
+            throw new RouterException("Could not get external IP: " + e.getMessage(), e);
         } catch (final IOException e) {
-            throw new RouterException("Could not get external IP", e);
+            throw new RouterException("Could not get external IP: " + e.getMessage(), e);
         }
-        logger.info("Got external IP address " + ipAddress + " for router.");
+        logger.info("Got external IP address {} for router.", ipAddress);
         return ipAddress;
     }
 
@@ -148,7 +148,7 @@ public class SBBIRouter extends AbstractRouter {
 
         for (final String key : sortedKeys) {
             final String value = info.get(key);
-            logger.info("Router Info: {} \t= {}", key, value);
+            logger.info("Router Info: {} = {}", key, value);
         }
 
         logger.info("def loc: {}", rootDevice.getDeviceDefLoc());
@@ -163,7 +163,7 @@ public class SBBIRouter extends AbstractRouter {
 
     private boolean addPortMapping(final String description, final Protocol protocol, final String remoteHost,
             final int externalPort, final String internalClient, final int internalPort, final int leaseDuration)
-                    throws RouterException {
+            throws RouterException {
 
         final String protocolString = protocol == Protocol.TCP ? "TCP" : "UDP";
 

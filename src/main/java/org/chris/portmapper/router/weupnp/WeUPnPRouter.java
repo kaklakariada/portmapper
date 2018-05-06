@@ -125,13 +125,16 @@ public class WeUPnPRouter extends AbstractRouter {
             try {
                 logger.debug("Getting port mapping {}...", index);
                 if (!device.getGenericPortMappingEntry(index, entry)) {
-                    throw new RuntimeException();
+                    logger.debug("Entry {} does not exist, stop getting more mappings", index);
+                    morePortMappings = false;
+                } else {
+                    logger.debug("Got port mapping {}: {}", index, entry);
                 }
-                logger.debug("Got port mapping {}: {}", index, entry);
             } catch (final Exception e) {
                 morePortMappings = false;
-                logger.debug("Got an exception with message '{}‘ for index {}, stop getting more mappings",
+                logger.debug("Got an exception with message '{}' for index {}, stop getting more mappings",
                         e.getMessage(), index);
+                logger.trace("Exception", e);
             }
 
             if (entry.getProtocol() != null) {
@@ -150,19 +153,20 @@ public class WeUPnPRouter extends AbstractRouter {
     @Override
     public void logRouterInfo() throws RouterException {
         final Map<String, String> info = new HashMap<>();
-        info.put("friendlyName", device.getFriendlyName());
+        info.put("friendly name", device.getFriendlyName());
         info.put("manufacturer", device.getManufacturer());
-        info.put("modelDescription", device.getModelDescription());
+        info.put("model description", device.getModelDescription());
+        info.put("location", device.getLocation());
+        info.put("device type", device.getDeviceType());
+        info.put("device type cif", device.getDeviceTypeCIF());
 
         final SortedSet<String> sortedKeys = new TreeSet<>(info.keySet());
 
+        logger.info("Router info:");
         for (final String key : sortedKeys) {
             final String value = info.get(key);
-            logger.info("Router Info: {} \t= {}", key, value);
+            logger.info("- {} = {}", key, value);
         }
-
-        logger.info("def loc: {}", device.getLocation());
-        logger.info("device type: {}", device.getDeviceType());
     }
 
     @Override

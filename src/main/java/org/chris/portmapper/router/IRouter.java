@@ -25,7 +25,7 @@ import java.util.Collection;
 import org.chris.portmapper.model.PortMapping;
 import org.chris.portmapper.model.Protocol;
 
-public interface IRouter {
+public interface IRouter extends AutoCloseable {
 
     public abstract String getName();
 
@@ -118,4 +118,7 @@ public interface IRouter {
      * Disconnect from the router.
      */
     public abstract void disconnect();
+
+    @Override
+    void close();
 }

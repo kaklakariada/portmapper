@@ -69,8 +69,7 @@ public class PortMapperCli {
             printHelp();
             return;
         }
-        try {
-            final IRouter router = connect();
+        try (final IRouter router = connect()) {
             if (router == null) {
                 logger.error("No router found: exit");
                 System.exit(1);
@@ -164,21 +163,18 @@ public class PortMapperCli {
         if (cmdLineArgs.isStartGui()) {
             return true;
         }
-        return !(cmdLineArgs.isPrintHelp() || cmdLineArgs.isAddPortMapping() || cmdLineArgs.isPrintInfo()
-                || cmdLineArgs.isListPortMappings() || cmdLineArgs.isDeletePortMapping());
+        return !cliCommand();
     }
 
-    @SuppressWarnings("unchecked")
-    private AbstractRouterFactory createRouterFactory() throws RouterException {
-        Class<AbstractRouterFactory> routerFactoryClass;
-        logger.info("Creating router factory for class {}", routerFactoryClassName);
-        try {
-            routerFactoryClass = (Class<AbstractRouterFactory>) Class.forName(routerFactoryClassName);
-        } catch (final ClassNotFoundException e) {
-            throw new RouterException("Did not find router factory class for name " + routerFactoryClassName, e);
-        }
+    private boolean cliCommand() {
+        return cmdLineArgs.isPrintHelp() || cmdLineArgs.isAddPortMapping() || cmdLineArgs.isPrintInfo()
+                || cmdLineArgs.isListPortMappings() || cmdLineArgs.isDeletePortMapping();
+    }
 
-        logger.debug("Creating a new instance of the router factory class {}", routerFactoryClass);
+    private AbstractRouterFactory createRouterFactory() throws RouterException {
+        logger.info("Creating router factory for class {}", routerFactoryClassName);
+        final Class<AbstractRouterFactory> routerFactoryClass = getClassForName(routerFactoryClassName);
+        logger.debug("Creating a new instance of the router factory class {}", routerFactoryClass.getName());
         try {
             final Constructor<AbstractRouterFactory> constructor = routerFactoryClass
                     .getConstructor(PortMapperApp.class);
@@ -188,8 +184,17 @@ public class PortMapperCli {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    private static Class<AbstractRouterFactory> getClassForName(final String className) throws RouterException {
+        try {
+            return (Class<AbstractRouterFactory>) Class.forName(className);
+        } catch (final ClassNotFoundException e) {
+            throw new RouterException("Did not find router factory class for name " + className, e);
+        }
+    }
+
     private IRouter connect() throws RouterException {
-        AbstractRouterFactory routerFactory;
+        final AbstractRouterFactory routerFactory;
         try {
             routerFactory = createRouterFactory();
         } catch (final RouterException e) {
@@ -203,10 +208,6 @@ public class PortMapperCli {
         return selectRouter(foundRouters);
     }
 
-    /**
-     * @param foundRouters
-     * @return
-     */
     private IRouter selectRouter(final List<IRouter> foundRouters) {
         // One router found: use it.
         if (foundRouters.size() == 1) {

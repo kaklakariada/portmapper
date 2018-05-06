@@ -51,7 +51,6 @@ abstract class AbstractClingAction<T> implements ClingAction<T> {
         return Collections.emptyMap();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public ActionInvocation<RemoteService> getActionInvocation() {
         final Action<RemoteService> action = service.getAction(actionName);
@@ -59,14 +58,13 @@ abstract class AbstractClingAction<T> implements ClingAction<T> {
             throw new ClingRouterException("No action found for name '" + actionName + "'. Available actions: "
                     + Arrays.toString(service.getActions()));
         }
-        @SuppressWarnings("rawtypes")
-        final ActionArgumentValue[] argumentArray = getArguments(action);
+        final ActionArgumentValue<RemoteService>[] argumentArray = getArguments(action);
         return new ActionInvocation<RemoteService>(action, argumentArray);
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    private ActionArgumentValue[] getArguments(final Action<RemoteService> action) {
-        final ActionArgument[] actionArguments = action.getArguments();
+    private ActionArgumentValue<RemoteService>[] getArguments(final Action<RemoteService> action) {
+        @SuppressWarnings("unchecked")
+        final ActionArgument<RemoteService>[] actionArguments = action.getArguments();
         final Map<String, Object> argumentValues = getArgumentValues();
         final List<ActionArgumentValue<RemoteService>> actionArgumentValues = new ArrayList<>(actionArguments.length);
 
@@ -78,6 +76,8 @@ abstract class AbstractClingAction<T> implements ClingAction<T> {
                 actionArgumentValues.add(new ActionArgumentValue<>(actionArgument, value));
             }
         }
-        return actionArgumentValues.toArray(new ActionArgumentValue[actionArgumentValues.size()]);
+        @SuppressWarnings("unchecked")
+        final ActionArgumentValue<RemoteService>[] array = actionArgumentValues.toArray(new ActionArgumentValue[0]);
+        return array;
     }
 }

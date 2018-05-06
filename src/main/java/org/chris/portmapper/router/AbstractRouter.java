@@ -73,7 +73,6 @@ public abstract class AbstractRouter implements IRouter {
     private InetAddress getLocalHostAddressFromSocket() throws RouterException {
         InetAddress localHostIP = null;
         try {
-
             // In order to use the socket method to get the address, we have to
             // be connected to the router.
             final int routerInternalPort = getInternalPort();
@@ -111,6 +110,11 @@ public abstract class AbstractRouter implements IRouter {
             throw new RouterException("Could not get IP of localhost.", e);
         }
         return localHostIP;
+    }
+
+    @Override
+    public void close() {
+        this.disconnect();
     }
 
     @Override
