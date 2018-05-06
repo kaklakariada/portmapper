@@ -38,6 +38,19 @@ on the command line.
 - Use a different UPnP library in the settings. Please note that `DummyRouterFactory` is just for testing.
 - Set Log level to `TRACE` in the settings, connect again and check the log.
 
+#### Manually specify location URL
+
+If you can connect to your router from one device but not from another you can directly specify the location URL.
+
+**Note**: this is only supported for library weupnp (`-lib org.chris.portmapper.router.weupnp.WeUPnPRouterFactory`).
+
+1. Get location URL on the machine that can connect to the router by clicking the `Info` button (look for something like `INFO  - location = http://192.168.178.1:49000/igddesc.xml`)
+1. Specify the location URL as a command line argument:
+
+```bash
+$ java "-Dportmapper.locationUrl=<locationurl>" -jar portmapper.jar -lib org.chris.portmapper.router.weupnp.WeUPnPRouterFactory <args>
+```
+
 ### Adding port forwardings not possible
 
 - Check that your router allows write access via UPnP.

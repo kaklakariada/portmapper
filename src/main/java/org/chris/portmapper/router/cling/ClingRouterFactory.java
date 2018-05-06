@@ -84,6 +84,7 @@ public class ClingRouterFactory extends AbstractRouterFactory {
 
     @Override
     protected IRouter connect(final String locationUrl) throws RouterException {
-        throw new UnsupportedOperationException("Direct connection is not supported for Cling library.");
+        throw new UnsupportedOperationException(
+                "Direct connection via location URL is not supported for Cling library.");
     }
 }

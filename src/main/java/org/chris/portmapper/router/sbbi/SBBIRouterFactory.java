@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * 
+ *
  */
 package org.chris.portmapper.router.sbbi;
 
@@ -25,12 +25,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import net.sbbi.upnp.impls.InternetGatewayDevice;
-
 import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.router.AbstractRouterFactory;
 import org.chris.portmapper.router.IRouter;
 import org.chris.portmapper.router.RouterException;
+
+import net.sbbi.upnp.impls.InternetGatewayDevice;
 
 /**
  * Router factory using the SBBI UPnP library.
@@ -71,6 +71,7 @@ public class SBBIRouterFactory extends AbstractRouterFactory {
 
     @Override
     protected IRouter connect(final String locationUrl) throws RouterException {
-        throw new UnsupportedOperationException("Direct connection is not implemented for SBBI library.");
+        throw new UnsupportedOperationException(
+                "Direct connection via location URL is not supported for SBBI library.");
     }
 }
