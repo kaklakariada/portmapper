@@ -14,7 +14,7 @@ The interface is written in English and German. PortMapper automatically selects
 [![Download UPnP PortMapper](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/upnp-portmapper/files/latest/download)
 
 [Download](http://sourceforge.net/projects/upnp-portmapper/files/latest/download) binaries from [SourceForge](http://sourceforge.net/projects/upnp-portmapper/).
-UPnP PortMapper requires Java 8 or later. You can download it at [java.com](http://java.com).
+UPnP PortMapper requires JRE 8 (Java Runtime Environment) or later. You can download it at [java.com](http://java.com). A JDK is only required for development.
 
 ## Usage
 
@@ -41,6 +41,8 @@ on the command line.
 ### Adding port forwardings not possible
 
 - Check that your router allows write access via UPnP.
+- Try to add port forwardings manually via your router's user interface.
+- Use a different UPnP library in the settings. Please note that `DummyRouterFactory` is just for testing.
 
 ### Known issues
 
@@ -48,23 +50,23 @@ on the command line.
 
 ## Command line interface
 
-PortMapper also has a command line interface. You can see the available options by adding parameter -h:
+PortMapper also has a command line interface. You can see the available options by adding parameter `-h`:
 
 ```
 $ java -jar portmapper.jar -h
--add                  : Add a new port mapping
--delete               : Delete a new port mapping
--description VAL      : Description of the port mapping
--externalPort N       : External port of the port mapping
--gui                  : Start graphical user interface
--h (-help)            : Print usage help
--info                 : Print router info
--internalPort N       : Internal port of the port mapping
--ip VAL               : Internal IP of the port mapping (default: host)
--lib VAL              : UPnP library to use
--list                 : Print existing port mappings
--protocol [TCP | UDP] : Protocol of the port mapping
--routerIndex N        : Router index if more than one is found (zero-based)
+ -add                  : Add a new port mapping
+ -delete               : Delete a new port mapping
+ -description VAL      : Description of the port mapping
+ -externalPort N       : External port of the port mapping
+ -gui                  : Start graphical user interface
+ -h (-help)            : Print usage help
+ -info                 : Print router info
+ -internalPort N       : Internal port of the port mapping
+ -ip VAL               : Internal IP of the port mapping (default: localhost)
+ -lib VAL              : UPnP library to use
+ -list                 : Print existing port mappings
+ -protocol [TCP | UDP] : Protocol of the port mapping
+ -routerIndex N        : Router index if more than one is found (zero-based)
 ```
 
 ### Examples
@@ -91,6 +93,12 @@ $ java -jar portmapper.jar -delete -externalPort <port> -protocol tcp
 
 ```bash
 $ java -jar portmapper.jar -list
+```
+
+- Specify a UPnP library (see below for available libraries)
+
+```bash
+$ java -jar portmapper.jar -lib org.chris.portmapper.router.weupnp.WeUPnPRouterFactory -list
 ```
 
 ### UPnP libraries
