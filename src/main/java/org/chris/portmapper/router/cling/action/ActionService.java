@@ -26,8 +26,12 @@ import org.fourthline.cling.model.action.ActionInvocation;
 import org.fourthline.cling.model.message.control.IncomingActionResponseMessage;
 import org.fourthline.cling.model.meta.RemoteService;
 import org.fourthline.cling.protocol.sync.SendingAction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ActionService {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     private final RemoteService remoteService;
     private final ControlPoint controlPoint;
 
@@ -46,10 +50,14 @@ public class ActionService {
 
         final IncomingActionResponseMessage response = prot.getOutputMessage();
         if (response == null) {
-            throw new ClingRouterException("Got null response for action " + actionInvocation);
+            final String message = "Got null response for action " + actionInvocation;
+            logger.error(message);
+            throw new ClingRouterException(message);
         } else if (response.getOperation().isFailed()) {
-            throw new ClingOperationFailedException("Invocation " + actionInvocation + " failed with operation '"
-                    + response.getOperation() + "', body '" + response.getBodyString() + "'", response);
+            final String message = "Invocation " + actionInvocation + " failed with operation '"
+                    + response.getOperation() + "', body '" + response.getBodyString() + "'";
+            logger.error(message);
+            throw new ClingOperationFailedException(message, response);
         }
         return action.convert(actionInvocation);
     }
