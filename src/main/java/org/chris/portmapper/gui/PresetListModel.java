@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 public class PresetListModel extends AbstractListModel<PortMappingPreset> implements PropertyChangeListener {
 
     private static final long serialVersionUID = 1L;
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger logger = LoggerFactory.getLogger(PresetListModel.class);
     private final Settings settings;
 
     public PresetListModel(final Settings settings) {

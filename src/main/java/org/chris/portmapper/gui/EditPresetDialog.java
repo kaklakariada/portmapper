@@ -18,7 +18,6 @@
 package org.chris.portmapper.gui;
 
 import java.awt.Component;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeSupport;
@@ -42,13 +41,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
-import net.miginfocom.swing.MigLayout;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.Settings;
 import org.chris.portmapper.model.PortMapping;
@@ -57,38 +50,46 @@ import org.chris.portmapper.model.Protocol;
 import org.chris.portmapper.model.SinglePortMapping;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import net.miginfocom.swing.MigLayout;
 
 /**
  * This class represents the edit preset dialog.
  */
+// Deep inheritance hierarchy required by Swing API
+@SuppressWarnings("squid:MaximumInheritanceDepth")
 public class EditPresetDialog extends JDialog {
 
     private static final long serialVersionUID = 1L;
 
+    private static final String DIALOG_NAME = "preset_dialog";
+    private static final String ACTION_SAVE = DIALOG_NAME + ".save";
+    private static final String ACTION_CANCEL = DIALOG_NAME + ".cancel";
+    private static final String ACTION_ADD_PORT = DIALOG_NAME + ".add_port";
+    private static final String ACTION_ADD_PORT_RANGE = DIALOG_NAME + ".add_port_range";
+    private static final String ACTION_REMOVE_PORT = DIALOG_NAME + ".remove_port";
+    private static final String PROPERTY_PORT_SELECTED = "portSelected";
+
+    private static final Logger LOG = LoggerFactory.getLogger(EditPresetDialog.class);
+
     public static final String PROPERTY_PORTS = "ports";
 
-    private JTextField remoteHostTextField, internalClientTextField, presetNameTextField;
+    private JTextField remoteHostTextField;
+    private JTextField internalClientTextField;
+    private JTextField presetNameTextField;
+
     private final List<SinglePortMapping> ports;
     private final PropertyChangeSupport propertyChangeSupport;
 
     private JCheckBox useLocalhostCheckBox;
     private JTable portsTable;
 
-    private final static String DIALOG_NAME = "preset_dialog";
-
-    private final static String ACTION_SAVE = DIALOG_NAME + ".save";
-    private final static String ACTION_CANCEL = DIALOG_NAME + ".cancel";
-    private static final String ACTION_ADD_PORT = DIALOG_NAME + ".add_port";
-    private static final String ACTION_ADD_PORT_RANGE = DIALOG_NAME + ".add_port_range";
-    private static final String ACTION_REMOVE_PORT = DIALOG_NAME + ".remove_port";
-    private static final String PROPERTY_PORT_SELECTED = "portSelected";
-
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final PortMappingPreset editedPreset;
+    private final transient PortMappingPreset editedPreset;
+    private final transient PortMapperApp app;
 
     private PortsTableModel tableModel;
-
-    private final PortMapperApp app;
 
     public EditPresetDialog(final PortMapperApp app, final PortMappingPreset portMappingPreset) {
         super(app.getMainFrame(), true);
@@ -104,12 +105,7 @@ public class EditPresetDialog extends JDialog {
         // Register an action listener that closes the window when the ESC
         // button is pressed
         final KeyStroke escKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, true);
-        final ActionListener windowCloseActionListener = new ActionListener() {
-            @Override
-            public final void actionPerformed(final ActionEvent e) {
-                cancel();
-            }
-        };
+        final ActionListener windowCloseActionListener = e -> cancel();
         getRootPane().registerKeyboardAction(windowCloseActionListener, escKeyStroke,
                 JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
@@ -119,7 +115,7 @@ public class EditPresetDialog extends JDialog {
         presetNameTextField.setText(editedPreset.getDescription());
 
         for (final SinglePortMapping port : editedPreset.getPorts()) {
-            this.ports.add((SinglePortMapping) port.clone());
+            this.ports.add(port.copy());
         }
 
         final boolean useLocalhost = (editedPreset.getInternalClient() == null);
@@ -130,7 +126,6 @@ public class EditPresetDialog extends JDialog {
             useLocalhostCheckBox.setSelected(false);
             useLocalhostCheckBox.setEnabled(false);
         } else {
-
             useLocalhostCheckBox.setSelected(useLocalhost);
             internalClientTextField.setEnabled(!useLocalhost);
 
@@ -167,15 +162,10 @@ public class EditPresetDialog extends JDialog {
 
         useLocalhostCheckBox = new JCheckBox("preset_dialog.internal_client_use_local_host", true);
         useLocalhostCheckBox.setName("preset_dialog.internal_client_use_local_host");
-        useLocalhostCheckBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent arg0) {
-                internalClientTextField.setEnabled(!useLocalhostCheckBox.isSelected());
-                if (useLocalhostCheckBox.isSelected()) {
-                    internalClientTextField.setText(app.getLocalHostAddress());
-                } else {
-                    // internalClientTextField.setText("");
-                }
+        useLocalhostCheckBox.addActionListener(event -> {
+            internalClientTextField.setEnabled(!useLocalhostCheckBox.isSelected());
+            if (useLocalhostCheckBox.isSelected()) {
+                internalClientTextField.setText(app.getLocalHostAddress());
             }
         });
 
@@ -184,12 +174,12 @@ public class EditPresetDialog extends JDialog {
         final String localHostAddress = app.getLocalHostAddress();
 
         if (localHostAddress != null) {
-            logger.debug("Found localhost address " + localHostAddress + ". Enable localhost checkbox.");
+            LOG.debug("Found localhost address {}. Enable localhost checkbox.", localHostAddress);
             internalClientTextField.setText(localHostAddress);
             internalClientTextField.setEnabled(false);
             useLocalhostCheckBox.setEnabled(true);
         } else {
-            logger.debug("Did not find localhost address: disable localhost checkbox.");
+            LOG.debug("Did not find localhost address: disable localhost checkbox.");
             useLocalhostCheckBox.setSelected(false);
             useLocalhostCheckBox.setEnabled(false);
             internalClientTextField.setEnabled(true);
@@ -223,12 +213,8 @@ public class EditPresetDialog extends JDialog {
         tableModel = new PortsTableModel(app, ports);
         portsTable = new JTable(tableModel);
         portsTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        portsTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(final ListSelectionEvent e) {
-                firePropertyChange(PROPERTY_PORT_SELECTED, false, isPortSelected());
-            }
-        });
+        portsTable.getSelectionModel()
+                .addListSelectionListener(e -> firePropertyChange(PROPERTY_PORT_SELECTED, false, isPortSelected()));
         final JComboBox<Protocol> protocolComboBox = new JComboBox<>();
         protocolComboBox.addItem(Protocol.TCP);
         protocolComboBox.addItem(Protocol.UDP);
@@ -246,8 +232,6 @@ public class EditPresetDialog extends JDialog {
     protected void presetSelected(final PortMapping item) {
         this.presetNameTextField.setText(item.getDescription());
         this.remoteHostTextField.setText(item.getRemoteHost());
-        // this.externalPortSpinner.setValue(item.getExternalPort());
-        // this.internalPortSpinner.setValue(item.getInternalPort());
         if (item.getInternalClient() != null) {
             this.useLocalhostCheckBox.setSelected(false);
             this.internalClientTextField.setText(item.getInternalClient());
@@ -267,7 +251,7 @@ public class EditPresetDialog extends JDialog {
 
     @Action(name = ACTION_ADD_PORT_RANGE)
     public void addPortRange() {
-        logger.debug("Open port range dialog");
+        LOG.debug("Open port range dialog");
         app.show(new AddPortRangeDialog(app, this));
     }
 
@@ -285,7 +269,7 @@ public class EditPresetDialog extends JDialog {
 
         for (int i = selectedRows.length - 1; i >= 0; i--) {
             final int row = selectedRows[i];
-            logger.debug("Removing row " + row);
+            LOG.debug("Removing row {}", row);
             this.ports.remove(row);
         }
 
@@ -337,7 +321,7 @@ public class EditPresetDialog extends JDialog {
 
         editedPreset.save(settings);
 
-        logger.info("Saved preset '" + editedPreset.toString() + "'.");
+        LOG.info("Saved preset '{}'.", editedPreset);
 
         this.dispose();
     }

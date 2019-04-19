@@ -87,8 +87,7 @@ public class PortMapping implements Cloneable {
     }
 
     public static PortMapping create(final ActionResponse response) {
-        final PortMapping mapping = new PortMapping(response);
-        return mapping;
+        return new PortMapping(response);
     }
 
     /**

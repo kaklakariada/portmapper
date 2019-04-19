@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * 
+ *
  */
 package org.chris.portmapper.gui;
 
@@ -37,7 +37,7 @@ public class PortsTableModel extends AbstractTableModel implements PropertyChang
 
     private static final long serialVersionUID = 1L;
     private final List<SinglePortMapping> ports;
-    private final PortMapperApp app;
+    private final transient PortMapperApp app;
 
     public PortsTableModel(final PortMapperApp app, final List<SinglePortMapping> ports) {
         this.app = app;

@@ -28,8 +28,8 @@ import org.chris.portmapper.model.PortMapping;
 public class PortMappingsTableModel extends AbstractTableModel {
 
     private static final long serialVersionUID = 1L;
-    private final ArrayList<PortMapping> mappings;
-    private final PortMapperApp app;
+    private final transient ArrayList<PortMapping> mappings;
+    private final transient PortMapperApp app;
 
     public PortMappingsTableModel(final PortMapperApp app) {
         this.app = app;

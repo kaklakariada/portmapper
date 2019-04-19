@@ -282,16 +282,15 @@ public class PortMapperApp extends SingleFrameApplication {
         }
     }
 
-    public boolean disconnectRouter() {
+    public void disconnectRouter() {
         if (this.router == null) {
-            logger.warn("Not connected to router. Can not disconnect.");
-            return false;
+            logger.debug("Not connected to router. Can not disconnect.");
+            return;
         }
 
         this.router.disconnect();
         this.router = null;
         this.getView().fireConnectionStateChange();
-        return true;
     }
 
     public IRouter getRouter() {

@@ -67,8 +67,7 @@ public class SinglePortMapping implements Cloneable, Serializable {
         this.internalPort = internalPort;
     }
 
-    @Override
-    public Object clone() {
+    public SinglePortMapping copy() {
         return new SinglePortMapping(protocol, internalPort, externalPort);
     }
 }

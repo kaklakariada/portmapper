@@ -16,18 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * 
+ *
  */
 package org.chris.portmapper.gui;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -44,10 +40,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.Border;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
-import net.miginfocom.swing.MigLayout;
 
 import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.model.PortMapping;
@@ -59,6 +51,8 @@ import org.jdesktop.application.FrameView;
 import org.jdesktop.application.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import net.miginfocom.swing.MigLayout;
 
 /**
  * The main view.
@@ -83,7 +77,7 @@ public class PortMapperView extends FrameView {
     private static final String ACTION_REMOVE_PRESET_MAPPING = "mainFrame.preset_mappings.remove";
     private static final String ACTION_USE_PRESET_MAPPING = "mainFrame.preset_mappings.use";
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger logger = LoggerFactory.getLogger(PortMapperView.class);
 
     private static final String PROPERTY_MAPPING_SELECTED = "mappingSelected";
     private static final String PROPERTY_ROUTER_CONNECTED = "connectedToRouter";
@@ -91,8 +85,8 @@ public class PortMapperView extends FrameView {
 
     private PortMappingsTableModel tableModel;
     private JTable mappingsTable;
-    private JLabel externalIPLabel, internalIPLabel;
-    private JButton connectDisconnectButton;
+    private JLabel externalIPLabel;
+    private JLabel internalIPLabel;
     private JList<PortMappingPreset> portMappingPresets;
     private final PortMapperApp app;
 
@@ -133,23 +127,19 @@ public class PortMapperView extends FrameView {
         routerPanel.add(internalIPLabel, "width 130!");
         routerPanel.add(new JButton(actionMap.get(ACTION_COPY_INTERNAL_ADDRESS)), "wrap, sizegroup router");
 
-        connectDisconnectButton = new JButton(actionMap.get(ACTION_CONNECT_ROUTER));
+        final JButton connectDisconnectButton = new JButton(actionMap.get(ACTION_CONNECT_ROUTER));
         routerPanel.add(connectDisconnectButton, "");
         routerPanel.add(new JButton(actionMap.get(ACTION_DISPLAY_ROUTER_INFO)), "sizegroup router");
         routerPanel.add(new JButton(actionMap.get(ACTION_SHOW_ABOUT_DIALOG)), "sizegroup router, wrap");
 
-        this.addPropertyChangeListener(new PropertyChangeListener() {
+        this.addPropertyChangeListener(evt -> {
+            if (evt.getPropertyName().equals(PROPERTY_ROUTER_CONNECTED)) {
+                logger.debug("Connection state changed to {}", evt.getNewValue());
 
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                if (evt.getPropertyName().equals(PROPERTY_ROUTER_CONNECTED)) {
-                    logger.debug("Connection state changed to " + evt.getNewValue());
-
-                    if (evt.getNewValue().equals(Boolean.TRUE)) {
-                        connectDisconnectButton.setAction(actionMap.get(ACTION_DISCONNECT_ROUTER));
-                    } else {
-                        connectDisconnectButton.setAction(actionMap.get(ACTION_CONNECT_ROUTER));
-                    }
+                if (evt.getNewValue().equals(Boolean.TRUE)) {
+                    connectDisconnectButton.setAction(actionMap.get(ACTION_DISCONNECT_ROUTER));
+                } else {
+                    connectDisconnectButton.setAction(actionMap.get(ACTION_CONNECT_ROUTER));
                 }
             }
         });
@@ -189,12 +179,9 @@ public class PortMapperView extends FrameView {
         portMappingPresets.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         portMappingPresets.setLayoutOrientation(JList.VERTICAL);
 
-        portMappingPresets.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(final ListSelectionEvent e) {
-                logger.trace("Selection of preset list has changed: " + isPresetMappingSelected());
-                firePropertyChange(PROPERTY_PRESET_MAPPING_SELECTED, false, isPresetMappingSelected());
-            }
+        portMappingPresets.addListSelectionListener(e -> {
+            logger.trace("Selection of preset list has changed: {}", isPresetMappingSelected());
+            firePropertyChange(PROPERTY_PRESET_MAPPING_SELECTED, false, isPresetMappingSelected());
         });
 
         presetPanel.add(new JScrollPane(portMappingPresets), "spany 4, grow");
@@ -217,12 +204,8 @@ public class PortMapperView extends FrameView {
         mappingsTable.setAutoCreateRowSorter(true);
         mappingsTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         mappingsTable.setSize(new Dimension(400, 100));
-        mappingsTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(final ListSelectionEvent e) {
-                firePropertyChange(PROPERTY_MAPPING_SELECTED, false, isMappingSelected());
-            }
-        });
+        mappingsTable.getSelectionModel().addListSelectionListener(
+                e -> firePropertyChange(PROPERTY_MAPPING_SELECTED, false, isMappingSelected()));
 
         final JScrollPane mappingsTabelPane = new JScrollPane();
         mappingsTabelPane.setViewportView(mappingsTable);
@@ -278,7 +261,7 @@ public class PortMapperView extends FrameView {
 
         try {
             router.addPortMappings(portMappings);
-            logger.info(portMappings.size() + " port mapping added successfully");
+            logger.info("{} port mapping added successfully", portMappings.size());
         } catch (final RouterException e) {
             logger.error("Could not add port mapping", e);
             JOptionPane.showMessageDialog(this.getFrame(), "The port mapping could not be added.\n" + e.getMessage(),
@@ -292,16 +275,16 @@ public class PortMapperView extends FrameView {
     public void removeMappings() {
         final Collection<PortMapping> selectedMappings = this.getSelectedPortMappings();
         for (final PortMapping mapping : selectedMappings) {
-            logger.info("Removing mapping " + mapping);
+            logger.info("Removing mapping {}", mapping);
             try {
                 app.getRouter().removeMapping(mapping);
             } catch (final RouterException e) {
                 logger.error("Could not remove port mapping " + mapping, e);
                 break;
             }
-            logger.info("Mapping was removed successfully: " + mapping);
+            logger.info("Mapping was removed successfully: {}", mapping);
         }
-        if (selectedMappings.size() > 0) {
+        if (!selectedMappings.isEmpty()) {
             updatePortMappings();
         }
     }
@@ -344,7 +327,7 @@ public class PortMapperView extends FrameView {
         }
         try {
             final Collection<PortMapping> mappings = router.getPortMappings();
-            logger.info("Found " + mappings.size() + " mappings");
+            logger.info("Found {} mappings", mappings.size());
             this.tableModel.setMappings(mappings);
         } catch (final RouterException e) {
             logger.error("Could not get port mappings", e);
@@ -398,7 +381,7 @@ public class PortMapperView extends FrameView {
     }
 
     public boolean isMappingSelected() {
-        return this.isConnectedToRouter() && this.getSelectedPortMappings().size() > 0;
+        return this.isConnectedToRouter() && !this.getSelectedPortMappings().isEmpty();
     }
 
     public boolean isPresetMappingSelected() {
@@ -407,7 +390,7 @@ public class PortMapperView extends FrameView {
 
     /**
      * Get the port mappings currently selected in the table.
-     * 
+     *
      * @return the currently selected port mappings.
      */
     public Collection<PortMapping> getSelectedPortMappings() {
@@ -432,13 +415,8 @@ public class PortMapperView extends FrameView {
 
     private void copyTextToClipboard(final String text) {
         final Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        logger.trace("Copy text '" + text + "' to clipbord");
-        clipboard.setContents(new StringSelection(text), new ClipboardOwner() {
-            @Override
-            public void lostOwnership(final Clipboard clip, final Transferable contents) {
-                logger.trace("Lost clipboard ownership");
-            }
-        });
+        logger.trace("Copy text '{}' to clipbord", text);
+        clipboard.setContents(new StringSelection(text), (clip, contents) -> logger.trace("Lost clipboard ownership"));
     }
 
     private class ConnectTask extends Task<Void, Void> {
@@ -466,8 +444,8 @@ public class PortMapperView extends FrameView {
 
         @Override
         protected void failed(final Throwable cause) {
-            logger.warn("Could not connect to router: " + cause.getMessage(), cause);
-            logger.warn("Could not connect to router: " + cause.getMessage());
+            logger.warn("Could not connect to router: {}", cause.getMessage(), cause);
+            logger.warn("Could not connect to router: {}", cause.getMessage());
         }
     }
 }

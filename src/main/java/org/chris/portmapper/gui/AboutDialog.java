@@ -17,8 +17,6 @@
  */
 package org.chris.portmapper.gui;
 
-import java.awt.HeadlessException;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
@@ -30,19 +28,21 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
-import net.miginfocom.swing.MigLayout;
-
 import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.gui.util.URLLabel;
 import org.jdesktop.application.Action;
 
+import net.miginfocom.swing.MigLayout;
+
+// Deep inheritance hierarchy required by Swing API
+@SuppressWarnings("squid:MaximumInheritanceDepth")
 public class AboutDialog extends JDialog {
 
     private static final long serialVersionUID = 1L;
-    private final static String DIALOG_NAME = "about_dialog";
-    private final static String ACTION_CLOSE = "about_dialog.close";
+    private static final String DIALOG_NAME = "about_dialog";
+    private static final String ACTION_CLOSE = "about_dialog.close";
 
-    public AboutDialog(final PortMapperApp app) throws HeadlessException {
+    public AboutDialog(final PortMapperApp app) {
         super(app.getMainFrame(), true);
 
         this.setName(DIALOG_NAME);
@@ -71,12 +71,7 @@ public class AboutDialog extends JDialog {
         // Register an action listener that closes the window when the ESC
         // button is pressed
         final KeyStroke escKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, true);
-        final ActionListener windowCloseActionListener = new ActionListener() {
-            @Override
-            public final void actionPerformed(final ActionEvent e) {
-                close();
-            }
-        };
+        final ActionListener windowCloseActionListener = e -> close();
         getRootPane().registerKeyboardAction(windowCloseActionListener, escKeyStroke,
                 JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
