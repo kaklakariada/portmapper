@@ -14,7 +14,7 @@ The interface is written in English and German. PortMapper automatically selects
 [![Download UPnP PortMapper](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/upnp-portmapper/files/latest/download)
 
 [Download](http://sourceforge.net/projects/upnp-portmapper/files/latest/download) binaries from [SourceForge](http://sourceforge.net/projects/upnp-portmapper/).
-UPnP PortMapper requires JRE 8 (Java Runtime Environment) or later. You can download it at [java.com](http://java.com). A JDK is only required for development.
+UPnP PortMapper requires JRE 8 (Java Runtime Environment) or later. We recommend Java 11. You can download JDK 11 from [oracle.com](https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html).
 
 ## Usage
 
@@ -56,6 +56,14 @@ $ java "-Dportmapper.locationUrl=<locationurl>" -jar portmapper.jar -lib org.chr
 - Check that your router allows write access via UPnP.
 - Try to add port forwardings manually via your router's user interface.
 - Use a different UPnP library in the settings. Please note that `DummyRouterFactory` is just for testing.
+
+### Multiple routers
+
+If you have multiple routers in your network please use library `org.chris.portmapper.router.weupnp.WeUPnPRouterFactory` or `org.chris.portmapper.router.sbbi.SBBIRouterFactory`. After connecting a dialog will allow you to select one of the found routers. `org.chris.portmapper.router.cling.ClingRouterFactory` currently only supports one router.
+
+### Small font on high resolution displays
+
+If you have a high resolution display and the fonts (e.g. the log) in PortMapper is too small, please upgrade to Java 9 or later. See http://openjdk.java.net/jeps/263 for details.
 
 ### Known issues
 
