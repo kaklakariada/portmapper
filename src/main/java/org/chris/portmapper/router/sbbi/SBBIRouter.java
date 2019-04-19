@@ -161,7 +161,7 @@ public class SBBIRouter extends AbstractRouter {
         logger.info("udn: {}", rootDevice.getUDN());
     }
 
-    private boolean addPortMapping(final String description, final Protocol protocol, final String remoteHost,
+    private boolean addPortMapping(final String description, final Protocol protocol,
             final int externalPort, final String internalClient, final int internalPort, final int leaseDuration)
             throws RouterException {
 
@@ -170,12 +170,9 @@ public class SBBIRouter extends AbstractRouter {
         final String encodedDescription = encodeIfNecessary(description);
 
         try {
-            final boolean success = router.addPortMapping(encodedDescription, null, internalPort, externalPort,
+            return router.addPortMapping(encodedDescription, null, internalPort, externalPort,
                     internalClient, leaseDuration, protocolString);
-            return success;
-        } catch (final IOException e) {
-            throw new RouterException("Could not add port mapping: " + e.getMessage(), e);
-        } catch (final UPNPResponseException e) {
+        } catch (final IOException | UPNPResponseException e) {
             throw new RouterException("Could not add port mapping: " + e.getMessage(), e);
         }
     }
@@ -198,8 +195,8 @@ public class SBBIRouter extends AbstractRouter {
 
     @Override
     public void addPortMapping(final PortMapping mapping) throws RouterException {
-        logger.info("Adding port mapping ()", mapping.getCompleteDescription());
-        addPortMapping(mapping.getDescription(), mapping.getProtocol(), mapping.getRemoteHost(),
+        logger.info("Adding port mapping {}", mapping.getCompleteDescription());
+        addPortMapping(mapping.getDescription(), mapping.getProtocol(),
                 mapping.getExternalPort(), mapping.getInternalClient(), mapping.getInternalPort(), 0);
     }
 
