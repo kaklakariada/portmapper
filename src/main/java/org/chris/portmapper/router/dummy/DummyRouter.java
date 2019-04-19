@@ -47,7 +47,7 @@ public class DummyRouter extends AbstractRouter {
 
     @Override
     public void addPortMapping(final PortMapping mapping) {
-        logger.debug("Adding mapping " + mapping);
+        logger.debug("Adding mapping {}", mapping);
         mappings.add(mapping);
     }
 
@@ -83,14 +83,14 @@ public class DummyRouter extends AbstractRouter {
             logger.debug("Sleep 3s to simulate delay when fetching port mappings.");
             Thread.sleep(3000);
         } catch (final InterruptedException e) {
-            // ignore
+            Thread.currentThread().interrupt();
         }
         return mappings;
     }
 
     @Override
     public void logRouterInfo() {
-        logger.info("DummyRouter " + getName());
+        logger.info("DummyRouter {}", getName());
     }
 
     @Override

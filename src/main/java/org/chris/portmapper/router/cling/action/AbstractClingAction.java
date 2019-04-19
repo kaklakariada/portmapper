@@ -59,7 +59,7 @@ abstract class AbstractClingAction<T> implements ClingAction<T> {
                     + Arrays.toString(service.getActions()));
         }
         final ActionArgumentValue<RemoteService>[] argumentArray = getArguments(action);
-        return new ActionInvocation<RemoteService>(action, argumentArray);
+        return new ActionInvocation<>(action, argumentArray);
     }
 
     private ActionArgumentValue<RemoteService>[] getArguments(final Action<RemoteService> action) {
@@ -77,7 +77,8 @@ abstract class AbstractClingAction<T> implements ClingAction<T> {
             }
         }
         @SuppressWarnings("unchecked")
-        final ActionArgumentValue<RemoteService>[] array = actionArgumentValues.toArray(new ActionArgumentValue[0]);
+        final ActionArgumentValue<RemoteService>[] array = actionArgumentValues
+                .toArray(new ActionArgumentValue[0]);
         return array;
     }
 }

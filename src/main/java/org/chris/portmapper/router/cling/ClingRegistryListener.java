@@ -51,6 +51,7 @@ public class ClingRegistryListener extends DefaultRegistryListener {
         try {
             return foundServices.poll(timeout, unit);
         } catch (final InterruptedException e) {
+            Thread.currentThread().interrupt();
             logger.warn("Interrupted when waiting for a service");
             return null;
         }
@@ -65,7 +66,10 @@ public class ClingRegistryListener extends DefaultRegistryListener {
         }
 
         logger.debug("Found connection service {}", connectionService);
-        foundServices.offer(connectionService);
+        final boolean success = foundServices.offer(connectionService);
+        if (!success) {
+            throw new IllegalStateException("Could not add new service");
+        }
     }
 
     protected Service<?, ?> discoverConnectionService(@SuppressWarnings("rawtypes") final Device<?, Device, ?> device) {
