@@ -3,6 +3,10 @@ sudo: false
 jdk:
   - oraclejdk11
 
+before_script:
+  # Required for sonar to provide blame information
+  - git fetch --unshallow
+
 script:
   - ./gradlew clean check sonarqube --info --stacktrace
 
