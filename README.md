@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/kaklakariada/portmapper.svg?branch=master)](https://travis-ci.org/kaklakariada/portmapper)
 [![Download UPnP PortMapper](https://img.shields.io/sourceforge/dw/upnp-portmapper.svg)](https://sourceforge.net/projects/upnp-portmapper/files/latest/download)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=portmapper&metric=alert_status)](https://sonarcloud.io/dashboard?id=portmapper)
 
 UPnP PortMapper is an easy to use program that manages the port mappings (port forwarding) of a UPnP enabled internet gateway device (router) in the local network. You can easily view, add and remove port mappings.
 
