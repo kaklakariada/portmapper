@@ -14,7 +14,7 @@ The interface is written in English and German. PortMapper automatically selects
 [![Download UPnP PortMapper](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/upnp-portmapper/files/latest/download)
 
 [Download](http://sourceforge.net/projects/upnp-portmapper/files/latest/download) binaries from [SourceForge](http://sourceforge.net/projects/upnp-portmapper/).
-UPnP PortMapper requires JRE 8 (Java Runtime Environment) or later. We recommend Java 11. You can download JDK 11 from [oracle.com](https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html).
+UPnP PortMapper requires JRE 11 (Java Runtime Environment) or later. You can download JDK 11 from [oracle.com](https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html).
 
 ## Usage
 

@@ -10,8 +10,8 @@ repositories {
 }
 
 version = '2.1.2'
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 11
+targetCompatibility = 11
 
 tasks.withType(JavaCompile) {
 	options.compilerArgs << '-Xlint:all'
