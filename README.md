@@ -10,6 +10,10 @@ Using port forwarding, it is possible to access servers (SSH, Web, Game servers,
 
 The interface is written in English and German. PortMapper automatically selects the language according your operating system.
 
+## Changes
+
+See [CHANGELOG.md](CHANGELOG.md) for changes in the new version.
+
 ## Download
 
 [![Download UPnP PortMapper](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/upnp-portmapper/files/latest/download)
