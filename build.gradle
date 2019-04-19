@@ -31,7 +31,6 @@ processResources {
     rename(/(\w+)_en.properties/, '$1.properties')
     rename(/(\w+)_zh_CN.properties/, '$1_zh.properties')
     filter { line -> line.replaceAll(/@VERSION_NUMBER@/, project.version) }
-    filter(org.apache.tools.ant.filters.EscapeUnicode)
 }
 
 jar {
