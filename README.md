@@ -37,6 +37,12 @@ on the command line.
 
 - Update the firmware of your router to the latest version.
 
+### PortMapper fails to start with exception `UnsupportedClassVersionError`
+
+`java.lang.UnsupportedClassVersionError: org/chris/portmapper/PortMapperStarter has been compiled by a more recent version of the Java Runtime (class file version 55.0), this version of the Java Runtime only recognizes class file versions up to 52.0`
+
+This means your Java version is outdated. Please install Java 11 or later from [oracle.com](https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html).
+
 ### Router not found
 
 - Check if UPnP is activated in your router's settings.
