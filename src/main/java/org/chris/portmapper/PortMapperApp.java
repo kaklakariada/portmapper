@@ -106,10 +106,8 @@ public class PortMapperApp extends SingleFrameApplication {
     private static Method getMethod(final Class<?> clazz, final String name, final Class<?>... parameterTypes) {
         try {
             return clazz.getMethod(name, parameterTypes);
-        } catch (final SecurityException e) {
-            throw new RuntimeException("Error getting method " + name + " of class " + clazz.getName(), e);
-        } catch (final NoSuchMethodException e) {
-            throw new RuntimeException("Error getting method " + name + " of class " + clazz.getName(), e);
+        } catch (SecurityException | NoSuchMethodException e) {
+            throw new IllegalStateException("Error getting method " + name + " of class " + clazz.getName(), e);
         }
     }
 
@@ -208,7 +206,7 @@ public class PortMapperApp extends SingleFrameApplication {
         try {
             routerFactory = createRouterFactory();
         } catch (final RouterException e) {
-            logger.error("Could not create router factory: " + e.getMessage(), e);
+            logger.error("Could not create router factory: {}", e.getMessage(), e);
             return;
         }
         logger.info("Searching for routers...");
@@ -216,7 +214,7 @@ public class PortMapperApp extends SingleFrameApplication {
         final Collection<IRouter> foundRouters = routerFactory.findRouters();
 
         // No routers found
-        if (foundRouters == null || foundRouters.size() == 0) {
+        if (foundRouters == null || foundRouters.isEmpty()) {
             throw new RouterException("Did not find a router");
         }
 
@@ -340,25 +338,25 @@ public class PortMapperApp extends SingleFrameApplication {
     private InetAddress getLocalhostAddressFromNetworkInterface() throws RouterException {
         try {
             final List<NetworkInterface> networkInterfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
-            logger.trace("Found network interfaces " + networkInterfaces);
+            logger.trace("Found network interfaces {}", networkInterfaces);
             for (final NetworkInterface nInterface : networkInterfaces) {
                 if (nInterface.isLoopback()) {
-                    logger.debug("Found loopback network interface " + nInterface.getDisplayName() + "/"
-                            + nInterface.getName() + " with IPs " + nInterface.getInterfaceAddresses() + ": ignore.");
+                    logger.debug("Found loopback network interface {}/{} with IPs {}: ignore.",
+                            nInterface.getDisplayName(), nInterface.getName(), nInterface.getInterfaceAddresses());
                 } else if (!nInterface.isUp()) {
-                    logger.debug("Found inactive network interface " + nInterface.getDisplayName() + "/"
-                            + nInterface.getName() + " with IPs " + nInterface.getInterfaceAddresses() + ": ignore.");
+                    logger.debug("Found inactive network interface {}/{} with IPs {}: ignore.",
+                            nInterface.getDisplayName(), nInterface.getName(), nInterface.getInterfaceAddresses());
                 } else {
-                    logger.debug("Found network interface " + nInterface.getDisplayName() + "/" + nInterface.getName()
-                            + " with IPs " + nInterface.getInterfaceAddresses() + ": use this one.");
+                    logger.debug("Found network interface {}/{} with IPs {}: use this one.",
+                            nInterface.getDisplayName(), nInterface.getName(), nInterface.getInterfaceAddresses());
                     final List<InetAddress> addresses = Collections.list(nInterface.getInetAddresses());
-                    if (addresses.size() > 0) {
+                    if (!addresses.isEmpty()) {
                         final InetAddress address = findIPv4Adress(nInterface, addresses);
-                        logger.debug("Found one address for network interface " + nInterface.getName() + ": using "
-                                + address);
+                        logger.debug("Found one address for network interface {}: using {}", nInterface.getName(),
+                                address);
                         return address;
                     }
-                    logger.debug("Network interface " + nInterface.getName() + " has no addresses.");
+                    logger.debug("Network interface {} has no addresses.", nInterface.getName());
                 }
             }
         } catch (final SocketException e) {
@@ -374,12 +372,12 @@ public class PortMapperApp extends SingleFrameApplication {
 
         for (final InetAddress inetAddress : addresses) {
             if (inetAddress.getHostAddress().contains(".")) {
-                logger.debug("Found IPv4 address " + inetAddress);
+                logger.debug("Found IPv4 address {}", inetAddress);
                 return inetAddress;
             }
         }
         final InetAddress address = addresses.get(0);
-        logger.info("Found more than one address for network interface " + nInterface.getName() + ": using " + address);
+        logger.info("Found more than one address for network interface {}: using {}", nInterface.getName(), address);
         return address;
     }
 

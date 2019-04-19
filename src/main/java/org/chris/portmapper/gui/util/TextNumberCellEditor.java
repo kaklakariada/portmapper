@@ -55,20 +55,20 @@ public class TextNumberCellEditor extends AbstractCellEditor implements TableCel
     }
 
     @Override
-    public void keyPressed(final KeyEvent arg0) {
+    public void keyPressed(final KeyEvent event) {
         // ignore
     }
 
     @Override
-    public void keyReleased(final KeyEvent arg0) {
+    public void keyReleased(final KeyEvent event) {
         // ignore
     }
 
     @Override
-    public void keyTyped(final KeyEvent arg0) {
+    public void keyTyped(final KeyEvent event) {
         // The user has clicked the cell
         try {
-            this.currentPortNumber = new Integer(textField.getText());
+            this.currentPortNumber = Integer.valueOf(textField.getText());
         } catch (final NumberFormatException e) {
             // Do nothing
         }

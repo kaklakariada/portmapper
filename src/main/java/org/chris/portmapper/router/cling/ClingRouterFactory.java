@@ -17,7 +17,8 @@
  */
 package org.chris.portmapper.router.cling;
 
-import java.util.Arrays;
+import static java.util.Collections.*;
+
 import java.util.Collections;
 import java.util.EventObject;
 import java.util.List;
@@ -63,8 +64,8 @@ public class ClingRouterFactory extends AbstractRouterFactory {
         }
 
         log.debug("Found service {}", service);
-        return Arrays
-                .<IRouter> asList(new ClingRouter(service, upnpService.getRegistry(), upnpService.getControlPoint()));
+        final ClingRouter router = new ClingRouter(service, upnpService.getRegistry(), upnpService.getControlPoint());
+        return singletonList(router);
     }
 
     private void shutdownServiceOnExit(final UpnpService upnpService) {

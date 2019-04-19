@@ -40,7 +40,7 @@ public class SBBIRouterFactory extends AbstractRouterFactory {
     /**
      * The timeout in milliseconds for finding a router device.
      */
-    private final static int DISCOVERY_TIMEOUT = 5000;
+    private static final int DISCOVERY_TIMEOUT = 5000;
 
     public SBBIRouterFactory(final PortMapperApp app) {
         super(app, "SBBI UPnP lib");

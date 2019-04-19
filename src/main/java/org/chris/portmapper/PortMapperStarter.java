@@ -23,7 +23,7 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
 
 public class PortMapperStarter {
 
-    private final static Logger LOG = LoggerFactory.getLogger(PortMapperStarter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PortMapperStarter.class);
 
     public static void main(final String[] args) {
         redirectJavaUtilLoggingToLogback();
