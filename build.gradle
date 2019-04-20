@@ -11,7 +11,7 @@ repositories {
     flatDir { dirs 'lib' }
 }
 
-version = '2.2.0'
+version = '2.3.0-SNAPSHOT'
 sourceCompatibility = 11
 targetCompatibility = 11
 
