@@ -17,8 +17,10 @@
  */
 package org.chris.portmapper.router.cling;
 
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.stream.Stream;
 
 import org.fourthline.cling.model.meta.Device;
 import org.fourthline.cling.model.meta.Service;
@@ -41,20 +43,21 @@ public class ClingRegistryListener extends DefaultRegistryListener {
     public static final ServiceType IP_SERVICE_TYPE = new UDAServiceType("WANIPConnection", 1);
     public static final ServiceType PPP_SERVICE_TYPE = new UDAServiceType("WANPPPConnection", 1);
 
-    private final SynchronousQueue<Service<?, ?>> foundServices;
+    private final Queue<Service<?, ?>> foundServices;
 
     public ClingRegistryListener() {
-        this.foundServices = new SynchronousQueue<>();
+        this.foundServices = new ConcurrentLinkedQueue<>();
     }
 
-    public Service<?, ?> waitForServiceFound(final long timeout, final TimeUnit unit) {
+    public Stream<Service<?, ?>> waitForServiceFound(final Duration maxWaitTime) {
+        logger.debug("Waiting for {} until routers are found", maxWaitTime);
         try {
-            return foundServices.poll(timeout, unit);
+            Thread.sleep(maxWaitTime.toMillis());
         } catch (final InterruptedException e) {
             Thread.currentThread().interrupt();
             logger.warn("Interrupted when waiting for a service");
-            return null;
         }
+        return foundServices.stream();
     }
 
     @Override
@@ -74,7 +77,7 @@ public class ClingRegistryListener extends DefaultRegistryListener {
 
     protected Service<?, ?> discoverConnectionService(@SuppressWarnings("rawtypes") final Device<?, Device, ?> device) {
         if (!device.getType().equals(IGD_DEVICE_TYPE)) {
-            logger.debug("Found service of wrong type {}, expected {}.", device.getType(), IGD_DEVICE_TYPE);
+            logger.info("Found service of wrong type {}, expected {}.", device.getType(), IGD_DEVICE_TYPE);
             return null;
         }
 
@@ -85,7 +88,7 @@ public class ClingRegistryListener extends DefaultRegistryListener {
             return null;
         }
 
-        logger.debug("Found {} devices", connectionDevices.length);
+        logger.info("Found {} devices", connectionDevices.length);
 
         return findConnectionService(connectionDevices);
     }
@@ -98,15 +101,15 @@ public class ClingRegistryListener extends DefaultRegistryListener {
             final Service pppConnectionService = connectionDevice.findService(PPP_SERVICE_TYPE);
 
             if (ipConnectionService != null) {
-                logger.debug("Device {} supports ip service type: {}", connectionDevice, ipConnectionService);
+                logger.info("Device {} supports ip service type: {}", connectionDevice, ipConnectionService);
                 return ipConnectionService;
             }
             if (pppConnectionService != null) {
-                logger.debug("Device {} supports ppp service type: {}", connectionDevice, pppConnectionService);
+                logger.info("Device {} supports ppp service type: {}", connectionDevice, pppConnectionService);
                 return pppConnectionService;
             }
 
-            logger.debug("IGD {} doesn't support IP or PPP WAN connection service", connectionDevice);
+            logger.info("IGD {} doesn't support IP or PPP WAN connection service", connectionDevice);
         }
         logger.debug("None of the {} devices supports IP or PPP WAN connections", connectionDevices.length);
         return null;

@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Improve ClingRouterFactory: Search for the right device type and return all found devices. This fixes [#43](https://github.com/kaklakariada/portmapper/issues/43) reported by [@elmimmo](https://github.com/elmimmo) and maybe fixes [#41](https://github.com/kaklakariada/portmapper/issues/41) reported by [@TheGamingLab](https://github.com/TheGamingLab).
+
 ### Changed
 
 ## [2.2.0] - 2019-04-19

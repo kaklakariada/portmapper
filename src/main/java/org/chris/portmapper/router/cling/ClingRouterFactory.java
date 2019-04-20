@@ -17,12 +17,11 @@
  */
 package org.chris.portmapper.router.cling;
 
-import static java.util.Collections.*;
+import static java.util.stream.Collectors.*;
 
-import java.util.Collections;
+import java.time.Duration;
 import java.util.EventObject;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.router.AbstractRouterFactory;
@@ -32,6 +31,8 @@ import org.fourthline.cling.DefaultUpnpServiceConfiguration;
 import org.fourthline.cling.UpnpService;
 import org.fourthline.cling.UpnpServiceConfiguration;
 import org.fourthline.cling.UpnpServiceImpl;
+import org.fourthline.cling.model.message.header.UDADeviceTypeHeader;
+import org.fourthline.cling.model.message.header.UpnpHeader;
 import org.fourthline.cling.model.meta.RemoteService;
 import org.jdesktop.application.Application.ExitListener;
 import org.slf4j.Logger;
@@ -39,7 +40,7 @@ import org.slf4j.LoggerFactory;
 
 public class ClingRouterFactory extends AbstractRouterFactory {
 
-    private static final long DISCOVERY_TIMEOUT_SECONDS = 5;
+    private static final Duration DISCOVERY_TIMEOUT = Duration.ofSeconds(3);
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     public ClingRouterFactory(final PortMapperApp app) {
@@ -53,19 +54,18 @@ public class ClingRouterFactory extends AbstractRouterFactory {
         final UpnpService upnpService = new UpnpServiceImpl(config, clingRegistryListener);
         shutdownServiceOnExit(upnpService);
 
-        log.debug("Start searching using upnp service");
-        upnpService.getControlPoint().search();
-        final RemoteService service = (RemoteService) clingRegistryListener
-                .waitForServiceFound(DISCOVERY_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+        final UpnpHeader<?> searchType = new UDADeviceTypeHeader(ClingRegistryListener.IGD_DEVICE_TYPE);
+        log.info("Start searching {} for device type {}", DISCOVERY_TIMEOUT, searchType);
+        upnpService.getControlPoint().search(searchType, (int) DISCOVERY_TIMEOUT.toSeconds());
+        return clingRegistryListener
+                .waitForServiceFound(DISCOVERY_TIMEOUT) //
+                .map(service -> (RemoteService) service)
+                .map(service -> createRouter(service, upnpService)) //
+                .collect(toList());
+    }
 
-        if (service == null) {
-            log.debug("Did not find a service after {} seconds", DISCOVERY_TIMEOUT_SECONDS);
-            return Collections.emptyList();
-        }
-
-        log.debug("Found service {}", service);
-        final ClingRouter router = new ClingRouter(service, upnpService.getRegistry(), upnpService.getControlPoint());
-        return singletonList(router);
+    private ClingRouter createRouter(final RemoteService service, final UpnpService upnpService) {
+        return new ClingRouter(service, upnpService.getRegistry(), upnpService.getControlPoint());
     }
 
     private void shutdownServiceOnExit(final UpnpService upnpService) {
