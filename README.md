@@ -14,14 +14,28 @@ The interface is written in English and German. PortMapper automatically selects
 
 See [CHANGELOG.md](CHANGELOG.md) for changes in the new version.
 
-## Download
+## Getting started
 
 [![Download UPnP PortMapper](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/upnp-portmapper/files/latest/download)
 
 [Download](http://sourceforge.net/projects/upnp-portmapper/files/latest/download) binaries from [SourceForge](http://sourceforge.net/projects/upnp-portmapper/).
-UPnP PortMapper requires JRE 11 (Java Runtime Environment) or later. You can download JDK 11 from [oracle.com](https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html).
 
-## Usage
+### Install Java<a name="install_java"></a>
+
+UPnP PortMapper requires JRE 11 (Java Runtime Environment) or later. I recommend you download OpenJDK 11 JRE from [AdoptOpenJDK](https://adoptopenjdk.net/releases.html?variant=openjdk11&jvmVariant=hotspot).
+
+For Windows please choose the `.msi` installer which will set the environment variable `JAVA_HOME` and add java to the `PATH`.
+
+Verify that the installation was successful by running this command:
+
+```bash
+$ java -version
+openjdk version "11.0.3" 2019-04-16
+OpenJDK Runtime Environment AdoptOpenJDK (build 11.0.3+7)
+OpenJDK 64-Bit Server VM AdoptOpenJDK (build 11.0.3+7, mixed mode)
+```
+
+### Running PortMapper
 
 To run PortMapper, double click on the JAR file or run
 
@@ -41,7 +55,7 @@ on the command line.
 
 `java.lang.UnsupportedClassVersionError: org/chris/portmapper/PortMapperStarter has been compiled by a more recent version of the Java Runtime (class file version 55.0), this version of the Java Runtime only recognizes class file versions up to 52.0`
 
-This means your Java version is outdated. Please install Java 11 or later from [oracle.com](https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html).
+This means your Java version is outdated. Please [install Java 11 or later](#install_java).
 
 ### Router not found
 
