@@ -57,12 +57,12 @@ public class PortMapperCli {
 
         if (cmdLineArgs.getUpnpLib() != null) {
             this.routerFactoryClassName = cmdLineArgs.getUpnpLib();
-            logger.info("Using router factory class '" + this.routerFactoryClassName + "'");
+            logger.info("Using router factory class {}", this.routerFactoryClassName);
         }
 
         if (cmdLineArgs.getRouterIndex() != null) {
             this.routerIndex = cmdLineArgs.getRouterIndex();
-            logger.info("Using router index " + this.routerIndex);
+            logger.info("Using router index {}", this.routerIndex);
         }
 
         if (cmdLineArgs.isPrintHelp()) {
@@ -108,7 +108,7 @@ public class PortMapperCli {
 
     private void printPortForwardings(final IRouter router) throws RouterException {
         final Collection<PortMapping> mappings = router.getPortMappings();
-        if (mappings.size() == 0) {
+        if (mappings.isEmpty()) {
             logger.info("No port mappings found");
             return;
         }
@@ -120,7 +120,7 @@ public class PortMapperCli {
                 b.append("\n");
             }
         }
-        logger.info("Found " + mappings.size() + " port forwardings:\n" + b.toString());
+        logger.info("Found {} port forwardings:\n{}", mappings.size(), b);
     }
 
     private void deletePortForwardings(final IRouter router) throws RouterException {
@@ -128,7 +128,7 @@ public class PortMapperCli {
         final String remoteHost = null;
         final int port = cmdLineArgs.getExternalPort();
         final Protocol protocol = cmdLineArgs.getProtocol();
-        logger.info("Deleting mapping for protocol " + protocol + " and external port " + port);
+        logger.info("Deleting mapping for protocol {} and external port {}", protocol, port);
         router.removePortMapping(protocol, remoteHost, port);
         printPortForwardings(router);
     }
@@ -150,7 +150,7 @@ public class PortMapperCli {
                 : "PortMapper " + protocol + "/" + internalClient + ":" + internalPort;
         final PortMapping mapping = new PortMapping(protocol, remoteHost, externalPort, internalClient, internalPort,
                 description);
-        logger.info("Adding mapping " + mapping);
+        logger.info("Adding mapping {}", mapping);
         router.addPortMapping(mapping);
         printPortForwardings(router);
     }
@@ -212,9 +212,9 @@ public class PortMapperCli {
         // One router found: use it.
         if (foundRouters.size() == 1) {
             final IRouter router = foundRouters.iterator().next();
-            logger.info("Connected to router " + router.getName());
+            logger.info("Connected to router {}", router.getName());
             return router;
-        } else if (foundRouters.size() == 0) {
+        } else if (foundRouters.isEmpty()) {
             logger.error("Found no router");
             return null;
         } else if (foundRouters.size() > 1 && routerIndex == null) {
@@ -223,16 +223,16 @@ public class PortMapperCli {
 
             int index = 0;
             for (final IRouter iRouter : foundRouters) {
-                logger.error("- index " + index + ": " + iRouter.getName());
+                logger.error("- index {}: {}", index, iRouter.getName());
                 index++;
             }
             return null;
         } else if (routerIndex >= 0 && routerIndex < foundRouters.size()) {
             final IRouter router = foundRouters.get(routerIndex);
-            logger.info("Found more than one router, using " + router.getName());
+            logger.info("Found more than one router, using {}", router.getName());
             return router;
         } else {
-            logger.error("Index must be between 0 and " + (foundRouters.size() - 1));
+            logger.error("Index must be between 0 and {}", (foundRouters.size() - 1));
             return null;
         }
     }
