@@ -1,7 +1,6 @@
+dist: xenial
 language: java
 sudo: false
-jdk:
-  - openjdk11
 
 before_script:
   # Required for sonar to provide blame information
