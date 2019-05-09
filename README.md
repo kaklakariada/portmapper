@@ -51,11 +51,13 @@ on the command line.
 
 - Update the firmware of your router to the latest version.
 
-### PortMapper fails to start with exception `UnsupportedClassVersionError`
+### PortMapper fails to start
 
-`java.lang.UnsupportedClassVersionError: org/chris/portmapper/PortMapperStarter has been compiled by a more recent version of the Java Runtime (class file version 55.0), this version of the Java Runtime only recognizes class file versions up to 52.0`
+Error 1: When you double click `portmapper.jar` an error dialog with message `A JNI error has occurred, please check your installation and try again` is displayed.
 
-This means your Java version is outdated. Please [install Java 11 or later](#install_java).
+Error 2: When you start PortMapper from the command line using `java -jar portmapper.jar` you get the following exception: `java.lang.UnsupportedClassVersionError: org/chris/portmapper/PortMapperStarter has been compiled by a more recent version of the Java Runtime (class file version 55.0), this version of the Java Runtime only recognizes class file versions up to 52.0`
+
+Usually this means your Java version is outdated. Please [install Java 11 or later](#install_java). If this does not help: run PortMapper from the command line using `java -jar portmapper.jar` and create a [ticket](https://github.com/kaklakariada/portmapper/issues) containing the stack trace.
 
 ### Router not found
 
