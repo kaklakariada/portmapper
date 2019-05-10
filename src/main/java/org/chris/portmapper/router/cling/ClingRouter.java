@@ -78,7 +78,10 @@ public class ClingRouter extends AbstractRouter {
     @Override
     public int getInternalPort() throws RouterException {
         final URI uri = getUri();
-        return uri != null ? uri.getPort() : null;
+        if (uri == null) {
+            throw new RouterException("Could not get internal port from URL");
+        }
+        return uri.getPort();
     }
 
     private URI getUri() {

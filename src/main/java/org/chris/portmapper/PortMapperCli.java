@@ -227,12 +227,12 @@ public class PortMapperCli {
                 index++;
             }
             return null;
-        } else if (routerIndex >= 0 && routerIndex < foundRouters.size()) {
+        } else if (routerIndex != null && routerIndex >= 0 && routerIndex < foundRouters.size()) {
             final IRouter router = foundRouters.get(routerIndex);
             logger.info("Found more than one router, using {}", router.getName());
             return router;
         } else {
-            logger.error("Index must be between 0 and {}", (foundRouters.size() - 1));
+            logger.error("Index {} must be between 0 and {}", routerIndex, (foundRouters.size() - 1));
             return null;
         }
     }
