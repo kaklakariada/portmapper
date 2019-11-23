@@ -16,15 +16,15 @@ sourceCompatibility = 11
 targetCompatibility = 11
 
 tasks.withType(JavaCompile) {
-	options.compilerArgs << '-Xlint:all'
-	options.encoding = 'UTF-8'
+    options.compilerArgs << '-Xlint:all'
+    options.encoding = 'UTF-8'
 }
 
 test {
-	if(logger.infoEnabled) {
-		testLogging.showStandardStreams = true
-	}
-	jvmArgs '-XX:+HeapDumpOnOutOfMemoryError', '-enableassertions'
+    if(logger.infoEnabled) {
+        testLogging.showStandardStreams = true
+    }
+    jvmArgs '-XX:+HeapDumpOnOutOfMemoryError', '-enableassertions'
 }
 
 processResources {
@@ -34,16 +34,16 @@ processResources {
 }
 
 jar {
-	from {
-		configurations.compileClasspath.collect {
-			it.isDirectory() ? it : zipTree(it)
-		}
-		configurations.runtimeClasspath.collect {
-			it.isDirectory() ? it : zipTree(it)
-		}
-	}
+    from {
+        configurations.compileClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+        configurations.runtimeClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
     duplicatesStrategy = DuplicatesStrategy.INCLUDE // allow duplicates
-	manifest { attributes 'Main-Class': 'org.chris.portmapper.PortMapperStarter' }
+    manifest { attributes 'Main-Class': 'org.chris.portmapper.PortMapperStarter' }
 }
 
 dependencies {
