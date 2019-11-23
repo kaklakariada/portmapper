@@ -7,7 +7,7 @@ before_script:
   - git fetch --unshallow
 
 script:
-  - ./gradlew clean check sonarqube --info --stacktrace
+  - ./gradlew clean check sonarqube --info --stacktrace --warning-mode all
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
