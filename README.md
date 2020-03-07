@@ -169,6 +169,16 @@ PortMapper is translated to English (`en`) and German (`de`). It automatically d
 $ java -Duser.language=de -jar portmapper.jar
 ```
 
+### Using a custom directory for configuration files
+
+PortMapper stores its configuration as XML files in a folder. Under Windows this folder is located at `%AppData%\UnknownApplicationVendor\PortMapper\` (e.g. `C:\Users\<username>\AppData\Roaming\UnknownApplicationVendor\PortMapper`). You can change this folder by specifying a command line argument:
+
+```bash
+java -Dportmapper.config.dir=C:/path/to/config -jar portmapper.jar
+```
+
+Create an empty directory before starting, else Portmapper will fail with an error message.
+
 ## Development
 
 Build PortMapper on the command line:
