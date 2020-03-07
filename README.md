@@ -113,6 +113,8 @@ goto loop
 
 Press `Ctrl+C` to stop the infinite loop.
 
+See [the command line interface section](#command-line-interface) for details about using the command line interface and available options.
+
 ### Known issues
 
 - Under Ubuntu Linux it is not possible to retrieve the IP address of the local host, the address must be entered manually.
@@ -195,7 +197,9 @@ PortMapper stores its configuration as XML files in a folder. Under Windows this
 java -Dportmapper.config.dir=C:/path/to/config -jar portmapper.jar
 ```
 
-Create an empty directory before starting, else Portmapper will fail with an error message.
+Create an empty directory before starting, else PortMapper will fail with an error message.
+
+The configuration files are only used when PortMapper runs in GUI mode. When running in command line mode the configuration files are not used. Instead you must specify all settings as command line arguments.
 
 ## Development
 
