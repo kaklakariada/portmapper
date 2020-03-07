@@ -95,6 +95,24 @@ If you have multiple routers in your network please use library `org.chris.portm
 
 If you have a high resolution display and the fonts (e.g. the log) in PortMapper is too small, please upgrade to Java 9 or later. See http://openjdk.java.net/jeps/263 for details.
 
+### Port mappings are expiring
+
+Some routers delete port mappings after some time. To avoid this you can use the command line interface of PortMapper to add the port mapping in an infinite loop. Under Windows you can use a `.cmd` script like this:
+
+```cmd
+:loop
+
+rem Add port mapping
+java -jar portmapper.jar -add -externalPort <port> -internalPort <port> -protocol tcp
+
+rem Wait for 6 hours (6*60*60 seconds)
+timeout 21600
+
+goto loop
+```
+
+Press `Ctrl+C` to stop the infinite loop.
+
 ### Known issues
 
 - Under Ubuntu Linux it is not possible to retrieve the IP address of the local host, the address must be entered manually.
