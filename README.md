@@ -218,6 +218,25 @@ $ java -jar build/libs/portmapper-*.jar
 $ ./gradlew licenseFormat
 ```
 
+### Publish to jcenter
+
+1. Add your bintray credentials to `~/.gradle/gradle.properties`:
+
+    ```properties
+    bintrayUser = <user>
+    bintrayApiKey = <apiKey>
+    ```
+
+2. Increment version number in `build.gradle` and `README.md`, commit and push.
+3. Run the following command:
+
+    ```bash
+    $ ./gradlew clean check bintrayUpload --info
+    ```
+
+4. Create a new [release](https://github.com/kaklakariada/portmapper/releases) on GitHub.
+5. Sign in at https://bintray.com/, go to https://bintray.com/kaklakariada/maven and publish the uploaded artifacts.
+
 ## Participate
 
 Your feedback is most welcome at the project page:
