@@ -6,3 +6,4 @@ bin/
 .classpath
 .project
 .nb-gradle/
+/.idea/
