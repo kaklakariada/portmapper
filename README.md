@@ -115,6 +115,16 @@ Press `Ctrl+C` to stop the infinite loop.
 
 See [the command line interface section](#command-line-interface) for details about using the command line interface and available options.
 
+### Error when fetching port mappings
+
+Sometimes you get a log message like this:
+
+```
+Got error response when fetching port mapping for entry number 0: '(IncomingActionResponseMessage) 500 Internal Server Error'. Stop getting more entries.
+```
+
+This error message is expected. UPnP does not allow getting the total number of available port mappings. That's why PortMapper continues fetching the mappings until it receives an error like this one. You can ignore these messages, they don't mean there is a problem.
+
 ### Known issues
 
 - Under Ubuntu Linux it is not possible to retrieve the IP address of the local host, the address must be entered manually.
