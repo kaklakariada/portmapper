@@ -21,8 +21,10 @@
 package org.chris.portmapper.router;
 
 import java.io.IOException;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import org.slf4j.Logger;
@@ -53,11 +55,16 @@ public abstract class AbstractRouter implements IRouter {
     public String getLocalHostAddress() throws RouterException {
         logger.debug("Get IP of localhost");
 
-        final InetAddress localHostIP = getLocalHostAddressFromSocket();
+        InetAddress localHostIP = getLocalHostAddressFromSocket();
 
         // We do not want an address like 127.0.0.1
         if (localHostIP.getHostAddress().startsWith("127.")) {
-            throw new RouterException("Only found an address that begins with '127.' when retrieving IP of localhost");
+            localHostIP = getLocalHostAddressFromDatagramSocket();
+
+            if (localHostIP.getHostAddress().startsWith("127.")) {
+                throw new RouterException(
+                        "Only found an address that begins with '127.' when retrieving IP of localhost");
+            }
         }
 
         return localHostIP.getHostAddress();
