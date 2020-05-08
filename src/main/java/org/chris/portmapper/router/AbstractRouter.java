@@ -112,6 +112,28 @@ public abstract class AbstractRouter implements IRouter {
         return localHostIP;
     }
 
+    /**
+     * Get the ip of the local host by attempting to send a datagram to an address that may not exist in a port that
+     * probably has nothing listening
+     *
+     * @return the ip of the local host.
+     * @throws RouterException
+     */
+    private InetAddress getLocalHostAddressFromDatagramSocket() throws RouterException {
+        try (final DatagramSocket socket = new DatagramSocket()) {
+            // What matters for IP and port is that they are valid
+            // The main process here happens in C code but it appears to work in linux and windows
+            socket.connect(InetAddress.getByName("255.255.255.0"), 0);
+            return socket.getLocalAddress();
+        } catch (final UnknownHostException e) {
+            // Should never happen
+            throw new RouterException("Error with Unknown host. Should have been impossible", e);
+        } catch (final SocketException e) {
+            // Should never happen
+            throw new RouterException("Socket failed when trying to get local IP address", e);
+        }
+    }
+
     @Override
     public void close() {
         this.disconnect();
