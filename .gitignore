@@ -2,6 +2,7 @@
 /build/
 /bin/
 /.settings/org.eclipse.buildship.core.prefs
+/.settings/org.sonarlint.eclipse.core.prefs
 /.classpath
 /.project
 /.nb-gradle/
