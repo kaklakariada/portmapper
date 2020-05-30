@@ -28,7 +28,7 @@ import org.chris.portmapper.Settings;
  * This class stores a port mapping preset containing a description, internal and remote host and a {@link List} of
  * {@link SinglePortMapping}s.
  */
-public class PortMappingPreset implements Cloneable, Serializable {
+public class PortMappingPreset implements Serializable {
 
     private static final long serialVersionUID = 3749136884938395765L;
 

@@ -26,7 +26,7 @@ import java.io.Serializable;
  * This class is used by {@link PortMapping} to store the information about a single port mapping, i.e. the protocol
  * (TCP or UDP) and internal and extern port.
  */
-public class SinglePortMapping implements Cloneable, Serializable {
+public class SinglePortMapping implements Serializable {
 
     private static final long serialVersionUID = 7458514232916039775L;
     private int externalPort;

@@ -25,7 +25,7 @@ import net.sbbi.upnp.messages.ActionResponse;
 /**
  * This immutable class represents a port mapping / forwarding on a router.
  */
-public class PortMapping implements Cloneable {
+public class PortMapping {
 
     public static final String MAPPING_ENTRY_LEASE_DURATION = "NewLeaseDuration";
     public static final String MAPPING_ENTRY_ENABLED = "NewEnabled";
@@ -148,11 +148,5 @@ public class PortMapping implements Cloneable {
     @Override
     public String toString() {
         return description;
-    }
-
-    @Override
-    public Object clone() {
-        return new PortMapping(protocol, remoteHost, externalPort, internalClient, internalPort, description, enabled,
-                leaseDuration);
     }
 }
