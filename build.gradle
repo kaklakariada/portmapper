@@ -80,6 +80,15 @@ java {
     withSourcesJar()
 }
 
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.enabled true
+    }
+}
+
+tasks["sonarqube"].dependsOn(tasks["jacocoTestReport"])
+
 publishing {
     publications {
         BintrayPublication(MavenPublication) {
