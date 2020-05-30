@@ -21,8 +21,10 @@
 package org.chris.portmapper.router;
 
 import java.io.IOException;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import org.slf4j.Logger;
@@ -53,11 +55,16 @@ public abstract class AbstractRouter implements IRouter {
     public String getLocalHostAddress() throws RouterException {
         logger.debug("Get IP of localhost");
 
-        final InetAddress localHostIP = getLocalHostAddressFromSocket();
+        InetAddress localHostIP = getLocalHostAddressFromSocket();
 
         // We do not want an address like 127.0.0.1
         if (localHostIP.getHostAddress().startsWith("127.")) {
-            throw new RouterException("Only found an address that begins with '127.' when retrieving IP of localhost");
+            localHostIP = getLocalHostAddressFromDatagramSocket();
+
+            if (localHostIP.getHostAddress().startsWith("127.")) {
+                throw new RouterException(
+                        "Only found an address that begins with '127.' when retrieving IP of localhost");
+            }
         }
 
         return localHostIP.getHostAddress();
@@ -110,6 +117,28 @@ public abstract class AbstractRouter implements IRouter {
             throw new RouterException("Could not get IP of localhost.", e);
         }
         return localHostIP;
+    }
+
+    /**
+     * Get the ip of the local host by attempting to send a datagram to an address that may not exist in a port that
+     * probably has nothing listening
+     *
+     * @return the ip of the local host.
+     * @throws RouterException
+     */
+    private InetAddress getLocalHostAddressFromDatagramSocket() throws RouterException {
+        try (final DatagramSocket socket = new DatagramSocket()) {
+            // What matters for IP and port is that they are valid
+            // The main process here happens in C code but it appears to work in linux and windows
+            socket.connect(InetAddress.getByName("255.255.255.0"), 0);
+            return socket.getLocalAddress();
+        } catch (final UnknownHostException e) {
+            // Should never happen
+            throw new RouterException("Error with Unknown host. Should have been impossible", e);
+        } catch (final SocketException e) {
+            // Should never happen
+            throw new RouterException("Socket failed when trying to get local IP address", e);
+        }
     }
 
     @Override
