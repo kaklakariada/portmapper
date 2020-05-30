@@ -8,8 +8,11 @@ plugins {
 }
 
 repositories {
-    maven { url 'http://4thline.org/m2' }
     jcenter()
+    maven {
+        url 'http://4thline.org/m2'
+        allowInsecureProtocol true
+    }
     flatDir { dirs 'lib' }
 }
 
