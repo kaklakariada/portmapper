@@ -47,6 +47,7 @@ public class LogbackConfiguration {
         configureLogger(appender);
     }
 
+    @SuppressWarnings("java:S4792") // Logger configuration is ok
     private void configureLogger(final OutputStreamAppender<ILoggingEvent> appender) {
         final Logger logbackLogger = getLogger();
         logbackLogger.addAppender(appender);
@@ -76,6 +77,7 @@ public class LogbackConfiguration {
         return encoder;
     }
 
+    @SuppressWarnings("java:S4792") // Logger configuration is ok
     public void setLogLevel(final String logLevel) {
         final Level level = Level.toLevel(logLevel);
         getLogger().setLevel(level);

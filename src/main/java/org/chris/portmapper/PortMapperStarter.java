@@ -25,6 +25,7 @@ public class PortMapperStarter {
 
     private static final Logger LOG = LoggerFactory.getLogger(PortMapperStarter.class);
 
+    @SuppressWarnings("java:S4823") // Command line arguments are used securely
     public static void main(final String[] args) {
         redirectJavaUtilLoggingToLogback();
         final PortMapperCli cli = new PortMapperCli();

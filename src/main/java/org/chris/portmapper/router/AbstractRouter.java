@@ -77,6 +77,7 @@ public abstract class AbstractRouter implements IRouter {
      * @return the ip of the local host.
      * @throws RouterException
      */
+    @SuppressWarnings("java:S4818") // Sockets are used safely here
     private InetAddress getLocalHostAddressFromSocket() throws RouterException {
         InetAddress localHostIP = null;
         try {
@@ -126,6 +127,7 @@ public abstract class AbstractRouter implements IRouter {
      * @return the ip of the local host.
      * @throws RouterException
      */
+    @SuppressWarnings("java:S1313") // Hard coded IP address used by intention
     private InetAddress getLocalHostAddressFromDatagramSocket() throws RouterException {
         try (final DatagramSocket socket = new DatagramSocket()) {
             // What matters for IP and port is that they are valid
