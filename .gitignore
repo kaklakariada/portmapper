@@ -1,8 +1,8 @@
-.gradle/
-target/
-build/
-bin/
-.settings/org.eclipse.buildship.core.prefs
-.classpath
-.project
-.nb-gradle/
+/.gradle/
+/build/
+/bin/
+/.settings/org.eclipse.buildship.core.prefs
+/.classpath
+/.project
+/.nb-gradle/
+/.idea/
