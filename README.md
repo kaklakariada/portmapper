@@ -1,10 +1,9 @@
 # UPnP PortMapper
 
 [![Java CI](https://github.com/kaklakariada/portmapper/workflows/Java%20CI/badge.svg)](https://github.com/kaklakariada/portmapper/actions?query=workflow%3A%22Java+CI%22)
-[![Build Status](https://travis-ci.org/kaklakariada/portmapper.svg?branch=master)](https://travis-ci.org/kaklakariada/portmapper)
 [![Download UPnP PortMapper](https://img.shields.io/sourceforge/dw/upnp-portmapper.svg)](https://sourceforge.net/projects/upnp-portmapper/files/latest/download)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=portmapper&metric=alert_status)](https://sonarcloud.io/dashboard?id=portmapper)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=portmapper&metric=coverage)](https://sonarcloud.io/dashboard?id=portmapper)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=com.github.kaklakariada%3Aportmapper&metric=alert_status)](https://sonarcloud.io/dashboard?id=portmapper)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=com.github.kaklakariada%3Aportmapper&metric=coverage)](https://sonarcloud.io/dashboard?id=portmapper)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/kaklakariada/portmapper.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/kaklakariada/portmapper/alerts/)
 [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/kaklakariada/portmapper.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/kaklakariada/portmapper/context:java)
 
