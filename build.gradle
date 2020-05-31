@@ -5,6 +5,7 @@ plugins {
     id "com.github.hierynomus.license" version "0.15.0"
     id "org.sonarqube" version "3.0"
     id "com.jfrog.bintray" version "1.8.5"
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
 repositories {
@@ -39,23 +40,29 @@ processResources {
     filter { line -> line.replaceAll(/@VERSION_NUMBER@/, project.version) }
 }
 
-task fatJar(type: Jar) {
-    classifier = 'with-dependencies'
-    from {
-        configurations.compileClasspath.collect {
-            it.isDirectory() ? it : zipTree(it)
-        }
-        configurations.runtimeClasspath.collect {
-            it.isDirectory() ? it : zipTree(it)
-        }
+shadowJar {
+    archiveBaseName = 'portmapper'
+    archiveVersion = null
+}
+
+def mainClass = 'org.chris.portmapper.PortMapperStarter'
+
+jar {
+    manifest {
+        attributes 'Main-Class': mainClass
     }
-    duplicatesStrategy = DuplicatesStrategy.INCLUDE // allow duplicates
-    manifest { attributes 'Main-Class': 'org.chris.portmapper.PortMapperStarter' }
-    with jar
+}
+
+tasks["build"].dependsOn(shadowJar)
+
+task run(type: JavaExec, dependsOn: shadowJar) {
+    classpath = shadowJar.outputs.files
+    main = mainClass
+    workingDir = rootProject.projectDir
 }
 
 artifacts {
-    archives fatJar
+    archives shadowJar
 }
 
 dependencies {
@@ -99,7 +106,7 @@ publishing {
             groupId project.group
             artifactId project.name
             version project.version
-            artifact fatJar
+            artifact shadowJar
         }
     }
 }
