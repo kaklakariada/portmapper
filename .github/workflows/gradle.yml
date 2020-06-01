@@ -41,6 +41,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    - run: ls -R build/
     - name: Archive portmapper binary
       uses: actions/upload-artifact@v1
       with:
