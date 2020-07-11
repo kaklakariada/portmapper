@@ -17,7 +17,7 @@ repositories {
     flatDir { dirs 'lib' }
 }
 
-version = '2.3.0-SNAPSHOT'
+version = '2.2.1'
 group 'com.github.kaklakariada'
 sourceCompatibility = 11
 targetCompatibility = 11

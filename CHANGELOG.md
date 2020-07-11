@@ -6,8 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.1] - 2020-07-11
+
 ### Fixed
 
+- Improve getting local IP address, thanks to [brunoais](https://github.com/brunoais) for pull request [#54](https://github.com/kaklakariada/portmapper/pull/54)
 - Improve ClingRouterFactory: Search for the right device type and return all found devices. This fixes [#43](https://github.com/kaklakariada/portmapper/issues/43) reported by [@elmimmo](https://github.com/elmimmo) and maybe fixes [#41](https://github.com/kaklakariada/portmapper/issues/41) reported by [@TheGamingLab](https://github.com/TheGamingLab).
 
 ### Changed
