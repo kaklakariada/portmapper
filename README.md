@@ -213,6 +213,22 @@ The configuration files are only used when PortMapper runs in GUI mode. When run
 
 ## Development
 
+### Using PortMapper as a library
+
+PortMapper is available as a Maven dependency at [jcenter](https://bintray.com/bintray/jcenter). Use the following coordinates:
+
+* Gradle: `com.github.kaklakariada:portmapper:2.2.1`
+* Maven:
+```xml
+<dependency>
+  <groupId>com.github.kaklakariada</groupId>
+  <artifactId>portmapper</artifactId>
+  <version>2.2.1</version>
+</dependency>
+```
+
+### Building PortMapper
+
 Build PortMapper on the command line:
 
 ```bash
@@ -246,6 +262,7 @@ $ ./gradlew licenseFormat
 
 4. Create a new [release](https://github.com/kaklakariada/portmapper/releases) on GitHub.
 5. Sign in at https://bintray.com/, go to https://bintray.com/kaklakariada/maven and publish the uploaded artifacts.
+6. Artifacts will be published at https://jcenter.bintray.com/com/github/kaklakariada/portmapper/
 
 ## Participate
 
