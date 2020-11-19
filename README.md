@@ -56,11 +56,29 @@ on the command line.
 
 ### PortMapper fails to start
 
-Error 1: When you double click `portmapper.jar` an error dialog with message `A JNI error has occurred, please check your installation and try again` is displayed.
+**Error 1**: When you double click `portmapper.jar`, an error dialog with the following message is displayed:
 
-Error 2: When you start PortMapper from the command line using `java -jar portmapper.jar` you get the following exception: `java.lang.UnsupportedClassVersionError: org/chris/portmapper/PortMapperStarter has been compiled by a more recent version of the Java Runtime (class file version 55.0), this version of the Java Runtime only recognizes class file versions up to 52.0`
+`A JNI error has occurred, please check your installation and try again`
+
+**Error 2**: When you start PortMapper from the command line using `java -jar portmapper.jar` you get the following exception:
+
+`java.lang.UnsupportedClassVersionError: org/chris/portmapper/PortMapperStarter has been compiled by a more recent version of the Java Runtime (class file version 55.0), this version of the Java Runtime only recognizes class file versions up to 52.0`
 
 Usually this means your Java version is outdated. Please [install Java 11 or later](#install_java). If this does not help: run PortMapper from the command line using `java -jar portmapper.jar` and create a [ticket](https://github.com/kaklakariada/portmapper/issues) containing the stack trace.
+
+### PortMapper fails to start with ClassNotFoundException
+
+```
+$ java -Duser.language=en -jar portmapper.jar
+Error: Could not find or load main class .language=en
+Caused by: java.lang.ClassNotFoundException: /language=en
+```
+
+This error occurs when using PowerShell to start PortMapper with a system property argument, e.g. `-Duser.language=en`. To fix this, enclose the system property in double quotes, e.g.:
+
+```
+$ java "-Duser.language=en" -jar portmapper.jar
+```
 
 ### Router not found
 
@@ -193,10 +211,10 @@ PortMapper includes three third party UPnP libraries. If the default does not wo
 
 ### Select language
 
-PortMapper is translated to English (`en`) and German (`de`). It automatically detects the operating system's language using English as default. If you want use a different language, add command line option `-Duser.language=de` to java, e.g.:
+PortMapper is translated to English (`en`) and German (`de`). It automatically detects the operating system's language, using English as default. If you want use a different language, add command line option `-Duser.language=de` to java, e.g.:
 
 ```bash
-$ java -Duser.language=de -jar portmapper.jar
+$ java "-Duser.language=de" -jar portmapper.jar
 ```
 
 ### Using a custom directory for configuration files
