@@ -23,7 +23,7 @@ See [CHANGELOG.md](CHANGELOG.md) for changes in the new version.
 
 [Download](http://sourceforge.net/projects/upnp-portmapper/files/latest/download) binaries from [SourceForge](http://sourceforge.net/projects/upnp-portmapper/).
 
-### Install Java<a name="install_java"></a>
+### Install Java 11<a name="install_java"></a>
 
 UPnP PortMapper requires JRE 11 (Java Runtime Environment) or later. I recommend you download OpenJDK 11 JRE from [AdoptOpenJDK](https://adoptopenjdk.net/releases.html?variant=openjdk11&jvmVariant=hotspot).
 
@@ -37,6 +37,10 @@ openjdk version "11.0.3" 2019-04-16
 OpenJDK Runtime Environment AdoptOpenJDK (build 11.0.3+7)
 OpenJDK 64-Bit Server VM AdoptOpenJDK (build 11.0.3+7, mixed mode)
 ```
+
+### Using PortMapper with Java 1.8
+
+If you are still using Java 1.8 and can't upgrade to Java 11, you can use [PortMapper version 2.1.1](https://github.com/kaklakariada/portmapper/releases/tag/v2.1.1).
 
 ### Running PortMapper
 
