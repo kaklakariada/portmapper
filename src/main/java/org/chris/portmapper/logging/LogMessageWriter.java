@@ -25,8 +25,7 @@ import javax.swing.JTextArea;
 
 /**
  * The {@link LogMessageWriter} copies every written string to a {@link LogMessageListener}. All written strings are
- * buffered, so no string is missed. A {@link LogMessageListener} can be registered using method
- * {@link #registerListener(JTextArea)}.
+ * buffered, so no string is missed.
  */
 public class LogMessageWriter extends Writer {
 

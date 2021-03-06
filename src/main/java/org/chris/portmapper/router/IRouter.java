@@ -33,7 +33,7 @@ public interface IRouter extends AutoCloseable {
      * Get the IP address of the local host.
      *
      * @return IP address of the local host or <code>null</code>, if the address could not be determined.
-     * @throws RouterException
+     * @throws RouterException in case an unexpected error occurs.
      */
     public String getLocalHostAddress() throws RouterException;
 
@@ -41,6 +41,7 @@ public interface IRouter extends AutoCloseable {
      * Get the external IP of the router.
      *
      * @return the external IP of the router.
+     * @throws RouterException in case an unexpected error occurs.
      */
     public abstract String getExternalIPAddress() throws RouterException;
 
@@ -48,7 +49,6 @@ public interface IRouter extends AutoCloseable {
      * Get the internal host name or IP of the router.
      *
      * @return the internal host name or IP of the router.
-     * @throws RouterException
      */
     public abstract String getInternalHostName();
 
@@ -56,7 +56,7 @@ public interface IRouter extends AutoCloseable {
      * Get the internal port of the router.
      *
      * @return the internal port of the router.
-     * @throws RouterException
+     * @throws RouterException in case an unexpected error occurs.
      */
     public abstract int getInternalPort() throws RouterException;
 
@@ -72,7 +72,7 @@ public interface IRouter extends AutoCloseable {
     /**
      * Write information about the router to the log.
      *
-     * @throws RouterException
+     * @throws RouterException in case an unexpected error occurs.
      */
     public abstract void logRouterInfo() throws RouterException;
 
@@ -81,7 +81,7 @@ public interface IRouter extends AutoCloseable {
      *
      * @param mappings
      *            the port mappings to add.
-     * @throws RouterException
+     * @throws RouterException in case an unexpected error occurs.
      */
     public abstract void addPortMappings(Collection<PortMapping> mappings) throws RouterException;
 
@@ -90,7 +90,7 @@ public interface IRouter extends AutoCloseable {
      *
      * @param mapping
      *            the port mapping to add.
-     * @throws RouterException
+     * @throws RouterException in case an unexpected error occurs.
      */
     public abstract void addPortMapping(PortMapping mapping) throws RouterException;
 
@@ -99,17 +99,17 @@ public interface IRouter extends AutoCloseable {
      *
      * @param mapping
      *            the port mapping to remove.
-     * @throws RouterException
+     * @throws RouterException in case an unexpected error occurs.
      */
     public abstract void removeMapping(PortMapping mapping) throws RouterException;
 
     /**
      * Remove the port mapping with the given data from the router.
      *
-     * @param protocol
-     * @param remoteHost
-     * @param externalPort
-     * @throws RouterException
+     * @param protocol the port mapping's network protocol (TCP or UDP).
+     * @param remoteHost the port mapping's remote host name.
+     * @param externalPort the port mapping's external port number.
+     * @throws RouterException in case an unexpected error occurs.
      */
     public abstract void removePortMapping(Protocol protocol, String remoteHost, int externalPort)
             throws RouterException;

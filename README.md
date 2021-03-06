@@ -275,7 +275,7 @@ $ java -jar build/libs/portmapper-*.jar
 $ ./gradlew licenseFormat
 ```
 
-### Publish to jcenter
+### Publish to Maven Central
 
 1. Add the following to your `~/.gradle/gradle.properties`:
 
