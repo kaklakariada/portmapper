@@ -3,10 +3,8 @@
 [![Java CI](https://github.com/kaklakariada/portmapper/workflows/Java%20CI/badge.svg)](https://github.com/kaklakariada/portmapper/actions?query=workflow%3A%22Java+CI%22)
 [![Download UPnP PortMapper](https://img.shields.io/sourceforge/dw/upnp-portmapper.svg)](https://sourceforge.net/projects/upnp-portmapper/files/latest/download)
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.kaklakariada/portmapper)](https://search.maven.org/artifact/com.github.kaklakariada/portmapper)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=com.github.kaklakariada%3Aportmapper&metric=alert_status)](https://sonarcloud.io/dashboard?id=portmapper)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=com.github.kaklakariada%3Aportmapper&metric=coverage)](https://sonarcloud.io/dashboard?id=portmapper)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/kaklakariada/portmapper.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/kaklakariada/portmapper/alerts/)
-[![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/kaklakariada/portmapper.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/kaklakariada/portmapper/context:java)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=com.github.kaklakariada%3Aportmapper&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.github.kaklakariada%3Aportmapper)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=com.github.kaklakariada%3Aportmapper&metric=coverage)](https://sonarcloud.io/dashboard?id=com.github.kaklakariada%3Aportmapper)
 
 UPnP PortMapper is an easy to use program that manages the port mappings (port forwarding) of a UPnP enabled internet gateway device (router) in the local network. You can easily view, add and remove port mappings.
 
