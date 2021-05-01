@@ -87,6 +87,7 @@ $ java "-Duser.language=en" -jar portmapper.jar
 
 - Check if UPnP is activated in your router's settings.
 - Use a different UPnP library in the settings. Please note that `DummyRouterFactory` is just for testing.
+- Check if a network bridge is active on your computer. Try to deactive it as it may [prevent detection of the router](https://sourceforge.net/p/upnp-portmapper/bugs/75/#54ef).
 - Set Log level to `TRACE` in the settings, connect again and check the log.
 
 #### Manually specify location URL
