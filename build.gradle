@@ -90,7 +90,7 @@ dependencies {
     runtimeOnly 'commons-jxpath:commons-jxpath:1.1' // sbbi
 
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.mockito:mockito-core:3.8.0'
+    testImplementation 'org.mockito:mockito-core:3.9.0'
 }
 
 license {
