@@ -30,11 +30,12 @@ jobs:
       run: ./gradlew build --info --stacktrace --warning-mode summary
     - name: Publish Test Report
       uses: scacap/action-surefire-report@v1
-      if: always()
+      if: ${{ always() && github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' }}
       with:
         report_paths: '**/build/test-results/*/TEST-*.xml'
         github_token: ${{ secrets.GITHUB_TOKEN }}
     - name: Sonar analysis
+      if: ${{ env.SONAR_TOKEN != null }}
       run: |
         ./gradlew sonarqube -Dsonar.host.url=https://sonarcloud.io \
                             -Dsonar.organization=kaklakariada-github \
