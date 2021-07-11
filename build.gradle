@@ -68,7 +68,7 @@ tasks["build"].dependsOn(shadowJar)
 
 task run(type: JavaExec, dependsOn: shadowJar) {
     classpath = shadowJar.outputs.files
-    main = mainClass
+    mainClass = mainClass
     workingDir = rootProject.projectDir
 }
 
@@ -100,7 +100,7 @@ license {
 jacocoTestReport {
     dependsOn test
     reports {
-        xml.enabled true
+        xml.required = true
     }
 }
 
