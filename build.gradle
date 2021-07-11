@@ -81,7 +81,7 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:1.7.31'
     implementation 'org.slf4j:jul-to-slf4j:1.7.31'
     implementation 'ch.qos.logback:logback-classic:1.2.3'
-    implementation 'com.miglayout:miglayout-swing:5.2'
+    implementation 'com.miglayout:miglayout-swing:11.0'
     implementation 'org.jdesktop.bsaf:bsaf:1.9.2'
     implementation ':sbbi-upnplib:1.0.4'
     implementation 'org.fourthline.cling:cling-support:2.1.2'
