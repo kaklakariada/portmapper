@@ -147,6 +147,10 @@ Got error response when fetching port mapping for entry number 0: '(IncomingActi
 
 This error message is expected. UPnP does not allow getting the total number of available port mappings. That's why PortMapper continues fetching the mappings until it receives an error like this one. You can ignore these messages, they don't mean there is a problem.
 
+### Ports are not forwarded<a name="verify_server_running"></a>
+
+If you use a tool to verify that a port forwarding works, please make sure to start the server process. If no server is running on the forwarded port, the tool might show the port as closed. See issue [#88](https://github.com/kaklakariada/portmapper/issues/88).
+
 ### Known issues
 
 - Under Ubuntu Linux it is not possible to retrieve the IP address of the local host, the address must be entered manually.
