@@ -279,6 +279,12 @@ $ java -jar build/libs/portmapper-*.jar
 $ ./gradlew licenseFormat
 ```
 
+### Check if dependencies are up-to-date
+
+```bash
+$ ./gradlew dependencyUpdates
+```
+
 ### Publish to Maven Central
 
 1. Add the following to your `~/.gradle/gradle.properties`:
