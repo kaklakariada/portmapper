@@ -10,33 +10,52 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [11, 16]
+    env:
+      DEFAULT_JAVA: 11
 
     steps:
+
     - uses: actions/checkout@v1
+
     - name: Cache Gradle packages and wrapper
       uses: actions/cache@v2
       with:
         path: |
           ~/.gradle/caches
           ~/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-        restore-keys: ${{ runner.os }}-gradle-
-    - name: Set up JDK 11
+        key: ${{ runner.os }}-java-${{ matrix.java }}-gradle-${{ hashFiles('**/*.gradle*') }}
+        restore-keys: ${{ runner.os }}-java-${{ matrix.java }}-gradle
+
+    - name: Cache SonarQube packages
+      uses: actions/cache@v2
+      with:
+        path: ~/.sonar/cache
+        key: ${{ runner.os }}-java-${{ matrix.java }}-sonar
+        restore-keys: ${{ runner.os }}-java-${{ matrix.java }}-sonar
+
+    - name: Set up JDK ${{ matrix.java }}
       uses: actions/setup-java@v2
       with:
         distribution: 'adopt'
-        java-version: 11
+        java-version: ${{ matrix.java }}
+
     - uses: gradle/wrapper-validation-action@v1
+    
     - name: Build with Gradle
-      run: ./gradlew build --info --warning-mode summary
-    - name: Publish Test Report
+      run: ./gradlew build --warning-mode summary
+    
+    - name: Publish Test Report for Java ${{ matrix.java }}
       uses: scacap/action-surefire-report@v1
       if: ${{ always() && github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' }}
       with:
         report_paths: '**/build/test-results/*/TEST-*.xml'
         github_token: ${{ secrets.GITHUB_TOKEN }}
+    
     - name: Sonar analysis
-      if: ${{ env.SONAR_TOKEN != null }}
+      if: ${{ env.DEFAULT_JAVA == matrix.java && env.SONAR_TOKEN != null }}
       run: |
         ./gradlew sonarqube -Dsonar.host.url=https://sonarcloud.io \
                             -Dsonar.organization=kaklakariada-github \
@@ -45,8 +64,10 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    
     - name: Archive portmapper binary
       uses: actions/upload-artifact@v2
+      if: ${{ env.DEFAULT_JAVA == matrix.java }}
       with:
         name: portmapper
         path: build/libs/portmapper-*-all.jar
