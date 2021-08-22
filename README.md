@@ -67,7 +67,15 @@ on the command line.
 
 `java.lang.UnsupportedClassVersionError: org/chris/portmapper/PortMapperStarter has been compiled by a more recent version of the Java Runtime (class file version 55.0), this version of the Java Runtime only recognizes class file versions up to 52.0`
 
-Usually this means your Java version is outdated. Please [install Java 11 or later](#install_java). If this does not help: run PortMapper from the command line using `java -jar portmapper.jar` and create a [ticket](https://github.com/kaklakariada/portmapper/issues) containing the stack trace.
+Usually this means your Java version is outdated. Please [install Java 11 or later](#install_java).
+
+Run `java -version` on the command line to check the default version. If this returns something else than Java 11, you can specify the complete path, e.g.:
+
+```bash
+"C:\Program Files\AdoptOpenJDK\jdk-11.0.3.7-hotspot\bin\java.exe" -jar portmapper.jar
+```
+
+If this does not help: run PortMapper from the command line using the command above and create a [ticket](https://github.com/kaklakariada/portmapper/issues) containing the complete error message and stack trace.
 
 ### PortMapper fails to start with ClassNotFoundException
 
