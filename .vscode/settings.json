@@ -1,0 +1,22 @@
+{
+    "files.exclude": {
+        "**/.classpath": true,
+        "**/.project": true,
+        "**/.settings": true,
+        "**/.factorypath": true,
+        "**/build/": false,
+        "**/bin/": true,
+        ".gradle/": true,
+        ".idea/": true,
+    },
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": true
+    },
+    "java.codeGeneration.useBlocks": true,
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveMode": "modificationsIfAvailable",
+    "sonarlint.connectedMode.project": {
+        "connectionId": "itsallcode",
+        "projectKey": "white-rabbit"
+    }
+}
