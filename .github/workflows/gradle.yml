@@ -21,7 +21,7 @@ jobs:
     - uses: actions/checkout@v1
 
     - name: Cache Gradle packages and wrapper
-      uses: actions/cache@v2
+      uses: actions/cache@v3.0.1
       with:
         path: |
           ~/.gradle/caches
@@ -30,7 +30,7 @@ jobs:
         restore-keys: ${{ runner.os }}-java-${{ matrix.java }}-gradle
 
     - name: Cache SonarQube packages
-      uses: actions/cache@v2
+      uses: actions/cache@v3.0.1
       with:
         path: ~/.sonar/cache
         key: ${{ runner.os }}-java-${{ matrix.java }}-sonar
