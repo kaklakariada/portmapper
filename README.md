@@ -77,7 +77,7 @@ Run `java -version` on the command line to check the default version. If this re
 
 If this does not help: run PortMapper from the command line using the command above and create a [ticket](https://github.com/kaklakariada/portmapper/issues) containing the complete error message and stack trace.
 
-### PortMapper fails to start with ClassNotFoundException
+#### java.lang.ClassNotFoundException: /language=en
 
 ```
 $ java -Duser.language=en -jar portmapper.jar
@@ -90,6 +90,25 @@ This error occurs when using PowerShell to start PortMapper with a system proper
 ```
 $ java "-Duser.language=en" -jar portmapper.jar
 ```
+
+#### java.lang.NoClassDefFoundError: org/slf4j/LoggerFactory
+
+```
+Exception in thread "main" java.lang.NoClassDefFoundError: org/slf4j/LoggerFactory
+        at org.chris.portmapper.PortMapperStarter.<clinit>(PortMapperStarter.java:26)
+Caused by: java.lang.ClassNotFoundException: org.slf4j.LoggerFactory
+        at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:581)
+        at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:178)
+        at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:522)
+        ... 1 more
+```
+
+You probably try to run a `.jar` that does not contain the required dependencies. Please either
+
+* [Download UPnP PortMapper from SourceForge](https://sourceforge.net/projects/upnp-portmapper/files/latest/download)
+* When building PortMapper yourself
+  * Build and execute PortMapper using a single command `./gradlew run`
+  * Build PortMapper using command `./gradlew build` and execute JAR `*-all.jar` that includes all dependencies: `java -jar build/libs/portmapper-$version-all.jar`
 
 ### Router not found
 
@@ -262,13 +281,7 @@ PortMapper is available as a Maven dependency at [Maven Central](https://repo1.m
   </dependency>
   ```
 
-**Important:** Due to the [deprecation of JCenter](https://jfrog.com/blog/into-the-sunset-bintray-jcenter-gocenter-and-chartcenter/) new versions will be published to [Maven Central](https://search.maven.org/artifact/com.github.kaklakariada/portmapper). In your build script please use
-
-```groovy
-repositories {
-    mavenCentral()
-}
-```
+**Important:** The version published to Maven Central is intended to be used as a library in other programs, not as a standalone program. If you don't know what this means you probably want to [download UPnP PortMapper from SourceForge](https://sourceforge.net/projects/upnp-portmapper/files/latest/download).
 
 ### Building PortMapper
 
