@@ -19,7 +19,7 @@ repositories {
     flatDir { dirs 'lib' }
 }
 
-version = '2.2.2'
+version = '2.2.3'
 group 'com.github.kaklakariada'
 
 java {
