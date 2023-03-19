@@ -18,6 +18,8 @@
 package org.chris.portmapper.gui;
 
 import java.awt.Font;
+import java.awt.font.TextAttribute;
+import java.util.Map;
 
 import javax.swing.JTextArea;
 
@@ -36,10 +38,10 @@ public class LogTextArea extends JTextArea implements LogMessageListener {
      * Create a new instance and set default properties.
      */
     public LogTextArea() {
-        setFont(Font.decode("Monospaced"));
+        setFont(getFont().deriveFont(Map.of(TextAttribute.FAMILY, Font.MONOSPACED)));
         setEditable(false);
         setWrapStyleWord(true);
-        setLineWrap(false);
+        setLineWrap(true);
     }
 
     @Override

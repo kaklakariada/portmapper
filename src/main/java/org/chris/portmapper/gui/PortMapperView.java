@@ -151,9 +151,6 @@ public class PortMapperView extends FrameView {
     private JComponent getLogPanel() {
 
         final LogTextArea logTextArea = new LogTextArea();
-        logTextArea.setEditable(false);
-        logTextArea.setWrapStyleWord(true);
-        logTextArea.setLineWrap(true);
 
         app.setLogMessageListener(logTextArea);
 

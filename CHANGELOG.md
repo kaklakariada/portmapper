@@ -6,7 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Upgrade dependencies [PR #](https://github.com/kaklakariada/portmapper/pull/)
+- [PR #](https://github.com/kaklakariada/portmapper/pull/)
+  - Upgrade dependencies
+  - Fixed too small font size in log view on high resolution screens
 
 ## [2.2.2] - 2021-03-06
 
