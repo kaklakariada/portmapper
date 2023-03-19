@@ -42,7 +42,7 @@ abstract class AbstractClingAction<T> implements ClingAction<T> {
     private final Service<RemoteDevice, RemoteService> service;
     private final String actionName;
 
-    public AbstractClingAction(final Service<RemoteDevice, RemoteService> service, final String actionName) {
+    protected AbstractClingAction(final Service<RemoteDevice, RemoteService> service, final String actionName) {
         this.service = service;
         this.actionName = actionName;
     }

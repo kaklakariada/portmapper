@@ -6,9 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [PR #113](https://github.com/kaklakariada/portmapper/pull/113)
+  - Upgrade dependencies
+  - Fixed too small font size in log view on high resolution screens
+  - Fixed static code analysis warnings
+
 ## [2.2.2] - 2021-03-06
 
-* No changes, move deployment from JCenter to Maven Central.
+- No changes, move deployment from JCenter to Maven Central.
 
 ## [2.2.1] - 2020-07-11
 

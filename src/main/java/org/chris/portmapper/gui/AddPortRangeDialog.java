@@ -32,6 +32,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.WindowConstants;
 
 import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.model.Protocol;
@@ -83,7 +84,7 @@ public class AddPortRangeDialog extends JDialog {
         this.setContentPane(this.getDialogPane());
 
         this.getRootPane().setDefaultButton(okButton);
-        this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.setName(DIALOG_NAME);
         this.setModal(true);
         this.pack();

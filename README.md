@@ -77,7 +77,7 @@ Run `java -version` on the command line to check the default version. If this re
 
 If this does not help: run PortMapper from the command line using the command above and create a [ticket](https://github.com/kaklakariada/portmapper/issues) containing the complete error message and stack trace.
 
-### PortMapper fails to start with ClassNotFoundException
+#### java.lang.ClassNotFoundException: /language=en
 
 ```
 $ java -Duser.language=en -jar portmapper.jar
@@ -90,6 +90,25 @@ This error occurs when using PowerShell to start PortMapper with a system proper
 ```
 $ java "-Duser.language=en" -jar portmapper.jar
 ```
+
+#### java.lang.NoClassDefFoundError: org/slf4j/LoggerFactory
+
+```
+Exception in thread "main" java.lang.NoClassDefFoundError: org/slf4j/LoggerFactory
+        at org.chris.portmapper.PortMapperStarter.<clinit>(PortMapperStarter.java:26)
+Caused by: java.lang.ClassNotFoundException: org.slf4j.LoggerFactory
+        at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:581)
+        at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:178)
+        at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:522)
+        ... 1 more
+```
+
+You probably try to run a `.jar` that does not contain the required dependencies. Please either
+
+* [Download UPnP PortMapper from SourceForge](https://sourceforge.net/projects/upnp-portmapper/files/latest/download)
+* When building PortMapper yourself
+  * Build and execute PortMapper using a single command `./gradlew run`
+  * Build PortMapper using command `./gradlew build` and execute JAR `*-all.jar` that includes all dependencies: `java -jar build/libs/portmapper-$version-all.jar`
 
 ### Router not found
 
@@ -245,77 +264,6 @@ Create an empty directory before starting, else PortMapper will fail with an err
 
 The configuration files are only used when PortMapper runs in GUI mode. When running in command line mode the configuration files are not used. Instead you must specify all settings as command line arguments.
 
-## Development
-
-### Using PortMapper as a library
-
-PortMapper is available as a Maven dependency at [Maven Central](https://repo1.maven.org/maven2/com/github/kaklakariada/portmapper/). Use the following coordinates:
-
-* Gradle: `com.github.kaklakariada:portmapper:2.2.2`
-* Maven:
-
-  ```xml
-  <dependency>
-    <groupId>com.github.kaklakariada</groupId>
-    <artifactId>portmapper</artifactId>
-    <version>2.2.2</version>
-  </dependency>
-  ```
-
-**Important:** Due to the [deprecation of JCenter](https://jfrog.com/blog/into-the-sunset-bintray-jcenter-gocenter-and-chartcenter/) new versions will be published to [Maven Central](https://search.maven.org/artifact/com.github.kaklakariada/portmapper). In your build script please use
-
-```groovy
-repositories {
-    mavenCentral()
-}
-```
-
-### Building PortMapper
-
-Build PortMapper on the command line:
-
-```bash
-$ git clone https://github.com/kaklakariada/portmapper.git
-$ cd portmapper
-$ ./gradlew build
-$ java -jar build/libs/portmapper-*.jar
-```
-
-### Generate license header for added files
-
-```bash
-$ ./gradlew licenseFormat
-```
-
-### Check if dependencies are up-to-date
-
-```bash
-$ ./gradlew dependencyUpdates
-```
-
-### Publish to Maven Central
-
-1. Add the following to your `~/.gradle/gradle.properties`:
-
-    ```properties
-    ossrhUsername=<your maven central username>
-    ossrhPassword=<your maven central passwort>
-
-    signing.keyId=<gpg key id (last 8 chars)>
-    signing.password=<gpg key password>
-    signing.secretKeyRingFile=<path to secret keyring file>
-    ```
-
-2. Increment version number in `build.gradle` and `README.md`, commit and push.
-3. Run the following command:
-
-    ```bash
-    $ ./gradlew clean check build publish closeAndReleaseRepository --info
-    ```
-
-4. Create a new [release](https://github.com/kaklakariada/portmapper/releases) on GitHub.
-5. After some time the release will be available at [Maven Central](https://repo1.maven.org/maven2/com/github/kaklakariada/portmapper/).
-
 ## Participate
 
 Your feedback is most welcome at the project page:
@@ -325,3 +273,7 @@ Your feedback is most welcome at the project page:
 - Need help using the UPnP PortMapper? Post a message in the Forum!
 - Want to help with developing? Contact [me](http://sourceforge.net/u/christoph/profile/) via [SourceForge.net](http://sourceforge.net/u/christoph/profile/send_message)!
 - Want to send me a mail? Use `christoph at users.sourceforge.net`!
+
+## Development
+
+See [developer guide](./doc/developer_guide.md).

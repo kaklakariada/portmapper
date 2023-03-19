@@ -21,7 +21,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import org.chris.portmapper.model.PortMapping;
-import org.chris.portmapper.router.RouterException;
 import org.chris.portmapper.router.cling.action.ActionService;
 import org.chris.portmapper.router.cling.action.GetPortMappingEntryAction;
 import org.fourthline.cling.model.message.control.IncomingActionResponseMessage;
@@ -54,7 +53,7 @@ class ClingPortMappingExtractor {
         this.currentMappingNumber = 0;
     }
 
-    public Collection<PortMapping> getPortMappings() throws RouterException {
+    public Collection<PortMapping> getPortMappings() {
 
         /*
          * This is a little trick to get all port mappings. There is a method that gets the number of available port
@@ -65,7 +64,7 @@ class ClingPortMappingExtractor {
          */
 
         while (morePortMappingsAvailable()) {
-            logger.debug("Getting port mapping with entry number " + currentMappingNumber + "...");
+            logger.debug("Getting port mapping with entry number {}...", currentMappingNumber);
 
             try {
                 final PortMapping portMapping = actionService

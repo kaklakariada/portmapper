@@ -55,7 +55,7 @@ public class SBBIRouter extends AbstractRouter {
     /**
      * The maximum number of port mappings that we will try to retrieve from the router.
      */
-    private final static int MAX_NUM_PORTMAPPINGS = 500;
+    private static final int MAX_NUM_PORTMAPPINGS = 500;
 
     private final PortMapperApp app;
 
@@ -71,9 +71,7 @@ public class SBBIRouter extends AbstractRouter {
         String ipAddress;
         try {
             ipAddress = router.getExternalIPAddress();
-        } catch (final UPNPResponseException e) {
-            throw new RouterException("Could not get external IP: " + e.getMessage(), e);
-        } catch (final IOException e) {
+        } catch (final UPNPResponseException | IOException e) {
             throw new RouterException("Could not get external IP: " + e.getMessage(), e);
         }
         logger.info("Got external IP address {} for router.", ipAddress);
@@ -211,9 +209,7 @@ public class SBBIRouter extends AbstractRouter {
         final String protocolString = (protocol.equals(Protocol.TCP) ? "TCP" : "UDP");
         try {
             router.deletePortMapping(remoteHost, externalPort, protocolString);
-        } catch (final IOException e) {
-            throw new RouterException("Could not remove port mapping", e);
-        } catch (final UPNPResponseException e) {
+        } catch (final IOException | UPNPResponseException e) {
             throw new RouterException("Could not remove port mapping", e);
         }
     }

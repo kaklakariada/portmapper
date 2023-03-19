@@ -105,7 +105,7 @@ public class PortMappingPreset implements Serializable {
     }
 
     public String getCompleteDescription() {
-        final StringBuffer b = new StringBuffer();
+        final StringBuilder b = new StringBuilder();
 
         b.append(" ");
         b.append(remoteHost);
@@ -170,7 +170,7 @@ public class PortMappingPreset implements Serializable {
         if (this.isNew) {
             settings.addPreset(this);
         } else {
-            settings.savePreset(this);
+            settings.savePreset();
         }
         this.isNew = false;
     }

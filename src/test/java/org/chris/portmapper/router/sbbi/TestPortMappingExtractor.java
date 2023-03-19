@@ -17,22 +17,22 @@
  */
 package org.chris.portmapper.router.sbbi;
 
-import static java.util.Arrays.*;
-import static org.junit.Assert.*;
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.util.HashSet;
 
 import org.chris.portmapper.model.PortMapping;
 import org.chris.portmapper.router.RouterException;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
-
-import static org.mockito.Mockito.*;
 
 import net.sbbi.upnp.impls.InternetGatewayDevice;
 import net.sbbi.upnp.messages.ActionResponse;
@@ -48,11 +48,17 @@ public class TestPortMappingExtractor {
     @Mock
     private Logger loggerMock;
     private SBBIPortMappingExtractor portMappingExtractor;
+    private AutoCloseable mocks;
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        mocks = MockitoAnnotations.openMocks(this);
         portMappingExtractor = new SBBIPortMappingExtractor(routerMock, 5, loggerMock);
+    }
+
+    @After
+    public void teardown() throws Exception {
+        mocks.close();
     }
 
     @Test
@@ -87,7 +93,7 @@ public class TestPortMappingExtractor {
         verify(loggerMock, never()).warn(anyString());
         verify(loggerMock, never()).error(anyString());
         verify(loggerMock, never()).warn(anyString(), any(Throwable.class));
-        verify(loggerMock).error(anyString(), any(Throwable.class));
+        verify(loggerMock).error(anyString(), anyInt(), any(Throwable.class));
         assertNumMappingsFound(0, 0);
     }
 

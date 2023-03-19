@@ -59,6 +59,7 @@ import net.miginfocom.swing.MigLayout;
  */
 public class PortMapperView extends FrameView {
 
+    private static final String MAIN_FRAME_ROUTER_NOT_CONNECTED = "mainFrame.router.not_connected";
     private static final String ACTION_SHOW_ABOUT_DIALOG = "mainFrame.showAboutDialog";
     private static final String ACTION_DISPLAY_ROUTER_INFO = "mainFrame.router.info";
     private static final String ACTION_CONNECT_ROUTER = "mainFrame.router.connect";
@@ -116,14 +117,14 @@ public class PortMapperView extends FrameView {
                 .setBorder(BorderFactory.createTitledBorder(app.getResourceMap().getString("mainFrame.router.title")));
 
         routerPanel.add(new JLabel(app.getResourceMap().getString("mainFrame.router.external_address")), "align label"); //$NON-NLS-2$
-        externalIPLabel = new JLabel(app.getResourceMap().getString("mainFrame.router.not_connected"));
+        externalIPLabel = new JLabel(app.getResourceMap().getString(MAIN_FRAME_ROUTER_NOT_CONNECTED));
         routerPanel.add(externalIPLabel, "width 130!");
         routerPanel.add(new JButton(actionMap.get(ACTION_COPY_EXTERNAL_ADDRESS)), "sizegroup router");
         routerPanel.add(new JButton(actionMap.get(ACTION_UPDATE_ADDRESSES)),
                 "wrap, spany 2, aligny base, sizegroup router");
 
         routerPanel.add(new JLabel(app.getResourceMap().getString("mainFrame.router.internal_address")), "align label");
-        internalIPLabel = new JLabel(app.getResourceMap().getString("mainFrame.router.not_connected"));
+        internalIPLabel = new JLabel(app.getResourceMap().getString(MAIN_FRAME_ROUTER_NOT_CONNECTED));
         routerPanel.add(internalIPLabel, "width 130!");
         routerPanel.add(new JButton(actionMap.get(ACTION_COPY_INTERNAL_ADDRESS)), "wrap, sizegroup router");
 
@@ -151,9 +152,6 @@ public class PortMapperView extends FrameView {
     private JComponent getLogPanel() {
 
         final LogTextArea logTextArea = new LogTextArea();
-        logTextArea.setEditable(false);
-        logTextArea.setWrapStyleWord(true);
-        logTextArea.setLineWrap(true);
 
         app.setLogMessageListener(logTextArea);
 
@@ -226,8 +224,8 @@ public class PortMapperView extends FrameView {
     public void updateAddresses() {
         final IRouter router = app.getRouter();
         if (router == null) {
-            externalIPLabel.setText(app.getResourceMap().getString("mainFrame.router.not_connected"));
-            internalIPLabel.setText(app.getResourceMap().getString("mainFrame.router.not_connected"));
+            externalIPLabel.setText(app.getResourceMap().getString(MAIN_FRAME_ROUTER_NOT_CONNECTED));
+            internalIPLabel.setText(app.getResourceMap().getString(MAIN_FRAME_ROUTER_NOT_CONNECTED));
             return;
         }
         externalIPLabel.setText(app.getResourceMap().getString("mainFrame.router.updating"));
