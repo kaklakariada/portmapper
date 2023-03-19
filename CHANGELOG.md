@@ -6,9 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Upgrade dependencies [PR #](https://github.com/kaklakariada/portmapper/pull/)
+
 ## [2.2.2] - 2021-03-06
 
-* No changes, move deployment from JCenter to Maven Central.
+- No changes, move deployment from JCenter to Maven Central.
 
 ## [2.2.1] - 2020-07-11
 
