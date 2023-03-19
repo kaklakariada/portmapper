@@ -5,14 +5,14 @@
 
 PortMapper is available as a Maven dependency at [Maven Central](https://repo1.maven.org/maven2/com/github/kaklakariada/portmapper/). Use the following coordinates:
 
-* Gradle: `com.github.kaklakariada:portmapper:2.2.2`
+* Gradle: `com.github.kaklakariada:portmapper:2.2.3`
 * Maven:
 
   ```xml
   <dependency>
     <groupId>com.github.kaklakariada</groupId>
     <artifactId>portmapper</artifactId>
-    <version>2.2.2</version>
+    <version>2.2.3</version>
   </dependency>
   ```
 
