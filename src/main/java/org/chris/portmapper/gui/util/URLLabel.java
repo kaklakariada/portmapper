@@ -25,6 +25,7 @@ import java.awt.Desktop;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -41,11 +42,11 @@ public class URLLabel extends JLabel {
 
     private static final long serialVersionUID = 1L;
 
-    private final static Logger logger = LoggerFactory.getLogger(URLLabel.class);
+    private static final Logger logger = LoggerFactory.getLogger(URLLabel.class);
 
     private String text;
 
-    private final Desktop desktop;
+    private final transient Desktop desktop;
 
     private URI uri;
 
@@ -74,7 +75,7 @@ public class URLLabel extends JLabel {
         try {
             desktop.browse(uri);
         } catch (final IOException e) {
-            throw new RuntimeException("Error opening uri " + uri, e);
+            throw new UncheckedIOException("Error opening uri " + uri, e);
         }
     }
 
@@ -82,7 +83,7 @@ public class URLLabel extends JLabel {
         try {
             return new URI(url);
         } catch (final URISyntaxException e) {
-            throw new RuntimeException("Error creating URI for url " + url);
+            throw new IllegalArgumentException("Error creating URI for url " + url);
         }
     }
 

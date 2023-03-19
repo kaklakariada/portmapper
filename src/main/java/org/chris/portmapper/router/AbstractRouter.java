@@ -39,7 +39,7 @@ public abstract class AbstractRouter implements IRouter {
 
     private final String name;
 
-    public AbstractRouter(final String name) {
+    protected AbstractRouter(final String name) {
         this.name = name;
     }
 
@@ -88,14 +88,7 @@ public abstract class AbstractRouter implements IRouter {
 
             // Check, if we got a correct port number
             if (routerInternalPort > 0) {
-                logger.debug("Creating socket to router: {}:{}...", getInternalHostName(), routerInternalPort);
-                try (Socket socket = new Socket(getInternalHostName(), routerInternalPort)) {
-                    localHostIP = socket.getLocalAddress();
-                } catch (final UnknownHostException e) {
-                    throw new RouterException(
-                            "Could not create socked to " + getInternalHostName() + ":" + routerInternalPort, e);
-                }
-
+                localHostIP = getLocalHostIP(routerInternalPort);
                 logger.debug("Got address {} from socket.", localHostIP);
             } else {
                 logger.debug("Got invalid internal router port number {}", routerInternalPort);
@@ -104,7 +97,6 @@ public abstract class AbstractRouter implements IRouter {
             // We are not connected to the router or got an invalid port number,
             // so we have to use the traditional method.
             if (localHostIP == null) {
-
                 logger.debug(
                         "Not connected to router or got invalid port number, can not use socket to determine the address of the localhost. "
                                 + "If no address is found, please connect to the router.");
@@ -118,6 +110,17 @@ public abstract class AbstractRouter implements IRouter {
             throw new RouterException("Could not get IP of localhost.", e);
         }
         return localHostIP;
+    }
+
+    private InetAddress getLocalHostIP(final int routerInternalPort)
+            throws IOException, RouterException {
+        logger.debug("Creating socket to router: {}:{}...", getInternalHostName(), routerInternalPort);
+        try (Socket socket = new Socket(getInternalHostName(), routerInternalPort)) {
+            return socket.getLocalAddress();
+        } catch (final UnknownHostException e) {
+            throw new RouterException(
+                    "Could not create socked to " + getInternalHostName() + ":" + routerInternalPort, e);
+        }
     }
 
     /**

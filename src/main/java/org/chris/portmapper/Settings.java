@@ -32,7 +32,7 @@ public class Settings implements Serializable {
 
     private static final long serialVersionUID = -1349121864190290050L;
 
-    public final static String PROPERTY_PORT_MAPPING_PRESETS = "presets";
+    public static final String PROPERTY_PORT_MAPPING_PRESETS = "presets";
 
     private List<PortMappingPreset> presets;
     private boolean useEntityEncoding;
@@ -75,7 +75,7 @@ public class Settings implements Serializable {
                 new ArrayList<>(this.presets));
     }
 
-    public void savePreset(final PortMappingPreset portMappingPreset) {
+    public void savePreset() {
         this.propertyChangeSupport.firePropertyChange(PROPERTY_PORT_MAPPING_PRESETS, null,
                 new ArrayList<>(this.presets));
     }

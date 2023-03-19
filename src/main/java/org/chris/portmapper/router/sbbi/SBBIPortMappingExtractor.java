@@ -133,8 +133,8 @@ class SBBIPortMappingExtractor {
                     currentMappingNumber, e.getDetailErrorCode(), e.getDetailErrorDescription());
         } else {
             moreEntries = false;
-            logger.error("Got exception when fetching port mapping for entry number " + currentMappingNumber
-                    + ". Stop getting more entries.", e);
+            logger.error("Got exception when fetching port mapping for entry number {}. Stop getting more entries.",
+                    currentMappingNumber, e);
         }
     }
 

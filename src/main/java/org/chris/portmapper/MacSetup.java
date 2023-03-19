@@ -22,6 +22,10 @@ package org.chris.portmapper;
  */
 public class MacSetup {
 
+    private MacSetup() {
+        // Not instantiable
+    }
+
     public static void setupMac() {
         System.setProperty("com.apple.mrj.application.apple.menu.about.name", "UPnP PortMapper");
         System.setProperty("apple.laf.useScreenMenuBar", "true");

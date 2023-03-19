@@ -43,7 +43,7 @@ public class ClingRouter extends AbstractRouter {
     /**
      * The maximum number of port mappings that we will try to retrieve from the router.
      */
-    private final static int MAX_NUM_PORTMAPPINGS = 500;
+    private static final int MAX_NUM_PORTMAPPINGS = 500;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

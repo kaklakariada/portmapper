@@ -58,7 +58,7 @@ public class LogMessageOutputStream extends OutputStream {
     }
 
     @Override
-    public void write(final byte b[], final int off, final int len) throws IOException {
+    public void write(final byte[] b, final int off, final int len) throws IOException {
         final String line = new String(b, off, len);
         addMessage(line);
     }

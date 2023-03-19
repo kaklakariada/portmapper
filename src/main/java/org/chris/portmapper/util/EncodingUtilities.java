@@ -27,6 +27,10 @@ public class EncodingUtilities {
 
     private static Map<Character, String> knownEncodings;
 
+    private EncodingUtilities() {
+        // Not instantiable
+    }
+
     static {
         knownEncodings = new HashMap<>();
         knownEncodings.put('<', "&lt;");
@@ -42,7 +46,7 @@ public class EncodingUtilities {
      * @return the result of the replacement.
      */
     public static String htmlEntityEncode(final String s) {
-        final StringBuffer buf = new StringBuffer();
+        final StringBuilder buf = new StringBuilder();
 
         for (int i = 0; i < s.length(); i++) {
             final char c = s.charAt(i);

@@ -41,6 +41,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
+import javax.swing.WindowConstants;
 
 import org.chris.portmapper.PortMapperApp;
 import org.chris.portmapper.Settings;
@@ -61,6 +62,8 @@ import net.miginfocom.swing.MigLayout;
 // Deep inheritance hierarchy required by Swing API
 @SuppressWarnings("squid:MaximumInheritanceDepth")
 public class EditPresetDialog extends JDialog {
+
+    private static final String PRESET_DIALOG_ERROR_TITLE = "preset_dialog.error.title";
 
     private static final long serialVersionUID = 1L;
 
@@ -198,7 +201,7 @@ public class EditPresetDialog extends JDialog {
 
         setContentPane(dialogPane);
         dialogPane.getRootPane().setDefaultButton(okButton);
-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setModal(true);
         pack();
     }
@@ -291,7 +294,7 @@ public class EditPresetDialog extends JDialog {
         // message.
         final String name = presetNameTextField.getText();
         if (name == null || name.trim().isEmpty()) {
-            showErrorMessage("preset_dialog.error.title", "preset_dialog.error.no_description");
+            showErrorMessage(PRESET_DIALOG_ERROR_TITLE, "preset_dialog.error.no_description");
             return;
         }
 
@@ -299,14 +302,14 @@ public class EditPresetDialog extends JDialog {
         final Settings settings = app.getSettings();
         for (final PortMappingPreset preset : settings.getPresets()) {
             if (preset != editedPreset && preset.getDescription() != null && preset.getDescription().equals(name)) {
-                showErrorMessage("preset_dialog.error.title", "preset_dialog.error.duplicate_name");
+                showErrorMessage(PRESET_DIALOG_ERROR_TITLE, "preset_dialog.error.duplicate_name");
                 return;
             }
         }
 
         // Check, if the user added at least one port mapping to the preset.
         if (tableModel.getRowCount() == 0) {
-            showErrorMessage("preset_dialog.error.title", "preset_dialog.error.no_ports");
+            showErrorMessage(PRESET_DIALOG_ERROR_TITLE, "preset_dialog.error.no_ports");
             return;
         }
 
