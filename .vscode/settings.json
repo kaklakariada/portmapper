@@ -13,6 +13,7 @@
         "source.organizeImports": true
     },
     "java.codeGeneration.useBlocks": true,
+    "java.configuration.updateBuildConfiguration": "automatic",
     "editor.formatOnSave": true,
     "editor.formatOnSaveMode": "modificationsIfAvailable",
     "sonarlint.connectedMode.project": {
