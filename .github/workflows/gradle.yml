@@ -14,7 +14,7 @@ jobs:
       matrix:
         java: [11, 17]
     env:
-      DEFAULT_JAVA: 11
+      DEFAULT_JAVA: 17
 
     steps:
 
