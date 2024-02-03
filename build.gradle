@@ -109,7 +109,6 @@ sonar {
   properties {
     property("sonar.organization", "kaklakariada-github")
     property("sonar.host.url", "https://sonarcloud.io")
-    property("sonar.gradle.skipCompile", "true")
   }
 }
 
