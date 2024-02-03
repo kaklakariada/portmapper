@@ -10,14 +10,15 @@
         ".idea/": true,
     },
     "editor.codeActionsOnSave": {
-        "source.organizeImports": true
+        "source.organizeImports": "explicit",
+        "source.fixAll": "explicit"
     },
     "java.codeGeneration.useBlocks": true,
     "java.configuration.updateBuildConfiguration": "automatic",
     "editor.formatOnSave": true,
     "editor.formatOnSaveMode": "modificationsIfAvailable",
     "sonarlint.connectedMode.project": {
-        "connectionId": "itsallcode",
-        "projectKey": "white-rabbit"
+        "connectionId": "kaklakariada-github",
+        "projectKey": "com.github.kaklakariada:portmapper"
     }
 }

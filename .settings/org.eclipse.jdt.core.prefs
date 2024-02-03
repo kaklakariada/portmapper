@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
+org.eclipse.jdt.core.classpath.outputOverlappingAnotherSource=ignore
 org.eclipse.jdt.core.codeComplete.argumentPrefixes=
 org.eclipse.jdt.core.codeComplete.argumentSuffixes=
 org.eclipse.jdt.core.codeComplete.fieldPrefixes=

@@ -22,16 +22,16 @@ See [CHANGELOG.md](CHANGELOG.md) for changes in the new version.
 
 [Download](http://sourceforge.net/projects/upnp-portmapper/files/latest/download) binaries from [SourceForge](http://sourceforge.net/projects/upnp-portmapper/).
 
-### Install Java 11<a name="install_java"></a>
+### Install Java
 
-UPnP PortMapper requires JRE 11 (Java Runtime Environment) or later. I recommend you download OpenJDK 11 JRE from [AdoptOpenJDK](https://adoptopenjdk.net/releases.html?variant=openjdk11&jvmVariant=hotspot).
+UPnP PortMapper requires JRE 11 (Java Runtime Environment) or later. I recommend you download the latest OpenJDK JRE from [AdoptOpenJDK](https://adoptium.net/temurin/releases/?package=jre).
 
-For Windows please choose the `.msi` installer which will set the environment variable `JAVA_HOME` and add java to the `PATH`.
+For Windows please choose the `.msi` installer which will set the environment variable `JAVA_HOME` and add Java to the `PATH`.
 
 Verify that the installation was successful by running this command:
 
-```bash
-$ java -version
+```
+java -version
 openjdk version "11.0.3" 2019-04-16
 OpenJDK Runtime Environment AdoptOpenJDK (build 11.0.3+7)
 OpenJDK 64-Bit Server VM AdoptOpenJDK (build 11.0.3+7, mixed mode)
@@ -45,8 +45,8 @@ If you are still using Java 1.8 and can't upgrade to Java 11, you can use [PortM
 
 To run PortMapper, double click on the JAR file or run
 
-```bash
-$ java -jar portmapper.jar
+```sh
+java -jar portmapper.jar
 ```
 
 on the command line.
@@ -56,14 +56,19 @@ on the command line.
 ### General
 
 - Update the firmware of your router to the latest version.
+- Verify that your router supports UPnP and it is enabled in the settings.
 
 ### PortMapper fails to start
 
-**Error 1**: When you double click `portmapper.jar`, an error dialog with the following message is displayed:
+#### JNI error
+
+When you double click `portmapper.jar`, an error dialog with the following message is displayed:
 
 `A JNI error has occurred, please check your installation and try again`
 
-**Error 2**: When you start PortMapper from the command line using `java -jar portmapper.jar` you get the following exception:
+#### UnsupportedClassVersionError
+
+When you start PortMapper from the command line using `java -jar portmapper.jar` you get the following exception:
 
 `java.lang.UnsupportedClassVersionError: org/chris/portmapper/PortMapperStarter has been compiled by a more recent version of the Java Runtime (class file version 55.0), this version of the Java Runtime only recognizes class file versions up to 52.0`
 
@@ -71,7 +76,7 @@ Usually this means your Java version is outdated. Please [install Java 11 or lat
 
 Run `java -version` on the command line to check the default version. If this returns something else than Java 11, you can specify the complete path, e.g.:
 
-```bash
+```sh
 "C:\Program Files\AdoptOpenJDK\jdk-11.0.3.7-hotspot\bin\java.exe" -jar portmapper.jar
 ```
 
@@ -79,19 +84,23 @@ If this does not help: run PortMapper from the command line using the command ab
 
 #### java.lang.ClassNotFoundException: /language=en
 
+When starting PortMapper on the command line with JVM option `-Duser.language=en` you get the following error:
+
 ```
-$ java -Duser.language=en -jar portmapper.jar
+java -Duser.language=en -jar portmapper.jar
 Error: Could not find or load main class .language=en
 Caused by: java.lang.ClassNotFoundException: /language=en
 ```
 
 This error occurs when using PowerShell to start PortMapper with a system property argument, e.g. `-Duser.language=en`. To fix this, enclose the system property in double quotes, e.g.:
 
-```
-$ java "-Duser.language=en" -jar portmapper.jar
+```sh
+java "-Duser.language=en" -jar portmapper.jar
 ```
 
 #### java.lang.NoClassDefFoundError: org/slf4j/LoggerFactory
+
+When starting PortMapper you get the following error message in the terminal:
 
 ```
 Exception in thread "main" java.lang.NoClassDefFoundError: org/slf4j/LoggerFactory
@@ -112,7 +121,7 @@ You probably try to run a `.jar` that does not contain the required dependencies
 
 ### Router not found
 
-- Check if UPnP is activated in your router's settings.
+- Check if your router supports UPnP and it is activated in your router's settings.
 - Use a different UPnP library in the settings. Please note that `DummyRouterFactory` is just for testing.
 - Check if a network bridge is active on your computer. Try to deactive it as it may [prevent detection of the router](https://sourceforge.net/p/upnp-portmapper/bugs/75/#54ef).
 - Set Log level to `TRACE` in the settings, connect again and check the log.
@@ -126,8 +135,8 @@ If you can connect to your router from one device but not from another you can d
 1. Get location URL on the machine that can connect to the router by clicking the `Info` button (look for something like `INFO  - location = http://192.168.178.1:49000/igddesc.xml`)
 1. Specify the location URL as a command line argument:
 
-```bash
-$ java "-Dportmapper.locationUrl=<locationurl>" -jar portmapper.jar -lib org.chris.portmapper.router.weupnp.WeUPnPRouterFactory <args>
+```sh
+java "-Dportmapper.locationUrl=<locationurl>" -jar portmapper.jar -lib org.chris.portmapper.router.weupnp.WeUPnPRouterFactory <args>
 ```
 
 ### Adding port forwardings not possible
@@ -187,7 +196,7 @@ If you use a tool to verify that a port forwarding works, please make sure to st
 PortMapper also has a command line interface. You can see the available options by adding parameter `-h`:
 
 ```
-$ java -jar portmapper.jar -h
+java -jar portmapper.jar -h
  -add                  : Add a new port mapping
  -delete               : Delete a new port mapping
  -description VAL      : Description of the port mapping
@@ -207,33 +216,33 @@ $ java -jar portmapper.jar -h
 
 - Create a new port mapping for a specific IP address
 
-```bash
-$ java -jar portmapper.jar -add -externalPort <port> -internalPort <port> -ip <ip-addr> -protocol tcp
-```
+  ```sh
+  java -jar portmapper.jar -add -externalPort <port> -internalPort <port> -ip <ip-addr> -protocol tcp
+  ```
 
 - Create a new port mapping for the local machine (just omit the IP)
 
-```bash
-$ java -jar portmapper.jar -add -externalPort <port> -internalPort <port> -protocol tcp
-```
+  ```sh
+  java -jar portmapper.jar -add -externalPort <port> -internalPort <port> -protocol tcp
+  ```
 
 - Delete a port forwarding
 
-```bash
-$ java -jar portmapper.jar -delete -externalPort <port> -protocol tcp
-```
+  ```sh
+  java -jar portmapper.jar -delete -externalPort <port> -protocol tcp
+  ```
 
 - List existing port forwardings
 
-```bash
-$ java -jar portmapper.jar -list
-```
+  ```sh
+  java -jar portmapper.jar -list
+  ```
 
 - Specify a UPnP library (see below for available libraries)
 
-```bash
-$ java -jar portmapper.jar -lib org.chris.portmapper.router.weupnp.WeUPnPRouterFactory -list
-```
+  ```sh
+  java -jar portmapper.jar -lib org.chris.portmapper.router.weupnp.WeUPnPRouterFactory -list
+  ```
 
 ### UPnP libraries
 
@@ -248,16 +257,18 @@ PortMapper includes three third party UPnP libraries. If the default does not wo
 
 PortMapper is translated to English (`en`) and German (`de`). It automatically detects the operating system's language, using English as default. If you want use a different language, add command line option `-Duser.language=de` to java, e.g.:
 
-```bash
-$ java "-Duser.language=de" -jar portmapper.jar
+```sh
+java "-Duser.language=de" -jar portmapper.jar
 ```
+
+Please note ensure to enclose the option with double quotes (`"`) in PowerShell, else the command will fail.
 
 ### Using a custom directory for configuration files
 
 PortMapper stores its configuration as XML files in a folder. Under Windows this folder is located at `%AppData%\UnknownApplicationVendor\PortMapper\` (e.g. `C:\Users\<username>\AppData\Roaming\UnknownApplicationVendor\PortMapper`). You can change this folder by specifying a command line argument:
 
-```bash
-java -Dportmapper.config.dir=C:/path/to/config -jar portmapper.jar
+```sh
+java "-Dportmapper.config.dir=C:/path/to/config" -jar portmapper.jar
 ```
 
 Create an empty directory before starting, else PortMapper will fail with an error message.

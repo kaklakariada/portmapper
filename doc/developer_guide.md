@@ -22,7 +22,7 @@ PortMapper is available as a Maven dependency at [Maven Central](https://repo1.m
 
 Build PortMapper on the command line:
 
-```bash
+```sh
 git clone https://github.com/kaklakariada/portmapper.git
 cd portmapper
 ./gradlew build
@@ -31,13 +31,13 @@ java -jar build/libs/portmapper-*.jar
 
 ## Generate license header for added files
 
-```bash
+```sh
 ./gradlew licenseFormat
 ```
 
 ## Check if dependencies are up-to-date
 
-```bash
+```sh
 ./gradlew dependencyUpdates
 ```
 
