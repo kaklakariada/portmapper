@@ -62,7 +62,7 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     
     - name: Archive portmapper binary
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: ${{ env.DEFAULT_JAVA == matrix.java }}
       with:
         name: portmapper
