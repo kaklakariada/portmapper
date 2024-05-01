@@ -30,7 +30,7 @@ jobs:
         distribution: 'temurin'
         java-version: 11
 
-    - uses: gradle/wrapper-validation-action@v2
+    - uses: gradle/wrapper-validation-action@v3
 
     - name: Cache Gradle packages and wrapper
       uses: actions/cache@v4
