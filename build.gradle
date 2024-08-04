@@ -24,14 +24,17 @@ group 'com.github.kaklakariada'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(11)
+        def javaVersion = project.hasProperty('javaVersion') ? project.getProperty('javaVersion') : 11
+        languageVersion = JavaLanguageVersion.of(javaVersion)
     }
     withJavadocJar()
     withSourcesJar()
 }
 
 javadoc {
+    failOnError = true
     options.addBooleanOption('html5', true)
+    //options.addStringOption('Xwerror', '-quiet')
 }
 
 tasks.withType(JavaCompile) {

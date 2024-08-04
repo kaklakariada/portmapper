@@ -8,7 +8,8 @@ on:
 
 jobs:
   build:
-
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -45,14 +46,7 @@ jobs:
     - uses: gradle/actions/wrapper-validation@v3
     
     - name: Build with Gradle
-      run: ./gradlew build --warning-mode summary
-    
-    - name: Publish Test Report for Java ${{ matrix.java }}
-      uses: scacap/action-surefire-report@v1
-      if: ${{ always() && github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' }}
-      with:
-        report_paths: '**/build/test-results/*/TEST-*.xml'
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+      run: ./gradlew build --warning-mode summary -PjavaVersion=${{ matrix.java }}
     
     - name: Sonar analysis
       if: ${{ env.DEFAULT_JAVA == matrix.java && env.SONAR_TOKEN != null }}
