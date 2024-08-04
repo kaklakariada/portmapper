@@ -36,7 +36,6 @@ public class SpinnerCellEditor extends AbstractCellEditor implements TableCellEd
     private Integer currentPortNumber;
     private final JSpinner spinner;
 
-    @SuppressWarnings("this-escape")
     public SpinnerCellEditor(final int value, final int min, final int max, final int step) {
         this.currentPortNumber = value;
         this.spinner = new JSpinner(new SpinnerNumberModel(this.currentPortNumber.intValue(), min, max, step));

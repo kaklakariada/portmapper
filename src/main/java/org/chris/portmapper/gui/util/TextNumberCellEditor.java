@@ -35,7 +35,6 @@ public class TextNumberCellEditor extends AbstractCellEditor implements TableCel
     private Integer currentPortNumber;
     private final JTextField textField;
 
-    @SuppressWarnings("this-escape")
     public TextNumberCellEditor(final int value, final int numColumns) {
         this.currentPortNumber = value;
         this.textField = new JTextField(this.currentPortNumber.toString(), numColumns);

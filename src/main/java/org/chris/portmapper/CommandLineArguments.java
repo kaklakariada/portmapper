@@ -17,13 +17,13 @@
  */
 package org.chris.portmapper;
 
-import static java.util.Arrays.asList;
-
 import org.chris.portmapper.model.Protocol;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 import org.kohsuke.args4j.ParserProperties;
+
+import static java.util.Arrays.*;
 
 public class CommandLineArguments {
 
@@ -64,7 +64,6 @@ public class CommandLineArguments {
 
     private final CmdLineParser parser;
 
-    @SuppressWarnings("this-escape")
     public CommandLineArguments() {
         parser = new CmdLineParser(this, ParserProperties.defaults().withShowDefaults(true).withUsageWidth(80));
     }

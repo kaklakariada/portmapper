@@ -42,7 +42,6 @@ public class AboutDialog extends JDialog {
     private static final String DIALOG_NAME = "about_dialog";
     private static final String ACTION_CLOSE = "about_dialog.close";
 
-    @SuppressWarnings("this-escape")
     public AboutDialog(final PortMapperApp app) {
         super(app.getMainFrame(), true);
 

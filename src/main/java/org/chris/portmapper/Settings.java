@@ -34,14 +34,13 @@ public class Settings implements Serializable {
 
     public static final String PROPERTY_PORT_MAPPING_PRESETS = "presets";
 
-    private final ArrayList<PortMappingPreset> presets;
+    private List<PortMappingPreset> presets;
     private boolean useEntityEncoding;
     private String logLevel;
     private String routerFactoryClassName;
 
     private transient PropertyChangeSupport propertyChangeSupport;
 
-    @SuppressWarnings("this-escape")
     public Settings() {
         useEntityEncoding = true;
         logLevel = Level.INFO.toString();
@@ -59,8 +58,7 @@ public class Settings implements Serializable {
     }
 
     public void setPresets(final List<PortMappingPreset> presets) {
-        this.presets.clear();
-        this.presets.addAll(presets);
+        this.presets = presets;
     }
 
     public void addPreset(final PortMappingPreset newPreset) {
