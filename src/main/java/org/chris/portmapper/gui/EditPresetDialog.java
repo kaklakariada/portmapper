@@ -83,6 +83,7 @@ public class EditPresetDialog extends JDialog {
     private JTextField internalClientTextField;
     private JTextField presetNameTextField;
 
+    @SuppressWarnings("serial")
     private final List<SinglePortMapping> ports;
     private final PropertyChangeSupport propertyChangeSupport;
 
@@ -94,6 +95,7 @@ public class EditPresetDialog extends JDialog {
 
     private PortsTableModel tableModel;
 
+    @SuppressWarnings("this-escape")
     public EditPresetDialog(final PortMapperApp app, final PortMappingPreset portMappingPreset) {
         super(app.getMainFrame(), true);
         this.app = app;

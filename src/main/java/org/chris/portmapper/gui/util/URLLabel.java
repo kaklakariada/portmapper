@@ -50,6 +50,7 @@ public class URLLabel extends JLabel {
 
     private URI uri;
 
+    @SuppressWarnings("this-escape")
     public URLLabel(final String name) {
         this.text = name;
         this.setLabelText();

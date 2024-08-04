@@ -91,6 +91,7 @@ public class PortMapperView extends FrameView {
     private JList<PortMappingPreset> portMappingPresets;
     private final PortMapperApp app;
 
+    @SuppressWarnings("this-escape")
     public PortMapperView(final PortMapperApp app) {
         super(app);
         this.app = app;
@@ -191,6 +192,7 @@ public class PortMapperView extends FrameView {
 
         return presetPanel;
     }
+
 
     private JComponent getMappingsPanel() {
         // Mappings panel

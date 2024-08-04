@@ -74,6 +74,7 @@ public class AddPortRangeDialog extends JDialog {
 
     private final transient PortMapperApp app;
 
+    @SuppressWarnings("this-escape")
     public AddPortRangeDialog(final PortMapperApp app, final EditPresetDialog editPresetDialog) {
         super(app.getMainFrame(), true);
         this.app = app;

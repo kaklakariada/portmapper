@@ -34,6 +34,7 @@ public class Settings implements Serializable {
 
     public static final String PROPERTY_PORT_MAPPING_PRESETS = "presets";
 
+    @SuppressWarnings("serial")
     private List<PortMappingPreset> presets;
     private boolean useEntityEncoding;
     private String logLevel;
@@ -41,6 +42,7 @@ public class Settings implements Serializable {
 
     private transient PropertyChangeSupport propertyChangeSupport;
 
+    @SuppressWarnings("this-escape")
     public Settings() {
         useEntityEncoding = true;
         logLevel = Level.INFO.toString();

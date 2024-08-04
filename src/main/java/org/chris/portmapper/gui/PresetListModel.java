@@ -36,6 +36,7 @@ public class PresetListModel extends AbstractListModel<PortMappingPreset> implem
     private static final Logger logger = LoggerFactory.getLogger(PresetListModel.class);
     private final Settings settings;
 
+    @SuppressWarnings("this-escape")
     public PresetListModel(final Settings settings) {
         this.settings = settings;
         settings.addPropertyChangeListener(Settings.PROPERTY_PORT_MAPPING_PRESETS, this);
