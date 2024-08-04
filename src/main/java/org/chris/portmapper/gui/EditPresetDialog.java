@@ -23,7 +23,6 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeSupport;
 import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.List;
 
 import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
@@ -83,7 +82,7 @@ public class EditPresetDialog extends JDialog {
     private JTextField internalClientTextField;
     private JTextField presetNameTextField;
 
-    private final List<SinglePortMapping> ports;
+    private final LinkedList<SinglePortMapping> ports;
     private final PropertyChangeSupport propertyChangeSupport;
 
     private JCheckBox useLocalhostCheckBox;
@@ -94,6 +93,7 @@ public class EditPresetDialog extends JDialog {
 
     private PortsTableModel tableModel;
 
+    @SuppressWarnings("this-escape")
     public EditPresetDialog(final PortMapperApp app, final PortMappingPreset portMappingPreset) {
         super(app.getMainFrame(), true);
         this.app = app;

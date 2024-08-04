@@ -22,6 +22,7 @@ package org.chris.portmapper.gui;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
@@ -36,12 +37,12 @@ import org.chris.portmapper.model.SinglePortMapping;
 public class PortsTableModel extends AbstractTableModel implements PropertyChangeListener {
 
     private static final long serialVersionUID = 1L;
-    private final List<SinglePortMapping> ports;
+    private final ArrayList<SinglePortMapping> ports;
     private final transient PortMapperApp app;
 
     public PortsTableModel(final PortMapperApp app, final List<SinglePortMapping> ports) {
         this.app = app;
-        this.ports = ports;
+        this.ports = new ArrayList<>(ports);
     }
 
     @Override

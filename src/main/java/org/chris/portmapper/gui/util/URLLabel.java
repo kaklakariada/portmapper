@@ -50,6 +50,7 @@ public class URLLabel extends JLabel {
 
     private URI uri;
 
+    @SuppressWarnings("this-escape")
     public URLLabel(final String name) {
         this.text = name;
         this.setLabelText();
@@ -87,6 +88,7 @@ public class URLLabel extends JLabel {
         }
     }
 
+    @SuppressWarnings("this-escape")
     private void setLabelText() {
         final String url = uri != null ? uri.toString() : "";
         super.setText("<html><a href=\\\\\\\\\\\"" + url + "\\\\\\\\\\\">" + text + "</a></html>");

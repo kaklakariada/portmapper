@@ -77,6 +77,7 @@ public class SettingsDialog extends JDialog {
 
     private final transient PortMapperApp app;
 
+    @SuppressWarnings("this-escape")
     public SettingsDialog(final PortMapperApp app) {
         super(app.getMainFrame(), true);
         this.app = app;

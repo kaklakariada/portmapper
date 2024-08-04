@@ -50,7 +50,7 @@ public class PortMappingPreset implements Serializable {
     /**
      * The port mappings in this preset.
      */
-    private List<SinglePortMapping> ports;
+    private final LinkedList<SinglePortMapping> ports;
 
     /**
      * <code>true</code> if this preset has not been saved.
@@ -69,7 +69,6 @@ public class PortMappingPreset implements Serializable {
         this.internalClient = internalClient;
         this.description = description;
         this.ports = new LinkedList<>();
-
         this.isNew = false;
     }
 
@@ -127,7 +126,8 @@ public class PortMappingPreset implements Serializable {
     }
 
     public void setPorts(final List<SinglePortMapping> ports) {
-        this.ports = ports;
+        this.ports.clear();
+        this.ports.addAll(ports);
     }
 
     public void setDescription(final String description) {
