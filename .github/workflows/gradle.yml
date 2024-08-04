@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  matrix-build:
     permissions:
       contents: read
     runs-on: ubuntu-latest
@@ -61,3 +61,9 @@ jobs:
       with:
         name: portmapper
         path: build/libs/portmapper-*-all.jar
+
+  build:
+    needs: matrix-build
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Build successful"
