@@ -193,7 +193,6 @@ public class PortMapperView extends FrameView {
         return presetPanel;
     }
 
-
     private JComponent getMappingsPanel() {
         // Mappings panel
 
