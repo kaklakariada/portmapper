@@ -6,10 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.4] - 2024-09-14
+
 ### Refactoring
 
 - [PR #118](https://github.com/kaklakariada/portmapper/pull/118): Upgrade dependencies
 - [PR #133](https://github.com/kaklakariada/portmapper/pull/133): Upgrade dependencies
+- [PR #134](https://github.com/kaklakariada/portmapper/pull/134): Add automatic release process
 
 ## [2.2.3] - 2023-03-19
 

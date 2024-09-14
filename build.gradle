@@ -8,6 +8,7 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '8.1.1'
     id "io.github.gradle-nexus.publish-plugin" version "2.0.0"
     id 'com.github.ben-manes.versions' version '0.51.0'
+    id 'org.gradle.crypto.checksum' version '1.4.0'
 }
 
 repositories {
@@ -19,7 +20,7 @@ repositories {
     flatDir { dirs 'lib' }
 }
 
-version = '2.2.3'
+version = '2.2.4'
 group 'com.github.kaklakariada'
 
 java {
@@ -71,6 +72,17 @@ jar {
 
 tasks["build"].dependsOn(shadowJar)
 
+task createSha512ChecksumExecutableJar(type: org.gradle.crypto.checksum.Checksum, dependsOn: [tasks.shadowJar]) {
+    files = files(tasks.shadowJar.outputs.files)
+    outputDir = new File(project.buildDir, "libs-checksums")
+    algorithm = org.gradle.crypto.checksum.Checksum.Algorithm.SHA512
+    appendFileNameToChecksum = false
+}
+
+tasks.shadowJar.configure {
+    finalizedBy createSha512ChecksumExecutableJar
+}
+
 task run(type: JavaExec, dependsOn: shadowJar) {
     classpath = shadowJar.outputs.files
     mainClass = mainClass
@@ -118,14 +130,6 @@ sonar {
 
 tasks["sonarqube"].dependsOn(tasks["jacocoTestReport"])
 
-def getOptionalProperty(String name) {
-    if(project.hasProperty(name)) {
-        return project.property(name)
-    }
-    logger.info("Project property '${name}' not available. Please it to ~/.gradle/gradle.properties")
-    return null
-}
-
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -156,22 +160,12 @@ publishing {
             }
         }
     }
-
-    repositories {
-        maven {
-            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
-            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
-            allowInsecureProtocol = false
-            credentials(PasswordCredentials) {
-                username = getOptionalProperty("ossrhUsername")
-                password = getOptionalProperty("ossrhPassword")
-            }
-        }
-    }
 }
 
 signing {
+    def signingKey = findProperty("signingKey")
+    def signingPassword = findProperty("signingPassword")
+    useInMemoryPgpKeys(signingKey, signingPassword)
     sign publishing.publications.mavenJava
 }
 
@@ -180,8 +174,6 @@ nexusPublishing {
     repositories {
         sonatype {
             stagingProfileId = "4f1b95618be44"
-            username = getOptionalProperty("ossrhUsername")
-            password = getOptionalProperty("ossrhPassword")
         }
     }
 }
