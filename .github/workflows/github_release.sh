@@ -29,6 +29,7 @@ echo "Git tag : $tag"
 echo "Title   : $title"
 echo "Artifacts: $release_artifacts"
 
-release_url=$(gh release create --latest --title "$title" --target main "$tag" "$release_artifacts")
+# shellcheck disable=SC2086
+release_url=$(gh release create --latest --title "$title" --target main "$tag" $release_artifacts)
 readonly release_url
 echo "Release URL: $release_url"
