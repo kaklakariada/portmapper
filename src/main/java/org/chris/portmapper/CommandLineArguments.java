@@ -64,6 +64,7 @@ public class CommandLineArguments {
 
     private final CmdLineParser parser;
 
+    @SuppressWarnings("this-escape")
     public CommandLineArguments() {
         parser = new CmdLineParser(this, ParserProperties.defaults().withShowDefaults(true).withUsageWidth(80));
     }

@@ -38,11 +38,11 @@ public class DummyRouter extends AbstractRouter {
         logger.debug("Created new DummyRouter");
         mappings = new LinkedList<>();
         mappings.add(new PortMapping(Protocol.TCP, "remoteHost1", 1, "internalClient1", 1,
-                getName() + ": dummy port mapping 1"));
+                name + ": dummy port mapping 1"));
         mappings.add(
-                new PortMapping(Protocol.UDP, null, 2, "internalClient2", 2, getName() + ": dummy port mapping 2"));
+                new PortMapping(Protocol.UDP, null, 2, "internalClient2", 2, name + ": dummy port mapping 2"));
         mappings.add(
-                new PortMapping(Protocol.TCP, null, 3, "internalClient3", 3, getName() + ": dummy port mapping 3"));
+                new PortMapping(Protocol.TCP, null, 3, "internalClient3", 3, name + ": dummy port mapping 3"));
     }
 
     @Override

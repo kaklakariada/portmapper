@@ -7,27 +7,19 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
-
+  matrix-build:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [11, 17]
+        java: [11, 17, 21]
     env:
-      DEFAULT_JAVA: 17
+      DEFAULT_JAVA: 17 # Sonar requires at least Java 17
 
     steps:
 
     - uses: actions/checkout@v4
-
-    - name: Cache Gradle packages and wrapper
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.gradle/caches
-          ~/.gradle/wrapper
-        key: ${{ runner.os }}-java-${{ matrix.java }}-gradle-${{ hashFiles('**/*.gradle*') }}
-        restore-keys: ${{ runner.os }}-java-${{ matrix.java }}-gradle
 
     - name: Cache SonarQube packages
       uses: actions/cache@v4
@@ -42,17 +34,11 @@ jobs:
         distribution: 'temurin'
         java-version: ${{ matrix.java }}
 
-    - uses: gradle/wrapper-validation-action@v2
-    
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v4
+
     - name: Build with Gradle
-      run: ./gradlew build --warning-mode summary
-    
-    - name: Publish Test Report for Java ${{ matrix.java }}
-      uses: scacap/action-surefire-report@v1
-      if: ${{ always() && github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' }}
-      with:
-        report_paths: '**/build/test-results/*/TEST-*.xml'
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+      run: ./gradlew build --warning-mode summary -PjavaVersion=${{ matrix.java }}
     
     - name: Sonar analysis
       if: ${{ env.DEFAULT_JAVA == matrix.java && env.SONAR_TOKEN != null }}
@@ -67,3 +53,9 @@ jobs:
       with:
         name: portmapper
         path: build/libs/portmapper-*-all.jar
+
+  build:
+    needs: matrix-build
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Build successful"

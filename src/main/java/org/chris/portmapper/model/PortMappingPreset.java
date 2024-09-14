@@ -50,6 +50,7 @@ public class PortMappingPreset implements Serializable {
     /**
      * The port mappings in this preset.
      */
+    @SuppressWarnings("serial")
     private List<SinglePortMapping> ports;
 
     /**

@@ -37,6 +37,7 @@ public class LogTextArea extends JTextArea implements LogMessageListener {
     /**
      * Create a new instance and set default properties.
      */
+    @SuppressWarnings("this-escape")
     public LogTextArea() {
         setFont(getFont().deriveFont(Map.of(TextAttribute.FAMILY, Font.MONOSPACED)));
         setEditable(false);

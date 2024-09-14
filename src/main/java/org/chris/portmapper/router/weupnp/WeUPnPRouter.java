@@ -20,8 +20,7 @@
  */
 package org.chris.portmapper.router.weupnp;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -89,12 +88,7 @@ public class WeUPnPRouter extends AbstractRouter {
         if (url == null || url.trim().length() == 0) {
             return null;
         }
-        try {
-            return new URL(url).getHost();
-        } catch (final MalformedURLException e) {
-            logger.warn("Could not get URL for internal host name '" + url + "'", e);
-            return url;
-        }
+        return URI.create(url).getHost();
     }
 
     @Override
@@ -108,11 +102,7 @@ public class WeUPnPRouter extends AbstractRouter {
             throw new RouterException("Presentation URL and URL base are null");
         }
 
-        try {
-            return new URL(url).getPort();
-        } catch (final MalformedURLException e) {
-            throw new RouterException("Could not get internal port from URL '" + url + "'", e);
-        }
+        return URI.create(url).getPort();
     }
 
     @Override

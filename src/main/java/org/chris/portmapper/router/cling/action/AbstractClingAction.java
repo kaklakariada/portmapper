@@ -76,7 +76,7 @@ abstract class AbstractClingAction<T> implements ClingAction<T> {
                 actionArgumentValues.add(new ActionArgumentValue<>(actionArgument, value));
             }
         }
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings({ "unchecked", "rawtypes" })
         final ActionArgumentValue<RemoteService>[] array = actionArgumentValues
                 .toArray(new ActionArgumentValue[0]);
         return array;

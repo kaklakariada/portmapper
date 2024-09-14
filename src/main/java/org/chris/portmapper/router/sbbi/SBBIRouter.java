@@ -87,7 +87,7 @@ public class SBBIRouter extends AbstractRouter {
             return null;
         }
         final String ipAddress = presentationURL.getHost();
-        logger.info("Got internal host name '{}' for router.", ipAddress);
+        logger.debug("Got internal host name '{}' for router.", ipAddress);
         return ipAddress;
     }
 
