@@ -24,7 +24,7 @@ group 'com.github.kaklakariada'
 
 java {
     toolchain {
-        def javaVersion = project.hasProperty('javaVersion') ? project.getProperty('javaVersion') : 21
+        def javaVersion = project.hasProperty('javaVersion') ? project.getProperty('javaVersion') : 11
         languageVersion = JavaLanguageVersion.of(javaVersion)
     }
     withJavadocJar()
