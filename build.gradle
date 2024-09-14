@@ -114,9 +114,6 @@ license {
     header = file('gradle/license-header.txt')
 }
 
-
-
-
 jacocoTestReport {
     dependsOn test
     reports {
@@ -164,7 +161,6 @@ publishing {
         }
     }
 }
-
 
 signing {
     def signingKey = findProperty("signingKey")
