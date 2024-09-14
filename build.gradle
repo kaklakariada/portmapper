@@ -83,10 +83,10 @@ artifacts {
 
 dependencies {
     implementation 'args4j:args4j:2.37'
-    implementation 'org.slf4j:slf4j-api:2.0.13'
-    implementation 'org.slf4j:jul-to-slf4j:2.0.13'
-    implementation 'ch.qos.logback:logback-classic:1.5.6'
-    implementation 'com.miglayout:miglayout-swing:11.4'
+    implementation 'org.slf4j:slf4j-api:2.0.16'
+    implementation 'org.slf4j:jul-to-slf4j:2.0.16'
+    implementation 'ch.qos.logback:logback-classic:1.5.8'
+    implementation 'com.miglayout:miglayout-swing:11.4.2'
     implementation 'org.jdesktop.bsaf:bsaf:1.9.2'
     implementation ':sbbi-upnplib:1.0.4'
     implementation 'org.fourthline.cling:cling-support:2.1.2'
@@ -95,7 +95,7 @@ dependencies {
     runtimeOnly 'commons-jxpath:commons-jxpath:1.1' // Version 1.1. required by sbbi
 
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.mockito:mockito-core:5.12.0'
+    testImplementation 'org.mockito:mockito-core:5.13.0'
 }
 
 license {
