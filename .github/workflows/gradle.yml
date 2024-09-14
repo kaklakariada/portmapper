@@ -15,7 +15,7 @@ jobs:
       matrix:
         java: [11, 17, 21]
     env:
-      DEFAULT_JAVA: 11
+      DEFAULT_JAVA: 17 # Sonar requires at least Java 17
 
     steps:
 
