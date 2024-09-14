@@ -40,11 +40,11 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Build
-        run: ./gradlew build --warning-mode all
+        run: ./gradlew build --info --warning-mode all
 
       - name: Publish to Maven Central
         if: ${{ !inputs.skip-deploy-maven-central }}
-        run: ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository --warning-mode all
+        run: ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository --info --warning-mode all
         env:
           ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.OSSRH_USERNAME }}
           ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.OSSRH_PASSWORD }}
