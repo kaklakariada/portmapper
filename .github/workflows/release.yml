@@ -26,7 +26,7 @@ jobs:
 
       - name: Fail if not running on main branch
         if: ${{ github.ref != 'refs/heads/main' }}
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             core.setFailed('Not running on main branch, github.ref is ${{ github.ref }}. Please start this workflow only on main')
