@@ -22,7 +22,7 @@ jobs:
     - uses: actions/checkout@v6
 
     - name: Cache SonarQube packages
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ~/.sonar/cache
         key: ${{ runner.os }}-java-${{ matrix.java }}-sonar
