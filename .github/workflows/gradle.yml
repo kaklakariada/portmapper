@@ -19,7 +19,7 @@ jobs:
 
     steps:
 
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
 
     - name: Cache SonarQube packages
       uses: actions/cache@v5
